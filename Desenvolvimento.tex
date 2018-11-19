@@ -1,0 +1,325 @@
+\section{Projeto da arquitetura}
+\label{projeto_arq}
+
+Após realizar uma analise de todos os componentes necessários para que todas as classes de instruções escolhidas sejam executados, é preciso fazer um projeto de arquitetura que consiga conectar todos eles de forma eficiente. Porém, não só eficiência é necessário, mas também economia de componentes, adicionando o mínimo de componentes possível e reutilizando o que puder ser reutilizado. 
+
+Essa seção, então, apresentará como foi realizado o projeto da arquitetura, visando a correta execução de todas as instruções aqui apresentadas. Para melhor entendimento, ela foi dividida em tópicos seguindo o mesmo padrão da seção \ref{a_requisitos}, sendo que cada um tratará de uma classe de instruções específica. Ao final, é possível encontrar uma subseção responsável por definir quais componentes serão reaproveitados, apresentando a adição de multiplexadores em cada parte da arquitetura.
+
+Assim, seguindo a mesma ordem da seção \ref{a_requisitos}, a primeira subseção sobre projeto, subseção número \ref{pArq_basicos}, abordará sobre os conceitos de funcionamento básico da arquitetura. Logo após, poderão ser encontradas as subseções de gerenciamento de dados, operações aritméticas e comparações, e pulos, com números \ref{pArq_dados}, \ref{pArq_arith} e \ref{pArq_pulos}, respectivamente. Finalizando esta seção, está a subseção \ref{pArq_geral}, o projeto de reutilização de componentes visando obter a menor área de ocupação possível para a arquitetura. 
+
+\subsection{Conceitos Básicos}
+\label{pArq_basicos}
+
+Como dito na subseção \ref{a_requisitos_basicos}, os componentes aqui presentes e apresentados terão como propósito a execução básica de um algoritmo, executando a movimentação entre as instruções e leitura das mesmas. Essa arquitetura parcial dispõe dos registradores de contador de programa (\textit{regPc}), de instrução (\textit{regInstr}) e de argumento (\textit{regArg}), juntamente com uma memória de instruções. 
+
+Na Figura \ref{img_analisebasicos}, lá na subseção \ref{a_requisitos_basicos}, pode-se observar que a memória de instruções possui uma entrada e duas saídas. Começando então por ela, o componente mais importante desta arquitetura parcial, pode-se perceber que a sua entrada é um endereço de memória. Como a memória de instruções tem como característica estar sempre lendo e escrevendo em sua saída, o endereço que chega nela deve estar sempre estável e, para isso, existe o \textit{regPc}. Então, a entrada da memória de instruções deverá ser ligada ao registrador capaz de salvar o endereço de memória da instrução lida a cada instante. 
+
+Assim, faz-se a primeira conexão, que será a entrada da memória de instruções com a saída do registrador PC (\textit{regPc}), como poderá ser visto na Figura \ref{img_pArq_basicos}. Porém, a figura só será apresentada e explicada detalhadamente ao final desta subseção. 
+
+Então, o \textit{regPc} é o registrador responsável por indicar a posição da memória de instrução que deverá ser lida. Como a cada instrução lida deve-se incrementar o registrador PC em 1 (caso não seja uma instrução de pulo, que será abordada na subseção \ref{pArq_pulos}), então a entrada do registrador PC deverá estar ligada à saída da unidade lógica aritmética, assim como a saída de \textit{regPc}, que também deverá estar ligada em uma das entradas da ULA. Como poderá ser visto na subseção \ref{pArq_arith}, a ULA deverá ter diversas entradas diferentes dependendo do que está sendo executado, então dever-se-á adicionar um multiplexador.
+
+Um multiplexador, chamado também de \textit{mux}, é um componente de seleção, capaz de receber diversas entradas e selecionar uma delas para sair em sua única saída. A insersão de multiplexadores na arquitetura será apresentada em detalhes na subseção \ref{pArq_geral}. Por ora, basta saber que a entrada de \textit{regPc} é um resultado vindo de uma operação na unidade lógica aritmética e sua saída está ligada à memória de instruções e à ULA.
+
+Até agora, portanto, definiu-se que a entrada de \textit{regPc} é ligada à saída da ULA e sua saída é ligada à entrada da ULA e à entrada da memória de instruções. Falta, então, conectar os dois registradores remanescentes. Para entender o funcionamento desses registradores, é preciso entender que cada bloco de memória presente na memória de instrução possui 16 \textit{bits}. Assim, ao ler o bloco que \textit{regPc} está apontando, quebra-se ele em dois valores de 8 \textit{bits} e os encaminha para cada uma das saídas da memória de instrução. Como apresentados na seção \ref{rf_modos_enderecamento}, os primeiros 8 \textit{bits} são identificados como o argumento da instrução e, portanto, são enviados para o registrador de argumento (\textit{regArg}). Já os 8 \textit{bits} finais são o código identificador de instrução (que mostram qual instrução deve ser executada) e são enviados para o registrador de instrução (\textit{regInstr}). 
+
+Tendo as entradas dos registradores de argumento e instrução, falta ainda conectar suas saídas. O primeiro registrador tem sua saída ligada a uma das entradas do controle, ao registrador de endereço e ao multiplexador do registrador de pilha (mostrados na subseção \ref{pArq_dados}). O motivo pelo qual sua saída está ligada ao controle é a instrução de comparação, que tem seu tipo de comparação definido como argumento. Sendo assim, o controle precisa saber qual é a comparação que deve ser executada para que consiga selecionar a operação correta na ULA. Já o motivo para a saída de \textit{regArg} está ligada ao multiplexador do registrador de pilha é a instrução de carregamento de constante (LOAD\_CONST), que deve salvar o valor do argumento diretamente na pilha. Enquanto isso, os motivos para a mesma saída estar ligada ao registrador de endereço são as instruções de carregamento e salvamento na memória externa (LOAD\_FAST e STORE\_FAST), que salvam e carregam diretamente de um endereço da memória, especificado por argumento.
+
+A Figura \ref{img_pArq_basicos}, como dito anteriormente, apresenta as ligações mensionadas acima. Na esquerda, é possível encontrar o registrador PC (\textit{regPc}), ligado à entrada da memória de instruções (\textit{memInstr}). Já à direita, encontram-se os dois registradores, argumento (\textit{regArg}) e instrução (\textit{regArg}), ligados às duas saídas da memória de instruções.  
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/projeto_basicos.png}
+\caption{Arquitetura parcial responsável pela funcionalidade básica.}
+\label{img_pArq_basicos}
+\end{figure}
+
+\subsection{Gerenciamento de Dados}
+\label{pArq_dados}
+
+Falando, então, sobre a arquitetura parcial responsável pelas instruções de gerenciamento de dados, realizar-se-á a conexão dos componentes apresentados na subseção \ref{a_requisitos_dados}. Tais componentes são: uma pilha, uma memória externa (\textit{memExt}), um registrador de pilha (\textit{regPilha}), um registrador de memória externa (\textit{regMemExt}), um registrador de \tos (\textit{regTos}) e, por último, um registrador de endereço (\textit{regEnd}). 
+
+Partindo então do registrador de pilha (\textit{regPilha}), pode-se perceber, através da Figura \ref{img_analisedados}, apresentada na subseção \ref{a_requisitos_dados}, que ele possui duas entradas e duas saídas. Tal registrador poderia ser dividido em dois registradores diferentes: o primeiro responsável por escrita na pilha e o segundo responsável por leitura da pilha. Porém, não foi realizada essa divisão visando economizar em um componente e permitindo que a arquitetura ficasse mais limpa quando fosse desenhada. 
+
+As primeiras entrada e saída do \textit{regPilha} que serão abordadas são as responsável por operações de escritas na pilha. Denominadas "\textit{entradaWrite}" e "\textit{saídaWrite}", elas possuem conexão direta entre elas. A entrada é conectada ao multiplexador que gerencia suas entradas, o qual será comentado na subseção \ref{pArq_geral}. Já a saída está conectada diretamente na entrada de escrita da pilha, denominada, também, "\textit{entradaWrite}".
+
+O segundo par de entrada e saída é o de leitura da pilha. O pino de entrada, denominado "\textit{entradaDados}", está conectado ao pino de saída de leitura da pilha, chamado de "\textit{saidaRead}". Já o pino de saída está conectado aos dois operandos da ULA e ao registrador de memória externa. Além dos dois pares de pinos deste registrador, ainda existe mais um pino, apelidado de "\textit{ctrl}" e com nome formal sendo "controle". Este pino se divide em dois pinos de entrada de controle, cada um para controlar um par de entrada e saída, e ambos são conectados em saídas diferentes da unidade de controle. Os sinais recebidos do controle servirão para habilitar ou desabilitar a escrita nos pinos de saída de ambos os pares. 
+
+Passando para o próximo componente, tem-se a pilha, que já teve um par de entrada e saída conectado ao \textit{regPilha} e, agora, falta só o último pino. Tal pino está conectado à saída do registrador de topo, \textit{regTos}, e é responsável por indicar qual posição da pilha está sendo lida. Sempre que é feita uma operação de escrita ou leitura da pilha, o valor deste registrador, através da ULA, é atualizado e sempre guardará a posição que está sendo lida na saída de leitura da pilha, ou seja, o \tos{}. 
+
+Além dos três pinos aqui citados, existe um quarto pino, o qual não está presente na Figura \ref{a_requisitos_dados}, mas é necessário. Este pino é o de controle de escrita. Uma memória que possui dois pinos (entrada e saída) pode ter a propriedade de estar sempre lendo, mas precisa de um comando para saber quando deve salvar determinado valor. Então, no pino de saída da pilha, sempre existe um valor (o qual está na posição apontada pelo valor de \textit{regTos}). Já o valor presente no pino de entrada da pilha só será aproveitado caso o sinal de controle da pilha esteja ativo. Caso contrário, o valor é ignorado. 
+
+O próximo trio de componentes (memória externa, registrador de memória externa e registrador de endereço) possui seu funcionamento parecido com o que já foi apresentado para a pilha. A memória externa tem seu funcionamento similar ao da pilha, equanto o registrador de memória externa possui funcionamento idêntico ao registrador de pilha. A grande diferença, e o que define que o primeiro trio possui uma pilha o segundo não, é o registrador de endereço. A função é a mesma do registrador \textit{regTos} (apontar a posição de memória lida), porém, ao invés de ter seu valor atualizado a cada operação de escrita ou leitura, sua saída é atualizada conforme o valor do registrador de argumento. Isso faz com que uma posição de memória especifica possa ler lida a qualquer momento, sem a necessidade de executar leituras sucessivas para conseguir acessar um dado que foi carregado no inicio da execução, como é o caso de uma pilha, que sempre lê o último dado carregado. 
+
+A Figura \ref{img_pArq_dados} apresenta todas as conexões citadas acima. Nela, pode-se observar os seis componentes conectados entre si. Porém, como já foi dito, é possível observar somente uma entrada de controle (\textit{ctrl}) nos registradores de memória externa e pilha, porém divide-se essa entrada em duas. O motivo de estar aparecendo somente um pino foi para evitar que a imagem ficasse sobrecarregada de informações.  
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/projeto_dados.png}
+\caption{Arquitetura parcial responsável pela execução de instruções de gerenciamento de dados.}
+\label{img_pArq_dados}
+\end{figure}
+
+\subsection{Operações Aritméticas e Comparações}
+\label{pArq_arith}
+
+A arquitetura parcial responsável por realizar operações aritméticas e comparações, como dito na subseção \ref{a_requisitos_arith}, possui cinco componentes básicos: uma unidade lógica aritmética (ULA), dois registradores de operandos (\textit{regOp1} e \textit{regOp2}), um registrador de comparação (\textit{regComp}) e um registrador de \textit{overflow} (\textit{regOverflow}). Todos os componentes são conectados entre si, mas possuem suas entradas, como no caso dos operandos, e saídas, como é o caso dos registradores de \textit{overflow} e comparação, para fora da arquitetura parcial.
+
+Iniciando-se uma análise sobre os dois registradores de operandos, definiu-se que ambos possuem suas entradas conectadas à saída de leitura do registrador de pilha, que foi explicado na subseção \ref{pArq_dados}. O registrador de pilha, então, lerá cada um dos operandos da pilha e os salvará, em instantes diferentes (lê um e o salva, após lê o outro e o salva), em cada um dos registradores de operandos. O primeiro que receberá o operando, conforme apresentado na subseção \ref{a_algo_sim}, é o registrador operando 1 (\textit{regOp1}), que será o segundo operando da operação, conforme equação \ref{eq_pArq_arith}. O segundo a receber seu valor é o \textit{regOp2}, que será o primeiro operando da ULA.
+
+\begin{equation}
+\label{eq_pArq_arith}
+	RESULTADO = OP2 - OP1
+\end{equation}
+
+Ambos os registradores estão conectados às entradas de operandos da ULA, a qual é responsável pela execução das operações aritméticas e comparações. Para definir o tipo de operação a ser realizada, é utilizado um seletor, vindo da unidade de controle, que entrará através do pino denominado "\textit{entradaSeletor}". Esse seletor possui 3 \textit{bits} e pode escolher uma entre as quatro operações aritméticas previstas para serem implementadas nesse trabalho (soma, subtração, multiplicação e divisão), assim como uma das três comparações possíveis (igual, menor que e maior que). Sendo assim, existe uma posição de operação vazia, pois o mesmo seletor poderia selecionar entre oito diferentes tipos de operações.
+
+Ainda na ULA, existem três saídas, as quais são responsáveis por distribuir os resultados das operações para componentes externos a ela. As duas primeiras, as quais seus registradores, estão presentes nesta arquitetura parcial. São elas a de comparação e a de \textit{overflow}. A primeira, conectada no \textit{regComp}, define se determinada operação de comparação é verdadeira ou falsa, salvando 0 ou 1 no registrador de comparação, que por sua vez terá sua saída conectada ao controle. 
+
+Já a saída de \textit{overflow}, conectada ao \textit{regOverflow}, é utilizada apenas em operações de multiplicação e adição. Como operações de multiplicação possuem a quantidade de \textit{bits} do resultado definida como a soma o número de \textit{bits} dos dois operandos. Logo, espera-se que o resultado tenha 16 \textit{bits}, pois cada um dos operandos possui 8 \bis{}. No caso de uma soma, é possível que o \bi{} mais significativo apresente valor 1 e receba uma soma de um, o qual resultaria de um valor 10. Caso isso aconteça, será necessário adicionar o valor 1 mais à esquerda do antigo \bi{} mais significativo, tornando o resultado 1 \bi{} maior do que os operandos.
+
+Contudo, só serão aproveitados os 8 \textit{bits} à direita. Assim, sempre que existir um \textit{bit} com valor 1 entre os 8 \textit{bits} à esquerda de um código de 16 \bis{}, o registrador de \textit{overflow} salvará o valor 1, indicando que houve \textit{overflow} e que o resultado da ULA pode estar comprometido e pode não expressar o resultado real, já que na saída resultado somente sairão os 8 \bis{} à direita. O \textit{regOverflow}, assim como o \textit{regComp}, é conectado a uma entrada da unidade de controle, permitindo que esse saiba se houve ou não \textit{overflow}. 
+
+Por último, tem-se a saída de resultado normal, utilizada para todas as operações aritméticas. Nas comparações, essa saída sempre sairá zerada. Ela é conectada diretamente ao registrador PC (\textit{regPc}), ao registrador de \tos (\textit{regTos}) e ao registrador de pilha (\textit{regPilha}).
+
+A Figura \ref{img_pArq_arith} apresenta um esboço da arquitetura parcial responsável pela execução das instruções aritméticas e comparação. Nela, podem ser vistos os cinco componentes conectados entre si e pinos de entrada e saída deles que são conectados a componentes externos a essa arquitetura. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/projeto_aritmeticas.png}
+\caption{Arquitetura parcial responsável pela execução de instruções de operações aritméticas e comparação.}
+\label{img_pArq_arith}
+\end{figure}
+
+\subsection{Instruções de Pulos/Desvios}
+\label{pArq_pulos}
+
+A próxima arquitetura parcial, responsável pela realização de pulos (ou desvios), possui o primeiro multiplexador (\textit{mux}) apresentado, até o momento, nessa arquitetura. Diferentemente das outras classes de instruções, onde foi possível apresentar a arquitetura parcial retirando-se os multiplexadores, nessa eles são necessários como sendo componente básico dela. Nas outras, adicionar multiplexadores apenas permite que o mesmo componente seja utilizado por diferentes classes de instruções, gerando entradas vindas de diversos componentes e com destino no mesmo. A adição de todos os outros multiplexadores será feita na subseção \ref{pArq_geral}.
+
+Então, como pode ser visto na Figura \ref{img_pArq_pulos}, a arquitetura que realiza pulos contém três componentes principais (sem contar o multiplexador). Ela consegue atender às quatro instruções de desvios apresentadas neste trabalho, POP\_JUMP\_IF\_FALSE, POP\_JUMP\_IF\_TRUE, JUMP\_ABSOLUTE e JUMP\_FORWARD. Nas duas primeiras, existe uma comparação que acontece antes de ser iniciado um pulo, porém ela não é apresentada aqui pois é uma operação que depende da arquitetura parcial apresentada em \ref{pArq_arith} e do controle, que será apresentado na seção \ref{projeto_control}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/projeto_pulos.png}
+\caption{Arquitetura parcial responsável pela execução de pulos.}
+\label{img_pArq_pulos}
+\end{figure}
+
+Tem-se então, para essa classe de instruções, os componentes: unidade lógica aritmética (ULA), registrador de argumento (\textit{regArg}) e registrador contador de programa (\textit{regPc}). A utilização de uma ULA para realizar os desvios foi definida para ser aproveitada a operação básica de adição ao valor de PC, que faz com o que seja executada a próxima operação de um programa. Então, partindo desse princípio, definir que a saída de \textit{regPc} e a entrada dele estão conectadas aos pinos de entrada e saída da ULA, respectivamente, evita que seja necessário adicionadar outro componente para armazenar o valor de \textit{regPc} antigo enquanto ele é atualizado.
+
+Então, analisando a execução das instruções POP\_JUMP\_IF\_, em que as duas possuem o mesmo funcionamento, porém em circunstâncias contrárias, tem-se que o valor de saída de \textit{regPc} será ignorado, passando pelo \textit{MUX} apenas a opção zero, vinda de \textit{regArg}. Como esse tipo de instrução executa um pulo para um endereço passado por argumento diretamente para PC, a operação ocorrida na ULA é uma operação de adição do valor zero ao valor que entrou como argumento. Assim, a saída de resultado da ULA é o mesmo valor que veio de \textit{regArg} e que será salvo no registrador PC.
+
+Assim como as duas instruções já analisadas, a instrução JUMP\_ABSOLUTE, que executa um desvio incondicional para um endereço passado por argumento, possui o mesmo funcionamento. A única diferença dela para as duas instruções POP\_JUMP\_IF\_ é que ela não necessita de uma comparação feita pelo controle antes de ser executada. Portanto, pode-se considerar que ela realiza um desvio incondicional.
+
+A última instrução de pulo, JUMP\_FORWARD, justifica o fato de \textit{regArg} estar ligado ao MUX da entrada de operando 2 e também à entrada de operando 1. Ela executa um pulo baseado na adição de um valor, passado por argumento, no valor atual de PC. Assim, passa-se através do MUX a opção 1, chegando à entrada de operando 2 o valor de \textit{regPc}. À entrada de operando 1, chega o valor de \textit{regArg} e, então, executa-se uma soma entre os dois valores. O resultado é salvo no registrador PC e finaliza-se a execução. 
+
+\subsection{Instruções de chamada e retorno de funções}
+\label{pArq_funcoes}
+
+Por fim, tem-se a arquitetura parcial responsável pela chamada e retorno de funções. Para que ela funcione corretamente, é preciso que existam duas pilhas. A primeira, responsável por salvar o endereço da próxima instrução a ser executada após o retorno. Já a segunda, responsável por guardar o endereço do \tos{} da pilha principal para que o bloco alocado para a função seja completamente ignorado após o retorno e os dados chamados anteriormente voltem a ser válidos.
+
+Então, como mostra a Figura \ref{img_pArq_funcoes}, pode-se observar que as duas pilhas citadas acima, pilha de função (chamada "pilhaFuncao" e responsável por guardar o valor de PC+1) e pilha de TOS (chamada "pilhaTosRetorno" e responsável por guardar o \tos{} principal antes da chamada da função) tem suas saídas conectadas ao registrador PC e ao registrador TOS, respectivamente. Assim, quando a instrução RETURN\_VALUE for chamada, os valores presentes nos topos dessas pilhas serão alocados nos registradores a qual estão conectadas.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/projeto_funcoes.png}
+\caption{Arquitetura parcial responsável pela chamada e retorno de funções.}
+\label{img_pArq_funcoes}
+\end{figure}
+
+Assim como toda pilha, pode-se perceber que as duas pilhas estão ligadas ao mesmo registrador responsável por guardar seus próprios topos, chamado de \textit{regTosFuncao}. Isso se deve ao fato de que elas possuem o mesmo valor endereçando seus topoo e sempre que for adicionado um novo dado em uma delas, será adicionado um dado equivalente na outra também. Assim, não há necessidade de existirem dois registradores de topo, visto que eles deveriam ser atualizados separadamente e isso custaria tempo de execução. Além do registrador de \tos{} adicionado para essa funcionalidade, foi adicionado um somador/subtrator, que é o responsável por manipular esse registrador. O motivo da adição do novo registrador é evitar que a unidade lógica aritmética (ULA) fique sobre carregada, fazendo com que seja necessário adicionar um multiplexador maior em uma de suas entradas, e paralisada para realizar apenas essa operação, não podendo executar essa operação e outra ao mesmo tempo. Com o somador/subtrator, a ULA não precisa parar e executar somente essa operação, pode seguir executando paralelamente o que for necessário, como uma soma PC+1 que salvará no topo da \textit{pilhaFuncao}. 
+
+Fora esses componentes, ligado ao registrador da pilha principal, está o registrador de retorno de dados (chamado de "\textit{regDataReturn}"). Sua entrada vem diretamente da saída de leitura da ULA, pois ele guarda um dado que está no \tos{} e, consequentemente, no topo de um bloco alocado para a função inicializada por CALL\_FUNCTION. Esse valor é retornado para a função principal e, portanto, precisa ser armazenado, após ocorrer o retorno para a função principal, no topo de pilha. Tendo em vista essa funcionalidade, esse registrador recebe o valor no topo da pilha antes de ser realizada a atualização do \textit{regTos} e, após a atualização desse registrador, é adicionado no \tos{} atual o valor salvo no registrador.
+
+\subsection{Arquitetura Geral}
+\label{pArq_geral}
+
+Então, após analisar todas as classes de instruções e suas arquiteturas parciais capazes de execulá-las, percebe-se que alguns dos componentes se repetem em mais de uma arquitetura. Essa repetição gera entradas diferentes para o mesmo componente, sendo necessário, portanto, utilizar um multiplexador.
+
+Um multiplexador (\mux{}) nada mais é do que um componente capaz de escolher, baseado em um sinal de controle, qual de suas entradas será reproduzida no pino de saída. Então, um multiplexador é capaz de possuir inúmeras entradas, sendo que o número de \bis{} que o sinal de controle deverá ter depende exatamente do número de entradas que o \mux{} possui. A Equação \ref{eq_nBits_seletor} mostra a fórmula que define o número de \bis{} que um seletor (como é chamado o sinal de controle que gerencia o multiplexador) deve possuir baseado no seu número de entradas.
+
+\begin{equation}
+\label{eq_nBits_seletor}
+n\_bits = \log_{2}{(n\_entradas)}
+\end{equation}
+
+A Figura \ref{img_muxes} apresenta o formato de um componente multiplexador, que já pôde ser visto na Figura \ref{img_pArq_pulos}, porém foi apresentado em detalhes. O componente posicionado à esquerda, (a), é um \mux{} que possui duas entrada e, portanto, apenas um \bi{} em seu seletor. Já o componente à direita, (b), é um \mux{} que possui 4 entradas e, portanto, um seletor de dois \bis{}. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/muxes.png}
+\caption{Exemplos de multiplexadores.}
+\label{img_muxes}
+\end{figure}
+
+Utilizando esse componente, portanto, é possível utilizar melhor componentes que apareceram em mais de uma arquitetura, sendo o destino da saída de diversos componentes. Começando, então, com o registrador de pilha (\textit{regPilha}), que recebe conexões vindas da ULA, do registrador da memória externa (\textit{regMemExt}), do registrador de argumento (\textit{regArg}) e do registrador de retorno de dados (\textit{regDataReturn}). 
+
+
+À entrada do \textit{regPilha}, foi necessário adicionar um multiplexador com dois \bis{} de sinal de controle, permitindo, portanto, quatro entradas. A Figura \ref{img_pArq_muxPilha} apresenta como é a entrada do registrador de pilha e quais os componentes que se conectam ao seu \textit{mux}. As entradas em que cada componente se conecta é a que eles realmente estão conectados na implementação final e são as que o controle irá enviar sinal para que saiam no pino à esquerda, que será apresentado na seção \ref{projeto_control}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/muxPilha.png}
+\caption{Apresentação do multiplexador posicionado na entrada do registrador de pilha.}
+\label{img_pArq_muxPilha}
+\end{figure}
+
+É possível perceber, através da análise da imagem, que na entrada "00" do multiplexador é conectada à saída da ULA. Já às entradas "01", "11" e "10", respectivamente, estão conectados os registradores de memória externa, argumento e dado de retorno, respectivamente. Ainda é possível perceber que alguns dos pinos foram cortados na imagem para que os componentes pudessem ser encaixados sem desperdício de espaço, porém o nome dos seus sinais/entradas se mantiveram. 
+
+A tabela \ref{table_muxPilha} apresenta, baseada na Figura \ref{img_pArq_muxPilha}, o mapeamento das entradas do multiplexador conectado à entrada do registrador de pilha. Nela, é possível ver o valor, à esquerda, referente ao sinal de controle que será recebido e, à direita, o nome do componente que será repassado na saída.
+
+\input{tables/table_muxPilha}
+
+Passando, então, para a próxima análise de adição de multiplexadores, tem-se a adição de três multiplexadores às entradas do mesmo componente, a unidade lógica aritmética. O primeiro multiplexador, apresentado também na Figura \ref{img_pArq_pulos}, não estava completo nessa Figura, pois somente era necessário, naquele momento, entender como funcionava a arquitetura parcial responsável pela execução de pulos, que necessitava de um \mux{} de duas entradas apenas. Agora, na Figura \ref{img_pArq_muxesUla}, o mesmo multiplexador aparece maior e completo completo, recebendo todos os componentes necessários para seu funcionamento. A ele, dar-se-á o nome de \textit{muxOp2}. Falar-se-á dele na sequência, após os dois primeiros registradores, para que a ordem seja seguida.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/muxesUla.png}
+\caption{Apresentação dos três multiplexadores que compõem as duas entradas da ULA.}
+\label{img_pArq_muxesUla}
+\end{figure}
+
+Analisando a Figura \ref{img_pArq_muxesUla}, percebe-se que o primeiro multiplexador, o qual recebe o nome de \textit{muxOp1}, recebe conexão de outro multiplexador e possui alguns valores de entrada constantes. Tais valores são zero (utilizado para somar zero durante um JUMP\_ABSOLUTE) e um (utilizado para atualizar o valor de PC e atualizar o valor do registrador de \tos{}). À entrada "11", conecta-se o \mux{} visto na sequência. Já a entrada "10", até o momento, não possui nenhuma conexão. Na tabela \ref{table_muxOp1} podem ser vistas todas as ligações do \textit{muxOp1}, juntamente com seus valores de controle.
+
+\input{tables/table_muxOp1}
+
+Passando para o multiplexador \textit{muxRegOp1}, que é responsável por definir se chegará o valor de \textit{regArg} ou \textit{regOp1} no \textit{muxOp1}. Quando necessita-se realizar um JUMP\_FORWARD, o valor passado por ele é o de \textit{regArg}, pois será necessário somá-lo ao valor de PC, que entrará como segundo operando da ULA. Já quando precisa-se realizar uma operação aritmética ou comparação, passa-se \textit{regOp1}. Esse multiplexador possui apenas um \bi{} em seu seletor, visto que só possui duas entradas. Na tabela subsequente, de número \ref{table_muxRegOp1}, pode ser visto o mapeamento das entradas e valores de seletor para o multiplexador \textit{muxRegOp1}.
+
+\input{tables/table_muxRegOp1}
+
+E, como último \mux{} da Figura \ref{img_pArq_muxesUla} e também já comentado anteriormente, tem-se o multiplexador \textit{muxOp2}, o qual é responsável por selecionar qual valor chegará à entrada de operando 2 da ULA. Suas entradas são conectadas aos registradores \textit{regArg} (utilizado para todos os desvios, exceto JUMP\_FORWARD), \textit{regTos} (utilizado para atualizar o valor de \tos{}, \textit{regPc} (utilizado para a atualização do registrador contador de programa) e \textit{regOp2} (utilizado para operações aritméticas e comparações). Na tabela \ref{table_muxOp2} podem ser vistos os componentes conectados a cada entrada do \textit{muxOp2}, juntamente com seus valores de controle.
+
+\input{tables/table_muxOp2}
+
+Além dos multiplexadores já adicionados, foram adicionados mais dois \textit{muxes} para permitir que existam chamadas e retornos de funções. O primeiro deles, conforme mostra a Figura \ref{img_pArq_muxPc}, tem sua saída ligada à entrada do registrador PC. Ele é um \mux{} com 1 \bi{} de controle e, portanto, duas entradas. A primeira delas, endereçada com o \bi{} "0", está ligada à saída da ULA. Já a segunda, "1", está ligada à saída da pilha de funções (chamada "pilhaFuncoes").
+
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.7]{images/muxPc.png}
+\caption{Apresentação do multiplexador responsável pela entrada do registrador PC.}
+\label{img_pArq_muxPc}
+\end{figure}
+
+A tabela \ref{table_muxPc} apresenta as conexões de entrada no multiplexador responsável por definir a entrada do registrador PC.
+
+\input{tables/table_muxPc}
+
+O segundo \mux{}, o qual pode ser observado na Figura \ref{img_pArq_muxTos}, tem sua saída conectada ao registrador \textit{regTos}. Ele também possui um sinal de controle endereçado com 1 \bi{}. Suas entradas são, respectivamente, a saída da ULA e a saída da pilha de retorno de topo em suas entradas "0" e "1". 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.7]{images/muxTos.png}
+\caption{Apresentação do multiplexador responsável pela entrada do registrador TOS.}
+\label{img_pArq_muxTos}
+\end{figure}
+
+Na tabela \ref{table_muxTos} pode ser observado o mapeamento das entradas e sinais do seletor do \mux{} ligado ao registrador TOS.
+
+\input{tables/table_muxTos}
+
+Esses dois últimos multiplexadores são necessários para que seja possível escolher entre fazer um retorno, com a instrução RETURN\_VALUE, e fazer uma atualização normal dos valores dos registradores PC e TOS, com a saída da unidade lógica aritmética. 
+
+Uma visualização completa da arquitetura, contendo todas as arquiteturas parciais conectadas, pode ser encontrada no apêndice \ref{apendice_arq}. Criado através da ferramenta \textit{Logisim}, o esboço da arquitetura apresenta todos os componentes conectados, gerando apenas uma arquitetura final. É possível observar, também, a presença de todas as arquiteturas parciais e todos os componentes apresentandos. Além disso, existem componentes, tais como \textit{regInstr} e \textit{regArq}, que possuem saídas que não são conectadas a nada. Esses pinos de saída representam, então, uma conexão com a unidade de controle, a qual não está presente na imagem mas se conecta a todos os componentes.
+
+\section{Projeto do controle}
+\label{projeto_control}
+
+A unidade de controle de uma arquitetura funciona como seu cérebro. Ela define os sinais para todos os componentes que precisam deles, para que eles funcionem de forma sincronizada e realizem corretamente as operações a eles destinadas, permitindo um correto funcionamento da arquitetura como um todo.
+
+É função da unidade de controle reconhecer qual instrução que está sendo executada, através da leitura do código de instrução (\textit{OpCode}), recebido através endereço vindo da memória de instruções e salvo no registrador de instrução (\textit{regInstr}). Com esse código, o controle sabe exatamente qual será a instrução a ser executada e prepara seus componentes, a cada estado de execução, para que consiga realizar a execução exatamente como esperado.
+
+Cabe ao controle, também, a análise de resultados, como a leitura do registrador de comparação ("\textit{regComp}") e a decisão se um desvio irá ocorrer ou não. Assim como a análise do argumento (contido no registrador \textit{regArg}) durante a execução da instrução COMPARE\_OP, para que o sinal de controle da unidade lógica aritmética seja escolhido corretamente.
+
+Portanto, cabe ao controle definir como cada componente se comportará a cada instante durante a execução. Mas, para que ele funcione corretamente, são definidas máquinas de estados, as quais possuem como saída os sinais de cada componente presente na arquitetura que necessite deles. A subseção \ref{control_sinais} apresentará todos os sinais de controle presentes na arquitetura proposta, assim como o significado de cada um deles.
+
+Mas, para que o sinais sejam corretamente selecionados no instante de tempo certo, é preciso que haja uma máquina de estados contendo todos os sinais e as ocasiões em que eles deverão ser passados para os componentes. As subseções \ref{control_meExp} e \ref{control_projMe} apresentarão, respectivamente, o funcionamento de uma máquina virtual e uma explicação as máquinas de estados projetadas para essa arquitetura, juntamente com suas imagens.  
+
+\subsection{Sinais de controle}
+\label{control_sinais}
+
+A seção \ref{a_requisitos} apresentou todos os componentes que são necessários para que todas as funcionalidades previstas para o processador \py{} sejam atendidas corretamente. Cada um deles, como as imagens mostram, possuem um pino de entrada chamado controle (\textit{ctrl}) ou seletor (chamado também de \textit{sel}). Nas figuras apresentadas, aparecem os nomes abreveados, visando economia de espaço.
+
+Esse módulo nada mais é do que um componente, o qual contém uma máquina de estados implementada, contendo uma lista de saídas que se conectarão a cada um dos componentes presentes na arquitetura. Além disso, ainda existem algumas entradas no componente, responsáveis por permitir que o controle faça escolhas durante a execução. Como o controle é um componente e não um tipo de sistema mestre que tem acesso a tudo sem se conectar a nada, é necessário que os dados que precisem ser analisados por ele sejam suas entradas. Então, por ele, somente poderão ser analisados dados que chegam até ele.
+
+Cada um dos registradores apresentados possui um sinal de controle, o qual é comumente chamado, na computação, de \textit{enable}, o que em português poderia ser traduzido livremente para "habilitar". Esse sinal indica o momento em que o registrador deverá salvar um dado ou não. O salvamento de cada dado ocorre em uma das bordas de subida do \textit{clock}, mas o sinal de controle \textit{enable} precisa estar ativo.
+
+Considera-se um dado salvo aquele valor que é passado para a saída de um registrador e nela mantido para que possa ser utilizado por qualquer outro componente que está conectado à ela. Então, já é esperado que a entrada de um registrador, quando o sinal \enable{} estiver desativado, possa ser totalmente diferente da saída. 
+
+Além dos registradores, os multiplexadores e as unidades de operações aritméticas também possuem sinais de controle. Contudo, diferentemente dos registradores, seus sinais de controle são chamados de seletores (ou abreviados para "\textit{sel}"). Seus sinais não são \enable{} porque eles não habilitam nada, mas sim definem o que será feito e, portanto, selecionam. Mesmo que eles estejam em zero, haverá um valor nos pinos de saída, mesmo que esse valor seja nulo, devido a uma possível ausência de entrada.
+
+No caso dos multiplexadores, que possuem mais de uma entrada que deverão ser mapeadas para apenas uma saída, o seletor irá indicar o código da entrada que deverá ser reproduzida no pino de saída. Já na ULA, a funcionalidade é diferente. Um seletor na ULA define o tipo de operação aritmética ou de comparação que deverá ser executada. O mesmo ocorre no somador/subtrator, pois ele possui mais de uma operação possível para executar. Caso ele só fosse um somador, não necessitaria de um sinal de controle, visto que, no momento em que chegasse um valor em sua entrada, sairia o valor somado a 1 na sua saída. 
+
+Quando se fala das memórias (ou pilhas), a nomenclatura também é um pouco diferente, mas sua funcionalidade é parecida com a de um registrador. O nome do sinal, nesse caso, é, muitas vezes, \textit{write}. Isso acontece porque uma memória está sempre lendo a posição que está sendo apontada pelo endereço de leitura (vindo de \textit{regTos}, \textit{regEnd} ou ainda \textit{regTosFuncao}) e reproduzindo o conteúdo dessa posição na sua saída. Mas quando o assunto é a escrita, então é necessário que haja uma permissão do controle para que ela seja feita. Isso se deve ao fato de que a memória não salvará todos os valores que chegam à sua entrada, mas sim apenas valores definidos. O funcionamento da memória, portanto, nada mais é do que um grupo de registradores conectados e coordenados. 
+
+Até agora, foi falado apenas de componentes que possuem apenas um sinal de controle. Mas, na arquitetura proposta, podem ser encontrados dois registradores mais complexos (\textit{regPilha} e \textit{regMemExt}), os quais possuem dois sinais de controle cada. O funcionamento deles pode ser comparado a um conjunto de dois registradores unidos em um só. Na verdade, é exatamente o que eles são. Porém, para simplificar a implementação e o desenho da arquitetura, eles foram unidos em apenas um, porém com duas saídas e duas entradas. 
+
+Após apresentados todos os tipos de sinais, não é necessariamente preciso nomeá-los, visto que, com exceção dos registradores de pilha e memória externa, todos possuem apenas um sinal de controle. Assim, os nomes dos sinais de controles que serão apresentados na subseção \ref{control_projMe} são exatamente os nomes dos componentes. Quando forem citados os registradores de pilha e memória, serão adicionados "W", indicando que a operação é para a saída de escrita (\textit{write}), ou "R", indicando uma operação de leitura (\textit{read}), no final dos seus nomes.
+
+\subsection{Máquinas de Estados}
+\label{control_meExp}
+
+Uma máquina de estados nada mais é do que um conjunto de estados, os quais possuem definições diferentes para as saídas do componente controle. A cada ciclo de \clock{}, é esperado que haja uma troca de estado. Cada estado possui um estado que será seu sucessor. Assim, já é definido previamente qual estado virá após determinado estado. Em alguns casos específicos, pode haver uma decisão lógica para que seja definido o próximo estado.
+
+Ao se encontrar em um estado, os sinais de controle são selecionados e adicionados às saídas do componente denominado controle. Normalmente, em um esboço de arquitetura, as ligações realizadas entre cada componente e o controle não são desenhadas, visto que já é esperado que o controle esteja conectado quase todos os componentes, tornando o desenho extremamente poluído e dificultando a visualizações de conexões mais importantes. 
+
+Cada máquina de estados começa sempre em um estado inicial, o qual será o ponto de partida para cada uma das máquinas de estado parciais, que são como podem ser chamadas as máquinas de estados responsáveis por funcionalidades específicas. Nesse estado, é esperado que haja uma definição de instrução que seja executada ou um carregamento de dados iniciais necessários, para que se possa, então, encaminhar o sistema para a máquina de estado parcial responsável pela funcionalidade que será executada. 
+
+Uma melhor visualização do sistema como um todo e da máquina de estados geral pode ser foi dividindo a máquina completa em máquinas menores, responsáveis por instruções ou funcionalidades específicas. Então, no primeiro estado, é esperado que o próximo estado seja selecionado. Esse próximo estado pode ser o primeiro estado de qualquer uma das instruções e depende unica e exclusivamente do valores salvo no registrador de instruções (\textit{regInstr}), o qual está conectado a uma das entradas do componente controle.
+
+Uma imagem do componente controle, com seus pinos de entrada (à esquerda) e de saída (à direita) pode ser vista na Figura \ref{img_control}. Os nomes de cada pino de saída e entrada são os exatos nomes dos componentes que deverão estar conectados a eles, com excessão dos registradores com dois sinais de controle (memória externa e pilha). 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/control.png}
+\caption{Representação do componente Unidade de Controle.}
+\label{img_control}
+\end{figure}
+
+Para que as máquinas de estados parciais, que serão apresentadas na próxima subseção, fossem criadas, foi necessário visualizar a arquitetura como um todo e definir os fluxos de execução para cada uma das instruções que serão executadas. Então, olha-se o que é preciso ser feito primeiro em cada passo de execução e define-se os sinais que deverão aparecer nas saídas do controle. Pode-se, porém, perceber que o primeiro estado de cada máquina de estados parcial é exatamente igual. Isso indica que pode existir um estado inicial comum para todas as instruções. 
+
+Com raras exceções (instruções BINARY\_ e COMPARE\_OP), além do primeiro estado, cada estado só possui um sucessor fixo. As duas instruções que possuem um estado com mais de um estado sucessor são as duas citadas, pois nelas o valor de seleção da unidade lógica aritmética é a única característica diferente entre os estados "b4\_" (máquina de estados apresentada no apêndice \ref{apendice_maqEst}), no caso das instruções BINARY\_. Todas elas possuem sinais de saídas exatamente idênticos para todos os estados, exceto o estado que define o seletor da ULA. O mesmo ocorre na instrução COMPARE\_OP, na qual o seletor da ULA depende do valor contido no registrador \textit{regArg}. 
+
+A unidade de controle, conforme pode ser observado na Figura \ref{img_control}, possui ainda mais duas entradas que não foram comentadas. A primeira, apelidada de \textit{clk}, representa a entrada do \clock{} e será utilizada para definir a troca de estados. Já a segunda, a qual possui uma saída também, é chamada de \textit{reset}. Quando inicia-se a arquitetura, a máquina de estados ainda não possui um estado definido, assim como os registradores TOS e PC, que não tem valores em suas saídas. Contudo, esses três componentes não podem funcionar sem que tenham um valor inicial em suas saídas, já que os valores de PC e TOS deverão ser incrementados ou decrementados durante a execução. Nos outros registradores, é possível iniciar a execução sem um valor inicial pois todos eles receberão valores prontos, que aparecerão em suas entradas independente das suas saídas. Mas \textit{regPc} e \textit{regTos} precisam das suas saídas para gerarem novos valores para serem atualizados.
+
+Assim, define-se que, por padrão, os primeiros ciclos de \clock{} que a arquitetura executar, logo após ser ligada, serão utilizados para \textit{reset} e o sinal de entrada (\textit{entrada\_reset}) dessa funcionalidade no controle estará ativo. Esse, por sua vez, repassará, através do pino de saída (\textit{saida\_reset}), o mesmo sinal para todos os outros componentes que necessitem de um valor inicial para que possam funcionar corretamente. 
+
+\subsection{Projeto das Máquinas de Estados}
+\label{control_projMe}
+
+Quando foi realizado o projeto da unidade de controle, definiu-se que cada instrução a ser implementada teria uma máquina de estados diferente. Com isso, foi possível otimizar ao máximo cada instrução, sem que haja a necessidade de perder funcionalidades com a reutilização de estados em outras instruções. 
+
+Caso fosse priorizada a reutilização de estados, alguns dos passos que estão sendo feitos em apenas dois estados, poderiam ser feitos em três ou mais. Isso porque cada um dos estados teriam que ser menos complexos, visando que seja possível reunilizá-los em mais de uma instrução. Porém, como eles são complexos e cheios de sinais de saída específicos para cada instrução, torna-se extremamente difícil reunilizá-los em outra instrução.
+
+Contudo, existe uma funcionalidade que é básica e feita no primeiro estado de cada instrução. Tal funcionalidade é a que permite a leitura, vinda da memória de instruções, dos 2 \bys{} de uma instrução: \textit{OpArg} e \textit{OpCode}. 
+
+A Figura \ref{estado_inicial} apresenta, como exemplo de um estado, o estado inicial, que é o mesmo para todas as instruções. É possível perceber que, dentro de seu círculo, só aparecem os sinais que se tornaram ativos no momento da inicialização do estado. Quanto aos sinais que controle que são considerados seletores, eles são definidos como um valor padrão, atribuindo-se zero para cada um deles, já que eles são considerados \textit{don't care} no momento.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=1]{images/estado_inicial.png}
+\caption{Representação do estado inicial de todas as instruções.}
+\label{estado_inicial}
+\end{figure}
+
+É possível perceber que, na imagem, aparecem três atribuições: desativação de \textit{regPc} e ativações de \textit{regInstr} e \textit{regArg}. A primeira, mesmo sendo um sinal que desliga um registrador, é apresentado pois, geralmente, o último estado de cada instrução salva o valor de \textit{regPc} atualizado, ativando-o. Logo, quando se atribui o valor zero à \textit{regPc}, fá-se uma modificação em possíveis instruções que tenham finalizado com o sinal de controle de \textit{regPc} ativo. Caso a última instrução executada não apresente um salvamento de PC no último estado, a atribuição de zero ao sinal \textit{regPc} não mudará nada. 
+
+É necessário destacar que, para cada estado, é necessário que todos os sinais sejam definidos. Nos esquemas de máquinas virtuais, no entanto, somente são apresentados sinais que sofreram modificações. Já na implementação, cada estado define os valores de todos os sinais, já que caso não seja feito isso, poderiam haver problemas nos valores de casa sinal. 
+
+Em cada máquina de estados é possível perceber um nome para cada um dos estados. Como o nome de cada instrução contém, na maioria das vezes, duas palavras, o nome de cada estado são as iniciais de cada palavra juntamente com o número do estado. Uma das exceções a isso são as instruções BINARY\_, que possuem uma máquina de estados que atende todas elas. Isso acontece porque as instruções são praticamente idênticas, com uma mudança apenas no valor do seletor da ULA, que deverá representar a operação aritmética que a instrução executada vai realizar. 
+
+A outra exceção à essa definição são as instruções POP\_JUMP\_IF\_FALSE e POP\_JUMP\_IF\_TRUE. Nela, são apresentadas letras iniciais das duas primeiras palavras, juntamente com as palavras "\_PULO" ou "\_FICA", indicando que está havendo um desvio ou não. Isso porque nessa instrução deve haver uma definição sobre haver ou não o pulo e, caso houver, o próximo estado deve realizar ou não essa funcionalidade. 
+
+Como pode ser visto na Figura \ref{me_loadConst}, que representa a instrução LOAD\_CONST, os nomes dos estados são "lc1", "lc2", etc. Esse mesmo padrão pode ser observado em todos os diagramas de máquinas de estados criados. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.6]{images/LOAD_CONST.jpg}
+\caption{Representação da máquina de estados da instrução LOAD\_CONST.}
+\label{me_loadConst}
+\end{figure}
+
+No entanto, existe uma exceção quanto ao nome de um dos estados. Tal exceção acontece também em outras máquinas de estados. O estado com o nome de "lc1\_AUX" é um estado auxiliar, que foi inserido para que corrigir problemas. Durante o projeto das máquinas de estado e implementação, alguns estados foram acelerados, fazendo com que três estados virassem apenas dois. Contudo, ao realizar-se os testes, foi percebido que com a aceleração, não havia tempo para que os dados necessários para alguns componentes estivessem prontos para serem utilizados diretamente no próximo estado, fazendo com que seja necessária uma pequena pausa enquanto os dados não chegam.
+
+Pode-se utilizar, como exemplo, a mesma instrução da Figura \ref{me_loadConst}. Nela, o estado apresentado como "lc2" foi concatenado ao estado "lc1\_AUX", fazendo com que, no mesmo estado, os registradores salvassem um valor e os multiplexadores já modificassem suas saídas, permitindo que no próximo estado já se obtivesse um novo resultado da ULA. Contudo, foi percebido, durante os testes, que o multiplexador modificava sua saída antes que os registradores terminassem de salvar o dado que era esperado, salvando, então, a nova saída da ULA. Para resolver esse problema, sem modificar todos os estados e seus nomes, foi inserido um estado auxiliar entre "lc1" e "lc2", o qual recebeu o nome de "lc1\_AUX" e que possui como característica apenas ativar o salvamento de dois registradores, sendo o \textit{regTos} responsável por salvar a saída da ULA.
+
+Todas as máquinas de estados desenvolvidas para este trabalho e implementadas nele podem ser encontradas no apêndice \ref{apendice_maqEst}. Lá, elas estão divididas por classe de instrução e cada estado possui como nome as iniciais da instrução a qual pertence.
