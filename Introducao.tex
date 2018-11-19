@@ -1,1 +1,33 @@
-ááá ã ç 
+Indubitavelmente, a tecnologia está se expandindo e evoluindo cada vez mais. Inúmeras empresas trabalham para, a cada dia, surgirem novos serviços e funcionalidades que visam simplificar tarefas, divertir, informar, entre outros objetivos. Um dos pilares fundamentais para todas estas possibilidades tecnológicas é a programação.
+
+A programação é a base para de muitos sistemas que vemos no dia a dia, tanto programação com linguagens de alto nível quanto programação utilizando linguagens de baixo nível. Um exemplo de linguagem de alto nível, sobre a qual trata este trabalho, é o Python. 
+
+A linguagem Python foi lançada em 1991 pelo programador holandês Guido van Rossum. Ela é compilada e executada utilizando uma implementação criada e mantida por Rossum. Tal algoritmo, chamado de \textit{CPython} \cite{insidePVM}, é escrito em C e executa os \textit{bytecodes} gerados pelo compilador \textit{Python} tal como uma máquina virtual, não permitindo, portanto, que o código rode diretamente no processador físico da máquina. Ele funciona de modo similar à máquina virtual responsável por executar implementações feitas através da linguagem Java, sendo responsável pela execução do algoritmo.
+
+A grande vantagem de se utilizar linguagens interpretadas está na portabilidade. A portabilidade é a capacidade de algoritmo ser utilizado em inumeros sistemas diferentes. Assim, um algoritmo escrito em \py{} criado para Windows, por exemplo, também é capaz de ser executado em um sistema Linux sem precisar se recompilado para o último. Isso acontece pelo fato da máquina virtual \py{} já possuir uma implementação Linux. Então, invés de se recompilar cada um dos algoritmos para que consiga rodar em um sistema diferente, recompila-se a máquina virtual uma vez e faz com que ela rode nos sistemas. O mesmo acontece com \java{} e também explica o motivo de \java{} ser uma tão amplamente utilizada no mundo inteiro \textbf{CITAÇÃO MOTIVO JAVA SER TÃO UTILIZADO: PORTABILIDADE}.
+
+A linguagem \textit{Python} possui um compilador \cite{designCompiler} que gera, como resultado, um arquivo contendo os \textit{bytecodes} de determinada implementação feita através da linguagem. Após tal arquivo ser obtido, pode-se iniciar a execução dos \textit{bytecodes} através do interpretador. A Figura \ref{INTRO_diagCompilacao} demonstra um fluxo básico de compilação, onde tem-se como entrada um código qualquer escrito em \textit{Python}, passando por um compilador que gerará, como resultado, um arquivo contendo os \textit{bytecodes} que serão lidos pelo interpretador posteriormente. Podemos perceber que, de posse do compilador citado anteriormente, é, de certa forma, simples obter o arquivo contendo os \textit{bytecodes}. 
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=1]{images/INTRO_Compilacao.png}
+	\caption{Fluxo básico de compilação.}
+	\label{INTRO_diagCompilacao}
+\end{figure}
+
+Este trabalho visa, então, desenvolver uma arquitetura em \textit{hardware}, utilizando a linguagem de descrição de \hw{} VHDL, que seja capaz de executar algoritmos escritos originalmente em \textit{Python} e, posteriormente, convertidos para um arquivo de \textit{bytecodes}. Tendo como premissa o fato de uma arquitetura física, desenvolvida para uma funcionalidade específica, consegue obter melhores desempenhos do que a mesma aplicação executada em \sw{}, tem-se como objetivo a possibilidade de acelerar a execução de algoritmos \py{}. 
+
+Sabe-se, contudo, que a máquina virtual \py{} é eficiente e apenas tem suas perdas de desempenho em aplicações que demandam muita capacidade de execução, executando sequências complexas de cálculos e repetições. Contudo, em virtude do tempo em que este trabalho será executado juntamente com a ausência de trabalhos visando a aceleração da linguagem \py{}, tais aplicações não serão o alvo de cobertura da arquitetura. Assim, neste trabalho, será apresentada uma proposta de arquitetura capaz de executar instruções consideras básicas, por aparecerem na imensa maioria dos algoritmos. Essas instruções, que serão apresentadas nos capítulos subsequêntes, serão divididas em classes, as quais serão abordadas individualmente.
+
+Espera-se, ao final desse trabalho, que seja obtida uma arquitetura física funcional e que ela possa ser prototipada, utilizando-se FPGA (\textit{Field Programmable Gate Array}). A Figura \ref{INTRO_diagFPGA} demonstra o fluxo que se pretende implementar para execução de um programa \textit{Python} em um FPGA. Quando uma arquitetura funcional for obtida, pretende-se criar um \textit{software} de apoio que será responsável por transferir os \textit{bytecodes} da aplicação, produzidos pelo compilador \textit{Python}, para a memória interna do FPGA, de modo que a arquitetura possa, subsequentemente, iniciar a execução desta aplicação. Com as instruções encontradas no arquivo já presentes na memória do FPGA, esse executará cada uma delas, na ordem em que aparecem, sendo capaz de pular entre elas (executar \textit{jumps}).
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=1]{images/INTRO_fluxo_entrada_FPGA.png}
+	\caption{Fluxo básico que se planeja implementar para execução de um arquivo com \textit{bytecodes Python} em um FPGA.}
+	\label{INTRO_diagFPGA}
+\end{figure}
+
+Além disso, para que seja possível executar algoritmos com praticidade, uma integração \hw{}/\sw{} torna-se necessária. Assim, poder-se-á ser possível ler os arquivos de \bc{} \py{}, através de uma aplicação em \sw{}, e executá-los diretamente na arquitetura, através da mesma aplicação. Sendo essa aplicação, portanto, o agente intermediário entre o algoritmo \py{}, que deseja-se executar, e a arquitetura, que irá executá-lo.
+
+A estruturação deste trabalho foi feita com base em etapas de desenvolvimento. Assim, o capítulo \ref{metodologia} possui três seções as quais possuem as mesmas subseções. Isso acontece porque cada uma das seções desse capítulo representa uma etapa do projeto, abordando sempre os mesmos temas, porém com diferentes focos. Assim, ao final deste capítulo, é possível obter uma arquitetura.

@@ -5,15 +5,16 @@
 \usepackage{graphicx}           % pacote para importar figuras
 \usepackage{times}              % pacote para usar fonte Adobe Times
 \usepackage{mathptmx}           % pacote usar fonte Adobe Times nas fórmulas
+\usepackage[final]{pdfpages}
 
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}	% pacote para usar citações abnt
 
-\title{Implementação de um processador, em VHDL, para executar algoritmos escrito em Python}
+\title{Implementação de um processador, em VHDL, para executar algoritmos escritos em Python}
 
 \author{Bitencourt}{Tulio Pereira}
 
 
-\advisor[Prof\textsuperscript{a}.~Dr]{Neves}{Bruno Silveira}
+\advisor[Prof.~Dr.]{Neves}{Bruno Silveira}
 
 \cutter{---} 											            % número de catalogação da biblioteca, na versão final do trabalho; 
                                               % deixar em branco antes de produzir a versão final ou se a versão
@@ -24,7 +25,7 @@
 \newcommand{\as}{\textit{Assembly}}
 \newcommand{\vm}{máquina virtual}
 \newcommand{\py}{\textit{Python}}
-\newcommand{\pvm}{máquina virtual \textit{Python} }
+\newcommand{\pvm}{máquina virtual \textit{Python}}
 \newcommand{\tos}{topo da pilha}
 \newcommand{\cpy}{\textit{CPython}}
 \newcommand{\asp}{\textit{Assembly Python}}
@@ -41,19 +42,24 @@
 \newcommand{\aloop}{\textit{loop}}
 \newcommand{\aloops}{\textit{loops}}
 \newcommand{\pc}{contador de programa}
+\newcommand{\java}{\textit{Java}}
+\newcommand{\mux}{\textit{mux}}
+\newcommand{\enable}{\textit{enable}}
+\newcommand{\clock}{\textit{clock}}
+
                                                   
 %%%% Se não colocar a banca, a folha de aprovação não aparece                                                  
 
-\banca[Prof.~Dr.]{Pinho}{Leonardo Bidese de}			% membro da banca de defesa (orientador não entra)
+\banca[Prof.~Me.]{Nunes}{Gerson Alberto Leiria}			% membro da banca de defesa (orientador não entra)
 \inst{Universidade Federal do Pampa}							% instituição do membro da banca
 
-\banca[Prof.~Dr.]{Camargo}{Sandro da Silva}       % membro da banca de defesa 
+\banca[Prof.~Me.]{Junior}{Julio Saraçol Domingues}       % membro da banca de defesa 
 \inst{Universidade Federal do Pampa}							% instituição do membro da banca
 
-\banca[Dr.]{Perez}{Naylor}                        % membro da banca de defesa 
-\inst{EMBRAPA Pecuária Sul}							          % instituição do membro da banca
+%\banca[Dr.]{Perez}{Naylor}                        % membro da banca de defesa 
+%\inst{EMBRAPA Pecuária Sul}							          % instituição do membro da banca
 
-\defesa{12}{dezembro}{2017}                       % data da defesa - dia, mês e ano
+\defesa{8}{dezembro}{2018}                       % data da defesa - dia, mês e ano
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -75,10 +81,8 @@
 \keyword{VHDL}
 \keyword{Python}
 \keyword{Processador}
-\keyword{circuitos integrados}
-\keyword{quartus}
+\keyword{circuitos Integrados}
 \keyword{máquina virtual}
-\keyword{UNIPAMPA}
 
 \sloppy % para o texto não ficar esquisito quando se usar elementos muito compridos que não podem ser separados.
 
@@ -98,7 +102,7 @@
 %
 
 \begin{dedicatoria}
-Dedico este trabalho ao meu gato, ao meu cachorro e ao meu papagaio.
+%Dedico este trabalho ao meu gato, ao meu cachorro e ao meu papagaio.
 \end{dedicatoria}
 
 %
@@ -112,14 +116,14 @@ Dedico este trabalho ao meu gato, ao meu cachorro e ao meu papagaio.
 %
 
 \chapter*{Agradecimento}
-Agradeço à Antarctica pelas Brahminhas que eles mandaram.
+%Agradeço à Antarctica pelas Brahminhas que eles mandaram.
 
 %
 % Epígrafe (opcional)
 %
 \begin{epigrafe}
-``If I have seen farther than others, it is because I stood on the shoulders of giants.''\\
---- Sir~Isaac Newton
+%``If I have seen farther than others, it is because I stood on the shoulders of giants.''\\
+%--- Sir~Isaac Newton
 \end{epigrafe}
 
 %
@@ -127,8 +131,19 @@ Agradeço à Antarctica pelas Brahminhas que eles mandaram.
 %
 
 \begin{abstract}
-Este documento é um exemplo de como formatar documentos para os cursos de graduação e pós-graduação da UNIPAMPA usando as classes \LaTeX\ 
-disponibilizadas pelo UTUG\@ e modificadas pela Prof. Ana Paula Lüdtke Ferreira, para atender às exigências expressas no manual de normalização da UNIPAMPA. Ao mesmo tempo, pode servir de consulta para comandos mais genéricos. \emph{O texto do resumo não deve conter mais do que 500 palavras, mas também não deve ser tão curto quanto esse.}
+Esta monografia apresenta a implementação de um processador, criado em VHDL, capaz de executar algoritmos escritos em \py{}. Nele, é mostrada a sequência de passos seguidos para que fosse possível obter uma arquitetura funcional e, futuramente, a conexão diretamente com o compilador nativo da linguagem Python.
+
+Inicialmente, foi realizada uma análise de requisitos, ou seja, uma definição de quais seriam as instruções do código \as{} da linguagem \py{} que seriam implementadas diretamente na arquitetura. Essa teve como objetivo listar as instruções básicas da linguagem, as quais podem ser encontradas na grande maioria dos algoritmos implementados em \py{}. Assim, torna-se viável executar algoritmos básicos da linguagem diretamente na arquitetura.
+
+Após a definição de quais instruções seriam implementadas, foi feito outro levantamento de requisitos. Nesse caso, os requisitos analisados foram os de componentes físicos. Para fazer isso, todas as instruções escolhidas foram separadas em diferentes classes quanto a suas funcionalidades. Essas classes são: gerenciamento de dados, operações aritméticas e comparações, pulos/desvios e chamadas ou retornos de funções. Além disso, foram definidos os componentes básicos necessários para o correto funcionamento da arquitetura, tais como a leitura de instruções e o incremento do contador de programa (PC) a cada instrução executada.
+
+Então, com de posse da lista de componentes a serem utilizados na arquitetura, foram realizadas as criações de arquiteturas parciais, as quais foram desenvolvidas especificamente para cada uma das classes de instruções. Nelas, alguns componentes apareciam em mais de uma arquitetura parcial, porém na arquitetura final eram únicos. Então, ao final deste fragmento de implementação, todas as arquiteturas foram integradas em apenas uma e foram inseridos multiplexadores para que fosse possível que o mesmo componente pudesse atender a mais de uma classe de instruções e, consequentemente, receber mais conexão de entrada vinda de mais de um componente.
+
+Por último, foi feito o projeto de uma unidade de controle, a qual é responsável por comandar todos os componentes presentes na arquitetura, definido seus sinais de controle e os repassando. Para isso, foram criadas máquinas de estados individuais para cada uma das instruções e foram implementadas gerando apenas uma. Com exceção das instruções BINARY\_, todas as instruções possuem uma máquina de estados única e independente. Foi definido, ainda, que o primeiro estado de todas as máquinas seria o mesmo.
+
+Portanto, ao final deste trabalho parcial, foi possível obter uma arquitetura funcional, a qual consegue executar corretamente todas as instruções listadas e analisadas no decorrer do trabalho. Contudo, essa arquitetura ainda não é integrada com o compilador Python, não executando, por ora, os \bc{} da linguagem. 
+
+A próxima parte deste trabalho, então, será focada na integração da arquitetura com o compilador \py{}. Nessa, também espera-se fazer melhorias significativas na arquitetura, melhorando sua frequência de operação, área ocupada no chip e eficiência energética. 
 \end{abstract}
 
 %
@@ -136,12 +151,22 @@ disponibilizadas pelo UTUG\@ e modificadas pela Prof. Ana Paula Lüdtke Ferreira,
 % como parâmetros devem ser passadas as palavras-chave na outra língua, separadas por vírgulas:
 %
 
-\begin{englishabstract}{Electronic document preparation, \LaTeX, ABNT, UNIPAMPA}
-This document is an example on how to prepare documents at UNIPAMPA
-using the \LaTeX\ classes provided. At the same time, it
-may serve as a guide for general-purpose commands. \emph{The text in
-the abstract should not contain more than 500~words although it must not be
-as short as this one.}
+\begin{englishabstract}{VHDL, Python, Processor, Integrated Circuits, Virtual Machine.
+
+This monograph presents a processor implementation, created in VHDL, able to execute algorithms written in Python. Here it is showed the sequence of steps followed to turn possible to obtain a functional architecture and, in the future, a directly connection with the native Python compiler. 
+
+As first step, it was realized an analyze of requirements, or in other words, a definition of Python Assembly code instructions to be implemented directly in the architecture. This step had as objective to list the basic instructions of the language, that are used in the majority of algorithms implemented in Python. Thus, turning able to execute basic algorithms of this language directly in the architecture. 
+
+After the definition of which instructions would be implemented, another requirement gathering was done. In this case, the analyzed requirements were about the physical components used. To do this, all chosen instructions were divided in classes based in their functionalities. The classes are: data management, arithmetical and comparison operations, jumps and calls or returns from functions. Beyond that, it was defined the basic components needed to the correct operation of the architecture, such as the instruction reading and the program counter (PC) increment after each instruction execution. 
+
+Then, with the list of components that would be used in the architecture, it was projected the partial architectures, which were developed specifically to each class of instructions. In that, some components appeared in more than one partial architecture, but in the final architecture there are only one of each. Then, in the end of this implementation fragment, all architectures were integrated in only one and were inserted multiplexers, turning able the same component being used in more than one class of instructions and, consequently, receive more than one input connection from several components. 
+
+At last, it was made the project of the control unit, which is responsible of managing all components showed in the architecture, defining their control signals. To do this, there were created individual state machines to each instruction chosen. With the only one exception, BINARY\_ instructions, every instruction have a unique state machine. It was defined that the first state of each state machine would be the same. 
+
+Therefore, in the end of this first step, it was possible to obtain a functional architecture, which is able to execute correctly all the instructions listed and analyzed during the work. However, this architecture is not integrated yet with the Python compiler, not executing directly the Python bytecodes. 
+
+The next step of this project will focus on the integration between the architecture created and the Python compiler. It is also expected the architecture to be improved, including the operation frequency, chip occupation area and energetic efficiency.
+}
 \end{englishabstract}
 
 %
@@ -174,21 +199,39 @@ as short as this one.}
 % \newcommand{\MT}{Máquina de Turing} e use \MT sempre que quiser que o termo apareça completo.
 % Isso torna a leitura do texto mais fluente.
 \begin{listofabbrv}{UNIPAMPA}
-        \item[TOS]     	Top Of the Stack
-        \item[PC]		Program Counter
-        \item[ACM]      Association for Computing Machinery
-        \item[ISA]		Instructions Set Architecture
-        \item[IEEE]     Institute of Electrical and Electronics Engineers 
-		\item[VM]		Virtual Machine
-		\item[PVM]		Python Virtual Machine
-        \item[UNIPAMPA] Universidade Federal do Pampa
+        \item[TOS]     		\textit{Top Of the Stack}
+        \item[PC]			\textit{Program Counter}
+        %\item[ACM]      	\textit{Association for Computing Machinery}
+        \item[ISA]			\textit{Instructions Set Architecture}
+        %\item[IEEE]     	\textit{Institute of Electrical and Electronics Engineers} 
+		\item[VM]			\textit{Virtual Machine}
+		\item[PVM]			\textit{Python Virtual Machine}
+        \item[UNIPAMPA] 	Universidade Federal do Pampa
+        \item[regPc]		Registrador de Program counter
+        \item[regOp1]		Registrador de Operando 1
+        \item[regOp2] 		Registrador de Operando 2
+        \item[regTos]		Registrador de topo da pilha
+        \item[regEnd]		Registrador de Endereço
+        \item[memExt]		Memória Externa
+        \item[regMemExt]	Registrador de Memória Externa
+        \item[regPilha]		Registrador de Pilha
+        \item[regComp]		Registrador de Comparação
+        \item[regOverflow]	Registrador de \textit{Overflow}
+		\item[memInstr]		Memória de Instruções        
+        \item[regInstr]		Registrador de Instrução
+        \item[regArg]		Registrador de Argumento
+        \item[ULA]			Unidade Lógica Aritmética
+        \item[muxPilha]		Multiplexador da Pilha
+        \item[muxOp1]		Multiplexador do Operando 1
+        \item[muxOp2]		Multiplexador do Operando 2
+        \item[muxRegOp1]	Multiplexador do Registrador de Operando 1        
 \end{listofabbrv}
 
 % Lista de símbolos
-\begin{listofsymbols}{$\alpha\beta\pi\omega$}
-       \item[$\sum{\frac{a}{b}}$] Somatório do produtório
-       \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
-\end{listofsymbols}
+%\begin{listofsymbols}{$\alpha\beta\pi\omega$}
+%       \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+%       \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+%\end{listofsymbols}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
@@ -224,11 +267,15 @@ as short as this one.}
 \input{Referencial_Teorico}
 
 \chapter{Metodologia}
+\label{metodologia}
 \input{Metodologia}
 
-% \chapter{Estado da arte}
-% \label{cap-estado-da-arte}
-% \input{RevisaoBibliografica}
+\chapter{Resultados}
+\input{Resultados}
+
+\chapter{Considerações Finais}
+\label{consideracoes-finais}
+\input{ConsideracoesFinais}
 
 % \chapter{A minha contribuição}
 % \label{cap-minha-contribuicao}
@@ -246,35 +293,40 @@ as short as this one.}
 % O arquivo de formatação abntex2-alf.bst coloca todas as entradas no formato correto.
 %
 
-\nocite{icgt04}
-\nocite{nagl86set}
-\nocite{microsoft05Csharp}
-\nocite{meinke92universal}
-\nocite{marchi04verificacao}
-\nocite{biberstein97coopnthesis}
-\nocite{anderson96model}
-\nocite{alur01partial}
-\nocite{abramski94domain}
-\nocite{abadi97alogic}
+%\nocite{icgt04}
+%\nocite{nagl86set}
+%\nocite{microsoft05Csharp}
+%\nocite{meinke92universal}
+%\nocite{marchi04verificacao}
+%\nocite{biberstein97coopnthesis}
+%\nocite{anderson96model}
+%\nocite{alur01partial}
+%\nocite{abramski94domain}
+%\nocite{abadi97alogic}
 
 \bibliographystyle{abntex2-alf}
 \bibliography{bibliografia}
 
-\chapter*{Glossário}
+%\chapter*{Glossário}
+%
+%O glossário é opcional. Se precisar, consulte o manual sobre o seu formato adequado.
 
-O glossário é opcional. Se precisar, consulte o manual sobre o seu formato adequado.
 
 \appendix
+\chapter{Esboço da Arquitetura Completa}
+\label{apendice_arq}
+\input{apendice/apArq}
 
-\chapter{Nome do Apêndice}
+\chapter{Máquinas de Estados}
+\label{apendice_maqEst}
+\input{apendice/ap1}
+%\includepdf[pages=-]{apendice/apendice_maquinasEstados.pdf}
 
-Depois do termo ``appendix'', qualquer capítulo aparecerá na forma correta, com o termo ``Apêndice''. Use apêndices quando houver material produzido pelo autor que ajuda no entendimento do trabalho mas que não faz parte do texto principal. Modelos de questionários utilizados, código fonte de programas, partituras completas, provas de teoremas acessórias, etc.
+%\annex
 
-\annex
-
-\chapter{Nome do Anexo}
-
-Depois do termo ``annex'', qualquer capítulo aparecerá na forma correta, com o termo ``Anexo'' no título. Use anexos quando se tratar de material não produzido pelo autor, mas necessário no entendimento do trabalho. Por exemplo, definições matemáticas, sintaxe formal de linguagens de programação, trechos de manuais, etc.
+%\chapter{Nome do Anexo}
+%
+%Depois do termo ``annex'', qualquer capítulo aparecerá na forma correta, com o termo ``Anexo'' no título. Use anexos quando se tratar de material não produzido pelo autor, mas necessário no entendimento do trabalho. Por exemplo, definições matemáticas, sintaxe formal de linguagens de programação, trechos de manuais, etc.
 
 %
 % Finalização do documento. A partir desse comando qualquer coisa escrita será ignorada:
