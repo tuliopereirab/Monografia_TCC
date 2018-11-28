@@ -1,6 +1,6 @@
-A seção de resultados é um ponto crucial de um trabalho acadêmico. Nesta, serão apresentados os resultados preliminares obtidos durante a primeira de duas partes de implementação. Como já dito, foi realizada a implementação de um processador capaz de executar os \bc{} da linguagem \py{}. Contudo, por ora, somente existe a arquitetura física implementada, capaz de executar as instruções apresentadas neste trabalho.
+Nesta, serão apresentados os resultados preliminares obtidos durante a primeira de duas partes de implementação. Como já dito, foi realizada a implementação de um processador capaz de executar os \bc{} da linguagem \py{}. Contudo, por ora, somente existe a arquitetura física implementada, capaz de executar as instruções apresentadas neste trabalho.
 
-Como ainda não existe uma relação entre o compilador \py{} e a arquitetura, existe a necessidade de se inserir os dados a serem computados nela manualmente diretamente no componente memória de instruções (\textit{memInstr}). Além disso, o código binário correspondente a cada instruções ainda não é fiel à linguagem \py{}, visto que ainda não foi realizado um estudo aprofundado sobre o código de cada instrução \py{}. Então, foi definido um código padrão, o qual é reconhecido pelo controle, para que seja possível executar as instruções corretamente.
+Como ainda não existe uma conexão entre o compilador \py{} e a arquitetura, existe a necessidade de se inserir os dados a serem computados nela manualmente diretamente no componente memória de instruções (\textit{memInstr}). Além disso, o código binário correspondente a cada instruções ainda não é o mesmo definido na compilação da linguagem \py{}, visto que ainda não foi realizado um estudo aprofundado sobre o código binário que de cada instrução \py{} que será lido ao ser executado na \pvm{}. Então, foi definido um código padrão, o qual é reconhecido pelo controle, para que seja possível executar as instruções corretamente.
 
 Na segunda parte deste trabalho, tem-se como objetivos: modificar o controle para que se utilize os códigos binários \py{} e realizar uma ligação entre o compilador \py{} e a arquitetura, permitindo a execução automática, por meio de um intermediário (\sw{}), na arquitetura. 
 
@@ -10,7 +10,7 @@ Assim, por ora, serão apresentados no neste capítulo apenas resultados gerais, j
 \label{carac_gerais}
 Para iniciar a análise das características gerais encontradas para a arquitetura, precisa-se definir quais ferramentas foram utilizadas para obter tais informações. Como foi dito na subseção \ref{desc_hw_vhdl}, foi utilizada uma ferramenta que possibilita a aquisição de resultados e, posteriormente, prototipação em um FPGA. Seu nome é \textit{Quartus} e ela foi criada, inicialmente, pela Altera, que foi comprada pela Intel. Essa última incorporou a primeira em seus produtos e os gerencia.
 
-A ferramenta \textit{Quartus} possibilita desenvolver o projeto em VHDL e, após, compilá-lo. Ao fazer esse procedimento, gera-se uma lista de características sobre a arquitetura e, dentre elas, estão a frequência de operação e total de componentes utilizados para criá-la. A primeira subseção, de número \ref{freq_op}, apresentará a frequência de operação máxima adquirida até o momento, juntamente com uma análise baseada nos trabalhos correlatos apresentados na seção \ref{trab_correlatos}. A segunda subseção apresentará os valores obtidos com relação à área ocupada pela arquitetura quando prototipada em no FPGA Cyclone III da Altera. 
+A ferramenta \textit{Quartus} possibilita desenvolver o projeto em VHDL e, após, compilá-lo. Ao fazer esse procedimento, gera-se uma lista de características sobre a arquitetura e, dentre elas, estão a frequência de operação e total de componentes utilizados para criá-la. A primeira subseção, de número \ref{freq_op}, apresentará a frequência de operação máxima adquirida até o momento, juntamente com uma análise baseada nos trabalhos correlatos apresentados na seção \ref{trab_correlatos}. A segunda subseção apresentará os valores obtidos com relação à área ocupada pela arquitetura quando prototipada em no FPGA Cyclone III da Altera, dispositivo de número EP3C25F324C6. 
 
 \subsection{Frequência Máxima de Operação}
 \label{freq_op}
@@ -23,7 +23,8 @@ O valor do período pode ser obtido obtido através do valor inverso da frequência
 \label{periodo}
 T = 1/f
 \end{equation}
-Nos trabalhos correlatos analisados, foi possível observar que, na maioria deles, as frequências de operações máximas definidas pelos projetistas giraram em torno dos 100 MHz. É possível que suas frequências máximas reais tenham sido pouco superior a isso, mas para facilitar a visualização e os testes, eles arredondaram o valor para baixo.
+
+Nos trabalhos correlatos analisados, foi possível observar que, na maioria deles, as frequências de operações máximas definidas pelos projetistas giraram em torno dos 100 MHz. É possível que suas frequências máximas reais tenham sido pouco superior a isso, mas foram, provavelmente, arredondadas para um valor abaixo.
 
 A Figura \ref{quartus_freq} mostra uma imagem obtida diretamente da ferramenta \textit{Quartus}. Nela, pode ser vista a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk\_geral}, o qual representa o sinal de entrada do \clock{}. Ao entrar nesse pino, o sinal de \clock{} é transmitido para o controle e para todos os componentes que necessitam dele (registradores e memórias).  
 
@@ -34,11 +35,11 @@ A Figura \ref{quartus_freq} mostra uma imagem obtida diretamente da ferramenta \
 \label{quartus_freq}
 \end{figure}
 
-Para melhorar a frequência de funcionamento da arquitetura, juntamente com seu desempenho, serão feitas modificações durante a segunda parte de implementação deste trabalho. Espera-se superar os 100 MHz de frequência máxima, assim como os trabalhos correlatos analisados.
+Para melhorar a frequência de funcionamento da arquitetura, juntamente com seu desempenho, serão feitas modificações ainda não definidas durante a segunda parte de implementação deste trabalho. Espera-se superar os 100 MHz de frequência máxima, assim como os trabalhos correlatos analisados.
 
 \subsection{Área Ocupada em um FPGA}
 
-Ainda utilizando a ferramenta \textit{Quartus}, porém dessa vez analisando a área ocupada pela arquitetura implementada, foi possível obter a Figura \ref{area_quartus}. Nela, é possível observar todos os componentes físicos necessários para que a arquitetura funcione corretamente. 
+Ainda utilizando a ferramenta \textit{Quartus}, porém dessa vez analisando a área ocupada pela arquitetura implementada, foi possível obter a Figura \ref{area_quartus}.
 
 \begin{figure}[htp]
 \centering
@@ -47,23 +48,23 @@ Ainda utilizando a ferramenta \textit{Quartus}, porém dessa vez analisando a áre
 \label{area_quartus}
 \end{figure}
 
-Analisando ela, é possível observar que a arquitetura implementada não ocupou muito espaço do FPGA, visto que ele foi criado para suportar implementações extremamente grandes. Dentre os dados obtidos, estão:
+Analisando ela, é possível observar que a arquitetura implementada não ocupou muito espaço do FPGA, visto que ele foi criado para suportar implementações bem maiores que essa. Dentre os dados obtidos, estão:
 
 \begin{description}
 	\item[Total de elementos lógicos:] foram encontrados um total de 409 elementos lógicos, utilizados em 314 funções combinacionais e 256 registradores lógicos dedicados. Esse valor total encontrado equivale a 2\% do total suportado pelo FPGA, que é 24.624.
-	\item[Total de registradores:] foram ocupados 256 registradores. Esse valor decorre do fato de que as memórias também podem ser consideradas registradores. Assim, além dos registradores criados como componentes funcionais, os quais são controlados pela unidade de controle, existem registradores nas memórias. Além disso, a ferramenta ainda adiciona registradores extras quando entende que é necessário.
+	\item[Total de registradores:] foram ocupados 256 registradores. Além disso, a ferramenta ainda adiciona registradores extras quando entende que é necessário.
 	\item[Total de pinos:] foram ocupados apenas três pinos do FPGA, pois existem apenas três pinos externos. Dois deles de entrada (\textit{clk\_geral} e \textit{reset\_geral}) e um deles de saída (\textit{overflow\_geral}). Esses valores caracterizam 1\% do total presente no FPGA.
-	\item[Total de \bis{} de memória:] foram ocupados 12.288 \bis{} de memória dos 608.256 existentes no FPGA. Tal valor caracteriza 2\% da capacidade do FPGA.
+	\item[Total de \bis{} de memória:] foram ocupados 12.288 \bis{} de memória dos 608.256 existentes no FPGA. Tal valor caracteriza 2\% da capacidade do FPGA. 
 	\item[Multiplicador de elementos de 9 \bis{} embarcado:] como a unidade lógica aritmética possui a função de multiplicação, foi utilizado um multiplicador nativo do FPGA, o qual foi adicionado a arquitetura. Esse um multiplicador equivale a menos de 1\% do total presente em um FPGA. 
 \end{description}
 
-Ao final deste trabalho, é esperado que a arquitetura ganhe mais componentes implementados, mas também espera-se reduzir o número de recursos utilizados pelo FPGA. Para isso, serão empregadas técnicas de redução de área, visto que o objetivo é realizar o maior número de funcionalidades no menor espaço possível. 
+Ao final deste trabalho, é esperado que a arquitetura ganhe mais componentes implementados, mas também espera-se reduzir o número de recursos utilizados pelo FPGA, como por exemplo o número de registrador e de estados na máquina de estados. Para isso, serão empregadas técnicas de redução de área, visto que o objetivo é realizar o maior número de funcionalidades no menor espaço possível. 
 
 \section{Resultados de Simulações}
 \label{resultados_imp}
 Nesta seção, serão apresentados os resultados obtidos após a simulação de alguns códigos \as{} diretamente na arquitetura. Então, aqui, serão apresentados apenas resultados em códigos binários, os quais serão explicados.
 
-Para a realização das simulações, foi utilizada a ferramenta criada e mantida pela Altera, atualmente pertencente à Intel, chamada \textit{Modelsim}. Foi criado um arquivo de \textit{testbench}, o qual definiu que ocorreria uma troca de borda de \clock{} a cada 5,29 ns, definindo-se, então, o período de \clock{} como sendo 10,58 ns.
+Para a realização das simulações, foi utilizada a ferramenta criada e mantida pela Altera, atualmente pertencente à Intel, chamada \textit{Modelsim}. Foi criado um arquivo de \textit{testbench}, o qual definiu que ocorreria uma troca de borda de \clock{} a cada 5,595 ns, definindo-se, então, o período de \clock{} como sendo 11,19 ns.
 
 Antes de iniciar, alguns pontos cruciais precisam ser destacados. O primeiro deles, e mais importante, diz respeito ao código binário utilizado para as instruções. Como ainda não foi realizada a conexão entre compilador \py{} e a arquitetura, a arquitetura ainda não responde a nenhum código binário da linguagem \py{}. Assim, para que as simulações fossem realizadas, foram definidos códigos binários para cada uma das instruções. A tabela \ref{table_binaryCode} apresenta os códigos binários utilizados para cada uma das instruções.
 
@@ -75,11 +76,11 @@ Para a instrução COMPARE\_OP, a qual precisa receber códigos indicando o tipo de
 
 \input{tables/resultados/table_compareOp}
 
-Cada uma das subseções a seguir apresenta, como título, os nomes das instruções utilizadas na simulação separados por barras. Dessa forma, torna-se mais fácil encontrar a execução de uma instrução específica.
+Cada uma das subseções a seguir apresenta os testes realizados para determinada funcionalidade, a qual pode ser observada em seus títulos. Dessa forma, torna-se mais fácil encontrar a execução de um tipo de instrução específico.
 
 Como todos os dados estão em códigos binários, as imagens apresentadas serão as originais retiradas diretamente da ferramenta \textit{Modelsim}. Nelas, serão mostradas as memórias (incluindo a pilha) e serão explicados os pontos a serem observados em cada uma. Já é esperado que as imagens apresentadas possam ser de difícil entendimento, então o máximo de informações possível será adicionado ao texto.
 
-\subsection{Teste 1: LOAD\_CONST/LOAD\_FAST/STORE\_FAST/BINARY\_ADD}
+\subsection{Teste 1: Soma entre variável e constante}
 
 Para a realização do primeiro teste, foi criado um algoritmo que utiliza todas as instruções listadas no título. A Figura \ref{teste1_code} apresenta o código criado.
 
@@ -123,7 +124,7 @@ A Figura \ref{teste1_wave} apresenta uma representação, gerada pela ferramenta, 
 
 Para os próximos testes, não serão apresentadas as imagens mostrando as formas de ondas, visto que não é possível entendê-las.
 
-\subsection{Teste 2: LOAD\_CONST/CALL\_FUNCTION/STORE\_FAST/BINARY\_SUBTRACT}
+\subsection{Teste 2: Chamada e retorno de função}
 
 Para o segundo teste, foi utilizado o algoritmo encontrado na Figura \ref{teste2_code}. Seguindo a mesma sequência de apresentação do teste 1, a Figura \ref{teste2_memInstr} apresenta a memória de instruções já com o código binário adicionado. 
 
@@ -165,7 +166,7 @@ Conclui-se, através dessa Figura, que ao chamar-se uma função, foi alocado um bl
 
 Ainda sobre a Figura \ref{teste2_pilha}, é possível observar que na posição 00000011 existe um dado representando o segundo operando da função. Sua existência é completamente ignorada pelo sistema, visto que, para o sistema, só existem dados até o ponteiro de topo, o qual se encontra apontando para a posição 00000010. Assim, no primeiro LOAD realizado, a posição 00000011 será sobrescrita. 
 
-\subsection{Teste 3: LOAD\_CONST/COMPARE\_OP/POP\_JUMP\_IF\_FALSE}
+\subsection{Teste 3: Procedimento \textit{if}}
 
 A última simulação realizada, chamada de Teste 3, tem como algoritmo utilizado o conteúdo da Figura \ref{teste3_code}. Nele, foram definidas duas comparações e dois pulos caso essa comparação retornasse como sendo falsa. A primeira comparação tem como operando dois valores idênticos e compara se eles são iguais. A segunda, tem os valores 00000001 e 00000000 e compara se o primeiro é menor que o segundo. 
 
@@ -176,7 +177,7 @@ A última simulação realizada, chamada de Teste 3, tem como algoritmo utilizado o
 \label{teste3_code}
 \end{figure}
 
-Após cada uma das comparações, foi adicionado um pulo condicional levando a uma instrução que executa um LOAD\_CONST de valores diferentes para que seja possível distinguir qual foi o destino do desvio. Caso nenhum desvio seja tomado, tem-se uma representação NOP, a qual não é nenhuma instrução específica mas representa um espaço vazio. Quando se executa um espaço vazio de memória, o sistema simplesmente reconhece que o algoritmo foi finalizado, não escrevendo, portanto, nenhum valor na pilha e executando um \textit{loop} infinito durante o resto do tempo definido para a execução.
+Após cada uma das comparações, foi adicionado um pulo condicional levando a uma instrução que executa um LOAD\_CONST de valores diferentes para que seja possível distinguir qual foi o destino do desvio. Caso nenhum desvio seja tomado, tem-se uma representação NOP, a qual não é nenhuma instrução específica mas representa um espaço vazio. Quando se executa um espaço vazio de memória, o sistema simplesmente reconhece que o algoritmo foi finalizado, não escrevendo, portanto, nenhum valor na pilha e executando um \textit{loop} infinito durante o resto do tempo definido para a execução. Esse \textit{loop} é definido ficando apenas no estado inicial, o qual salvará o valor de \textit{OpCode} e, como não encontrará nada, reiniciará e salvará novamente. Tal sequência acontece até que se chegue ao final do tempo de simulação definido.
 
 A Figura \ref{teste3_memInstr} apresenta uma visão da memória de instruções mostrando o código binário adicionado nela para a execução do Teste 3. É possível visualizar os destinos dos pulos em posições na primeira linha da imagem, de cima para baixo.
 
@@ -201,7 +202,7 @@ O resultado desta simulação pode ser visto na Figura \ref{teste3_pilha}, a qual 
 
 Os resultados apresentados na seção \ref{carac_gerais} estão de acordo com o que era esperado. A frequência máxima de operação apresentada, a qual foi retirada da ferramenta \textit{Quartus}, combina com os resultados encontrados pelos trabalhos correlatos.
 
-Tanto características como frequência e área não foram otimizadas e não foram uma preocupação nesta parte da implementação. Por ora, foram preocupações apenas questões de funcionalidade e correções de \textit{bugs}. Após finalizadas as implementações gerais, quando for possível declara que a arquitetura está pronta e funcional, serão aplicadas técnicas de melhoria de desempenho e economia de área e energia. 
+Tanto características como frequência e área não foram otimizadas e não foram uma preocupação nesta parte da implementação. Por ora, foram preocupações apenas questões de funcionalidade e correções de \textit{bugs}. Após finalizadas as implementações gerais, quando for possível declarar que a arquitetura está pronta e funcional, conforme previsto, serão aplicadas técnicas de melhoria de desempenho e economia de área e energia. 
 
 Os resultados referentes à eficiência energética não foram apresentados pois ocorreram erros durante a implementação da sequência de testes energéticos, definida pelo próprio \textit{Quartus}. Um dos arquivos principais, o qual deveria ser carregado no processo automaticamente pela ferramenta, não foi encontrado. Informações referentes à eficiência energética serão apresentadas apenas na parte final deste trabalho.
 

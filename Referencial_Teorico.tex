@@ -9,7 +9,7 @@ A grande vantagem de se utilizar uma linguagem interpretada, ou seja, baseada em
 
 A linguagem \py{}, como dito anteriormente, teve sua primeira aparição no ano de 1990. Ela é uma linguagem interpretada, com seu interpretador principal e básico sendo o \cpy{}, que será apresentado na seção \ref{cpython_func}. 
 
-Segundo \cite{Sandler2018}, que escreveu para a revista Business Insider, a linguagem \py{} aparece na sétima posição em uma lista das 14 linguagens mais populares, de acordo com 100 mil desenvolvedores. Isso mostra que a linguagem está muito próxima de linguagens como \textit{Java} \cite{Grand1997}, a qual aparece na quinta posição e é muito conhecida, principalmente, por permitir a criação de algoritmos que possam ser executados nos mais variados dispositivos. A lista também mostra a enorme difusão de linguagens voltadas à aplicações para \textit{Internet} (\textit{web}), tendo, em suas três primeiras posições, linguagens como \textit{Javascript} \cite{Flanagan2006}, HTML \cite{Lloyd2008} e \textit{Cascading Style Sheets}, conhecida como CSS \cite{Bos2011}.
+Segundo \citeonline{Sandler2018}, que escreveu para a revista Business Insider, a linguagem \py{} aparece na sétima posição em uma lista das 14 linguagens mais populares, de acordo com 100 mil desenvolvedores. Isso mostra que a linguagem está muito próxima de linguagens como \textit{Java} \cite{Grand1997}, a qual aparece na quinta posição e é muito conhecida, principalmente, por permitir a criação de algoritmos que possam ser executados nos mais variados dispositivos. A lista também mostra a enorme difusão de linguagens voltadas à aplicações para \textit{Internet} (\textit{web}), tendo, em suas três primeiras posições, linguagens como \textit{Javascript} \cite{Flanagan2006}, HTML \cite{Lloyd2008} e \textit{Cascading Style Sheets}, conhecida como CSS \cite{Bos2011}.
 
 Ainda sobre a lista publicada pela revista, muitos dos desenvolvedores entrevistados acreditam que \py{} é a melhor e mais fácil linguagem para que uma pessoa que nunca programou, mas gostaria de ingressar na área, começar. Segundo eles, ela é uma linguagem com alta facilidade de leitura, podendo ser entendida facilmente. Isso se dá, além de outros fatores, pela simplificação na declaração de variáveis, onde o usuário não precisa entender onde é aplicado cada tipo de variável para que consiga programar. Na maioria das linguagens, define-se um tipo de variável para cada funcionalidade. Já em \py{}, basta o usuário utilizar uma variável, mesmo sem declará-la, que o compilador a reconhecerá e permitirá que os dados sejam salvos nela, sem restrição sobre tipo (\textit{int}, \textit{float}, \textit{char}).
 
@@ -23,7 +23,7 @@ Outras áreas da ciência que utilizam \py{} para criação de seus algoritmos são a
 
 Voltando para a computação sem foco em alguma área específica, pode-se citar aplicações de \py{} em algoritmos voltados para a \textit{web}, tal como \cite{Forcier2008}, inteligência artificial (\textit{Machine Learning}) \cite{Pedregosa2012} e \textit{Data Science} \cite{Grus2015}. Dentro da matemática, também, a ferramenta \textit{Matlab} possui suporte a algoritmos \py{} \cite{MathWorks2015}.
 
-Por último, pode-se citar como uma aplicação para a linguagem \py{} a possibilidade de descrever arquiteturas físicas, tal como a linguagem VHDL faz. Segundo \cite{Villar2011}, isso pode ser feito por meio um pacote chamado \textit{MyHDL}, o qual consegue converter um código \py{} em VHDL, gerando uma arquitetura que pode ser simulada com a ajuda dos mesmos simuladores utilizados para implementações VHDL nativas.
+Por último, pode-se citar como uma aplicação para a linguagem \py{} a possibilidade de descrever arquiteturas físicas, tal como a linguagem VHDL faz. Segundo \citeonline{Villar2011}, isso pode ser feito por meio um pacote chamado \textit{MyHDL}, o qual consegue converter um código \py{} em VHDL, gerando uma arquitetura que pode ser simulada com a ajuda dos mesmos simuladores utilizados para implementações VHDL nativas.
 
 \subsection{Máquina Virtual da linguagem \py{} em \textit{Hardware}}
 \label{pvm_hardware}
@@ -64,7 +64,7 @@ Então, sabendo que existem diversas semelhanças nos modos de funcionamento das l
 
 \subsection{picoJava-I}
 \label{pico}
-O primeiro trabalho analisado pertence a \cite{OConnor1997}, que desenvolveu a arquitetura \textit{picoJava-I}. Seu trabalho é uma proposta de arquitetura que visa executar algoritmos escritos em \java{} diretamente em \hw{}. Seu objetivo específico é permitir a execução de, praticamente, qualquer algoritmo escrito em \java{} em \hw{}.
+O primeiro trabalho analisado pertence a \citeonline{OConnor1997}, que desenvolveu a arquitetura \textit{picoJava-I}. Seu trabalho é uma proposta de arquitetura que visa executar algoritmos escritos em \java{} diretamente em \hw{}. Seu objetivo específico é permitir a execução de, praticamente, qualquer algoritmo escrito em \java{} em \hw{}.
 
 Para iniciar sua análise, ele apresenta diversos dados mostrando as taxas de execução de cada classe de instruções. Com esses dados, é possível perceber que grande parte das operações executadas são de gerenciamento de dados, sendo o carregamento de variáveis locais sendo executada 34,5\% das vezes, seguida por carregamentos vindos da memória, que é executada em 20,2\% das vezes. 
 
@@ -74,7 +74,7 @@ Para realizar os testes de suas arquitetura, foi definida uma frequência de 100 
 
 \subsection{JAIP-MP}
 \label{jaipmp}
-O segundo trabalho, proposto por \cite{Tsai2015a}, é um processador de quatro \textit{cores} feito para executar algoritmos escritos em \java{}. Foi atribuido à arquitetura o nome de JAIP-MP (\textit{Java Application IP - Multi-core Processor}).
+O segundo trabalho, proposto por \citeonline{Tsai2015a}, é um processador de quatro \textit{cores} feito para executar algoritmos escritos em \java{}. Foi atribuido à arquitetura o nome de JAIP-MP (\textit{Java Application IP - Multi-core Processor}).
 
 Nesse trabalho, a arquitetura implementada carregamentos dinâmicos de classe e execução dupla de \textit{bytecodes}, permitindo que duas instruções sejam executadas simultaneamente em cada \textit{core}. Além disso, foram implementados métodos de utilização da memória \textit{cache} para o funcionamento de objetos, tais como utilizados na linguagem \java{}. Ou seja, é possível alocar objetos diretamente na memória e manipulá-los. Com a possibilidade de execução simultânea de instruções, é possível perceber o uso de \textit{multithreading} por parte da arquitetura proposta. 
 
@@ -82,7 +82,7 @@ Para a realização dos testes, foi definida uma frequência de 83,3 MHz e utilizad
 
 \subsection{JOP - \textit{Java Optimized Processor}}
 \label{jop}
-O autor \cite{Schoeberl2008} propôs uma arquitetura de um processador \java{} que visa a execução de sistemas embarcados de tempo real. À sua arquitetura, foi dado o nome de JOP. 
+O autor \citeonline{Schoeberl2008} propôs uma arquitetura de um processador \java{} que visa a execução de sistemas embarcados de tempo real. À sua arquitetura, foi dado o nome de JOP. 
 
 Nela, é possível perceber técnicas utilizadas para melhorar o desempenho, tais como utilização de \textit{pipelines}, \textit{caches} e predição de desvios. JOP é classificada pelo autor como uma arquitetura RISC e baseada em pilha. Suas instruções são otimizadas para o funcionamento juntamente com os \textit{bytecodes} \java{}. É uma arquitetura considerada como "completamente \textit{pipeline}", por ser executada tal técnica em todas as execuções feitas nela.
 
@@ -90,7 +90,7 @@ Para a obtenção de resultados referentes à performance, não foram utilizados \te
 
 \subsection{JAIP}
 
-Esse trabalho, proposto por \cite{Tsai2015}, apresenta uma arquitetura de baixo custo, baseada em memória de pilha e manipulação de exceções. Seu trabalho apresenta uma execução dupla de instruções utilizando técnicas de \textit{pipelining} e \hw{} de baixa complexidade, segundo o autor. Esse trabalho está relacionado com o trabalho apresentado na subseção \ref{jaipmp}, o qual pertence ao mesmo autor. 
+Esse trabalho, proposto por \citeonline{Tsai2015}, apresenta uma arquitetura de baixo custo, baseada em memória de pilha e manipulação de exceções. Seu trabalho apresenta uma execução dupla de instruções utilizando técnicas de \textit{pipelining} e \hw{} de baixa complexidade, segundo o autor. Esse trabalho está relacionado com o trabalho apresentado na subseção \ref{jaipmp}, o qual pertence ao mesmo autor. 
 
 Sendo um sistema embarcado, esse trabalho define a utilização de uma classe \java{} dinâmica integrada, através de \textit{buffers}, com um \textit{core} \java{}, classificado como uma arquitetura RISC. Em outras palavras, esse trabalho visa executar algoritmos em \java{} utilizando, como ponto de partida, um \sw{} e \textit{buffers}, conectado a uma arquitetura RISC. Para a execução dos algoritmos, são utilizados os próprios \textit{bytecodes} da linguagem \java{}.  
 

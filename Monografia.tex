@@ -79,10 +79,11 @@
 % exceto no caso de abreviaturas.
 %
 \keyword{VHDL}
+\keyword{FPGA}
 \keyword{Python}
 \keyword{Processador}
-\keyword{circuitos Integrados}
-\keyword{máquina virtual}
+\keyword{Circuitos Integrados}
+\keyword{Máquina virtual}
 
 \sloppy % para o texto não ficar esquisito quando se usar elementos muito compridos que não podem ser separados.
 
@@ -101,9 +102,9 @@
 % Dedicatoria (opcional)
 %
 
-\begin{dedicatoria}
+%\begin{dedicatoria}
 %Dedico este trabalho ao meu gato, ao meu cachorro e ao meu papagaio.
-\end{dedicatoria}
+%\end{dedicatoria}
 
 %
 % Agradecimentos (opcional)
@@ -115,35 +116,35 @@
 % mais limpo, claro e conciso.
 %
 
-\chapter*{Agradecimento}
+%\chapter*{Agradecimento}
 %Agradeço à Antarctica pelas Brahminhas que eles mandaram.
 
 %
 % Epígrafe (opcional)
 %
-\begin{epigrafe}
+%\begin{epigrafe}
 %``If I have seen farther than others, it is because I stood on the shoulders of giants.''\\
 %--- Sir~Isaac Newton
-\end{epigrafe}
+%\end{epigrafe}
 
 %
 % Resumo na língua do documento (obrigatório). Segundo o manual da UNIPAMPA, deve ser escrito em um único parágrafo:
 %
 
 \begin{abstract}
-Esta monografia apresenta a implementação de um processador, criado em VHDL, capaz de executar algoritmos escritos em \py{}. Nele, é mostrada a sequência de passos seguidos para que fosse possível obter uma arquitetura funcional e, futuramente, a conexão diretamente com o compilador nativo da linguagem Python.
+Esta monografia apresenta a estratégia adotada para implementação de um processador, criado em VHDL, capaz de executar algoritmos escritos em \py{}. % e, futuramente, a conexão diretamente com o compilador nativo da linguagem Python.
 
-Inicialmente, foi realizada uma análise de requisitos, ou seja, uma definição de quais seriam as instruções do código \as{} da linguagem \py{} que seriam implementadas diretamente na arquitetura. Essa teve como objetivo listar as instruções básicas da linguagem, as quais podem ser encontradas na grande maioria dos algoritmos implementados em \py{}. Assim, torna-se viável executar algoritmos básicos da linguagem diretamente na arquitetura.
+Para isso, inicialmente, foi realizada uma análise de requisitos, ou seja, uma definição de quais seriam as instruções do código \as{} da linguagem \py{} seriam implementadas na arquitetura, tendo como objetivo listar as instruções básicas da linguagem, as quais podem ser encontradas na grande maioria dos algoritmos implementados em \py{}.
 
-Após a definição de quais instruções seriam implementadas, foi feito outro levantamento de requisitos. Nesse caso, os requisitos analisados foram os de componentes físicos. Para fazer isso, todas as instruções escolhidas foram separadas em diferentes classes quanto a suas funcionalidades. Essas classes são: gerenciamento de dados, operações aritméticas e comparações, pulos/desvios e chamadas ou retornos de funções. Além disso, foram definidos os componentes básicos necessários para o correto funcionamento da arquitetura, tais como a leitura de instruções e o incremento do contador de programa (PC) a cada instrução executada.
+Após definição, foi feito outro levantamento de requisitos. Nesse caso, para identificar os componentes físicos necessários para dar suporte ao conjunto de instruções. Para fazer isso, todas as instruções escolhidas foram separadas quanto as suas classes: acesso à memória, operações aritméticas ou lógicas e controle de fluxo.
+ 
+Então, com posse da lista de componentes a serem utilizados na arquitetura, foram realizadas as criações de arquiteturas parciais, as quais foram desenvolvidas especificamente para cada uma das classes de instruções. Ao final deste fragmento de implementação, todas as arquiteturas foram integradas em apenas uma e foram inseridos multiplexadores para que fosse possível que o mesmo componente, presente no desenho de mais uma arquitetura parcial, pudesse ser compartilhado, a fim de atender a mais de uma classe de instruções.
 
-Então, com de posse da lista de componentes a serem utilizados na arquitetura, foram realizadas as criações de arquiteturas parciais, as quais foram desenvolvidas especificamente para cada uma das classes de instruções. Nelas, alguns componentes apareciam em mais de uma arquitetura parcial, porém na arquitetura final eram únicos. Então, ao final deste fragmento de implementação, todas as arquiteturas foram integradas em apenas uma e foram inseridos multiplexadores para que fosse possível que o mesmo componente pudesse atender a mais de uma classe de instruções e, consequentemente, receber mais conexão de entrada vinda de mais de um componente.
+Por último, foi feito o projeto de uma unidade de controle, sendo, para este fim, criadas máquinas de estados individuais para cada uma das instruções, as quais foram posteriormente integradas gerando uma única máquina de estados. %Com exceção das instruções BINARY\_, todas as instruções possuem uma máquina de estados única e independente. Foi definido, ainda, que o primeiro estado de todas as máquinas seria o mesmo.
 
-Por último, foi feito o projeto de uma unidade de controle, a qual é responsável por comandar todos os componentes presentes na arquitetura, definido seus sinais de controle e os repassando. Para isso, foram criadas máquinas de estados individuais para cada uma das instruções e foram implementadas gerando apenas uma. Com exceção das instruções BINARY\_, todas as instruções possuem uma máquina de estados única e independente. Foi definido, ainda, que o primeiro estado de todas as máquinas seria o mesmo.
+Portanto, ao final deste trabalho parcial, foi possível obter uma arquitetura funcional, a qual consegue executar todas as instruções listadas e analisadas no decorrer do trabalho. Contudo, essa arquitetura ainda não é integrada com o compilador Python, não executando, por ora, os \bc{} da linguagem. 
 
-Portanto, ao final deste trabalho parcial, foi possível obter uma arquitetura funcional, a qual consegue executar corretamente todas as instruções listadas e analisadas no decorrer do trabalho. Contudo, essa arquitetura ainda não é integrada com o compilador Python, não executando, por ora, os \bc{} da linguagem. 
-
-A próxima parte deste trabalho, então, será focada na integração da arquitetura com o compilador \py{}. Nessa, também espera-se fazer melhorias significativas na arquitetura, melhorando sua frequência de operação, área ocupada no chip e eficiência energética. 
+A próxima parte deste trabalho, então, será focada na integração da arquitetura com o compilador \py{}. Nessa, também espera-se fazer melhorias significativas na arquitetura, melhorando sua frequência de operação (atualmente 89,29 MHz), área ocupada no chip (atualmente equivalente a 409 elementos lógicos de um dispositivo Ciclone III) e eficiência energética (não mensurada neste estudo parcial). 
 \end{abstract}
 
 %
@@ -151,21 +152,22 @@ A próxima parte deste trabalho, então, será focada na integração da arquitetura 
 % como parâmetros devem ser passadas as palavras-chave na outra língua, separadas por vírgulas:
 %
 
-\begin{englishabstract}{VHDL, Python, Processor, Integrated Circuits, Virtual Machine.
+\begin{englishabstract}{VHDL, FPGA, Python, Processor, Integrated Circuits, Virtual Machine.
 
-This monograph presents a processor implementation, created in VHDL, able to execute algorithms written in Python. Here it is showed the sequence of steps followed to turn possible to obtain a functional architecture and, in the future, a directly connection with the native Python compiler. 
+This monograph presents the strategy of a processor implementation, created in VHDL, able to execute algorithms written in Python, and, in the future, a directly connection with the native Python compiler. 
 
-As first step, it was realized an analyze of requirements, or in other words, a definition of Python Assembly code instructions to be implemented directly in the architecture. This step had as objective to list the basic instructions of the language, that are used in the majority of algorithms implemented in Python. Thus, turning able to execute basic algorithms of this language directly in the architecture. 
+To do this, as first step, it was realized an analyze of requirements, or in other words, a definition of Python Assembly code instructions to be implemented in the architecture, had as objective to list the basic instructions of the language, that are used in the majority of algorithms implemented in Python.
 
-After the definition of which instructions would be implemented, another requirement gathering was done. In this case, the analyzed requirements were about the physical components used. To do this, all chosen instructions were divided in classes based in their functionalities. The classes are: data management, arithmetical and comparison operations, jumps and calls or returns from functions. Beyond that, it was defined the basic components needed to the correct operation of the architecture, such as the instruction reading and the program counter (PC) increment after each instruction execution. 
+After definition, another requirement gathering was done. In this case, to identify the necessary physical components required to support the instruction set. To do this, all chosen instructions were divided in classes based in their functionalities: memory access, logical or arithmetical operations and flow control. 
 
-Then, with the list of components that would be used in the architecture, it was projected the partial architectures, which were developed specifically to each class of instructions. In that, some components appeared in more than one partial architecture, but in the final architecture there are only one of each. Then, in the end of this implementation fragment, all architectures were integrated in only one and were inserted multiplexers, turning able the same component being used in more than one class of instructions and, consequently, receive more than one input connection from several components. 
+Then, with the list of components that would be used in the architecture, it was projected the partial architectures, which were developed specifically to each class of instructions. In the end of this implementation fragment, all architectures were integrated in only one and were inserted multiplexers, turning able the same component, present in more than one partial architecture design, could be shared, with the purpose of attend more than one instruction class. 
 
-At last, it was made the project of the control unit, which is responsible of managing all components showed in the architecture, defining their control signals. To do this, there were created individual state machines to each instruction chosen. With the only one exception, BINARY\_ instructions, every instruction have a unique state machine. It was defined that the first state of each state machine would be the same. 
+At last, it was made the project of the control unit, being, to this purpose, created individual state machines to each instruction chosen, which was, posteriorly, integrated, generation only one state machine. %With the only one exception, BINARY\_ instructions, every instruction have a unique state machine. It was defined that the first state of each state machine would be the same. 
 
-Therefore, in the end of this first step, it was possible to obtain a functional architecture, which is able to execute correctly all the instructions listed and analyzed during the work. However, this architecture is not integrated yet with the Python compiler, not executing directly the Python bytecodes. 
+Therefore, in the end of this first step, it was possible to obtain a functional architecture, which is able to execute all the instructions listed and analyzed during the work. However, this architecture is not integrated yet with the Python compiler, not executing directly the Python bytecodes. 
 
-The next step of this project will focus on the integration between the architecture created and the Python compiler. It is also expected the architecture to be improved, including the operation frequency, chip occupation area and energetic efficiency.
+The next step of this project will focus on the integration between the architecture created and the Python compiler. It is also expected the architecture to be improved, including the operation frequency (actually 89.29 MHz), chip occupation area (actually equivalent of 409 logical elements of a Cyclone III device) and energetic efficiency (not measured in this partial study).
+
 }
 \end{englishabstract}
 
