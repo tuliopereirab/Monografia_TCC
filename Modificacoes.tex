@@ -1,0 +1,57 @@
+Todo o trabalho que visa a implementação de alguma funcionalidade ou que tem um objetivo específico a ser atendido pode sofrer com modificações de projeto caso necessário. Assim, durante a implementação do projeto, é possível que seja percebido que, para atingir os objetivos, alguns pontos pré-definidos durante a fase de projeto precisam ser modificados. 
+
+Esta seção trata de todas as modificações e aprimorações feitas com o objetivo de melhorar o projeto como um todo e expandir o leque de opções a ser comportado pelo sistema final. Tais modificações incluem: modificações de algoritmos (\ref{algoMod}), modificações estruturais (\ref{estMod}), adição de funcionalidades (\ref{addMod}) e, por último, adição de verificação e controle de erros (\ref{errorMod}).
+
+\section{Modificações de Algoritmos}
+\label{algoMod}
+
+Quando se inicia um projeto, começa-se pensando no método mais eficiente de implementação conhecido. Seguindo essa ideia, este trabalho foi implementado visando atingir todos os objetivos pré-definidos da melhor forma possível.
+
+Contudo, dentro do projeto, é esperado que haja, além de eficiência, compreensibilidade dentro do código, podendo ele ter pontos importantes modificados desembaraçadamente. Tal fato não foi percebido quando viu-se a necessidade de modificar uma característica básica de um processador: as capacidades das memórias (que será abordada na seção \ref{est_mod}).
+
+\subsection{O Problema}
+
+Dentro da criação dos arquivos VHDL que compunham o servidor, não havia qualquer entrada de configuração inicial. Tornando necessário que, caso haja a necessidade de modificar uma característica básica do processador, tal modificação precise ser feita diretamente em cada um dos vários arquivos.
+
+Aliado a isso, não existia qualquer reaproveitamento de arquivos. Ou seja, cada componente tinha, imprudentemente, um arquivo próprio que somente era utilizado por ele mesmo.
+
+A combinação destes dois problemas e o objetivo principal evidente de modificar as memórias fez com que fosse necessária uma modificação drástica dentro dos arquivos que davam origem ao processador.
+
+\subsection{A Solução}
+
+Para solucionar os problemas de desorganização dos arquivos e falta de maleabilidade do projeto frente a modificações, tomou-se como primeiro objetivo diminuir o número de arquivos \textit{vhd} que compunham o projeto. Para isso, foram analisados todos os componentes que possuíam as mesmas entradas e as mesmas saídas.
+
+Ao listar-se todos os componentes que suportavam utilizar um mesmo arquivo, foi desenvolvido um arquivo padrão que já estava pronto para receber valores vindos da entidade topo que definem as larguras dos sinais internos. Assim sendo, o segundo problema também foi resolvido simplesmente com a organização do projeto.
+
+\section{Modificações Estruturais}
+\label{estMod}
+
+Durante fases de testes e conversas com avaliadores externos, foi percebida a grande necessidade de elevar as capacidades das memórias (ou pelo menos tornar tal ação possível). Como dito nos capítulos anteriores, foi definido que as larguras dos endereços de memórias seria de 8 \bis{} e que os cálculos de incremento e decremento de PC e TOS seriam feitos pela ULA. 
+
+\subsection{Larguras de endereços de memória}
+
+Tinha-se como objetivo aumentar os comprimentos das memórias, aumentando, consequentemente, a largura dos seus endereços. Contudo, foi encontrado um problema: os endereços, que antes entravam no sistema como argumentos de instruções de 16 \bis{} (ou seja, 8 \bis{} de argumento) agora precisavam entrar com um número de \bis{} superior. 
+
+Para resolver tal problema, primeiramente, foi pensado que podia-se expandir a largura das palavras da memória de instruções. Porém, como encontrado em bibliografia da própria máquina virtual da linguagem \py{}, as instruções recebidas são sempre de 8 \bis{} \cite{insidePVM}. Assim sendo, tal característica não poderia ser modificada.
+
+Então, para solucionar o problema, pensou-se em utilizar uma segunda palavra, aliada à palavra que carrega o código da instrução com 8 \bis{}, para carregar o endereço. E, para melhor aproveitamento futuro, caso seja encontrada a necessidade de expandir ainda mais a memória, existe a possibilidade de utilizar os 8 \bis{} remanescentes da primeira palavra concatenados com a segunda palavra inteira, totalizando 24 \bis{} de endereçamento de memória. 
+
+Para isso, foi criado e adicionado um registrador responsável pela concatenação dos dois vetores, chamado de \textit{regJump}. Sua função é receber dados do registrador de argumentos (8 \bis{}) e receber uma palavra inteira da memória de instruções (16 \bis{}), entregando, como saída, um vetor de 24 \bis{} aos registradores de endereços das memórias. 
+
+Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
+
+\subsection{Manter cálculos na ULA}
+
+Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de 24 \bis{} ou menos. Assim sendo, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
+
+Então, evitando o incremento no número de componentes, a segunda opção foi seguida e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor. E, ainda, houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima seção (\ref{addMod}). 
+
+\section{Adição de funcionalidades}
+\label{addMod}
+
+Ao realizar-se as modificações citadas na seção \ref{estMod}, viu-se necessário que houvesse adição de algumas funcionalidades na ULA. Assim sendo, foi adicionado um \bi{} no sinal seletor da ULA, totalizando 4 \bis{}.
+
+Basicamente, as funcionalidades adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos muxes da ULA.
+
+\section{Verificação e Controle de Erros}
+\label{errorMod}
