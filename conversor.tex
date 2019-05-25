@@ -1,0 +1,102 @@
+A realização de testes, tanto de simulação utilizando o \textit{Modelsim}, quanto direto no FPGA com a ferramenta \textit{Quartus}, exige a criação de arquivos binários para inicializar a memória de instruções. Ou seja, um algoritmo \py{}, passado para código \as{}, precisa ainda ser convertido em código binário e escrito nos arquivos.
+
+Os arquivos em questão, os quais serão abordados especificamente na seção \ref{conv_arq}, são os \textit{.mem} e \textit{.mif}. Sendo utilizados, respectivamente, nas ferramentas \modelsim{} e \quartus{}. 
+
+O principal objetivo da criação deste conversor é agilizar a execução de algoritmos \py{} diretamente no processador. Simplificando, portanto, a execução dos testes e permitindo que algoritmos mais complexos sejam executados na arquitetura. 
+
+\section{Funcionalidades}
+\label{conv_func}
+
+O conversor, desenvolvido em C, recebe como entrada os códigos \as{} gerados pelo compilador \py{}, utilizando a função \textit{Disassembler}. 
+
+Tais formatos, que já foram vistos no capítulo \ref{Referencial_Teorico}, prevêm uma instrução no formato "\textit{LOAD\_CONST [argumento]}. Essas instruções servem, então, de entrada para o conversor.
+
+\subsection{Recebimento de instruções}
+
+Ao ser inicializado, o conversor gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
+
+A palavra de memória é a posição de memória que é apontada por PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a figura %\ref{img_conv_line}.
+
+Então, com a palavra (ou palavras, no caso de instruções que recebem endereços) salva na matriz, retorna-se para a função inicial que espera uma nova instrução. A posição de memória é, então, atualizada para a próxima, conforme o tipo de instrução inserido anteriormente. Caso seja uma instrução que recebe endereços e, então, necessita de duas palavras de memória para funcionar, a linha atual recebe um incremento de 2, caso contrário, apenas 1.
+
+Quando existe um desvio, é necessário que seja escrito na memória em uma posição fora de ordem. Para isso, dentro do conversor, existe o comando "\textit{line}", que permite que o conversor passe a escrever em uma linha diferente. Tal comando pode ser utilizado tanto para desvios quanto para corrigir erros de digitação cometidos anteriormente. 
+
+\subsection{Gerenciamento de memória}
+
+A linguagem \py{} permite que existam variáveis no seu código de alto nível. Tais variáveis, em \hw{}, podem ser consideradas as posições da memória externa onde foram salvas. Em outras palavras, para criar-se uma variável, salva-se um valor na memória externa e o acessa sempre através do mesmo endereço.
+
+Fazendo uma analogia com um algoritmo de alto nível, a variável "\textit{result}" recebe o endereço 12. Sempre que ela precisar ser acessada em alto nível, seu nome é digitado. Mas em \hw{}, seu endereço é digitado.
+
+Então, como ficaria muito difícil para alguém que quer digitar um código \as{} para rodar na arquitetura digitar o endereço de cada uma das variáveis, foi crada uma funcionalidade que permite atribuir nomes às variáveis. Tal funcionalidade é similar à utilizada em um algoritmo de alto nível.
+
+Seu funcionamento baseia-se em uma matriz de variáveis e chaves de acesso. Ao realizar-se a inserção de uma instrução STORE\_FAST, utiliza-se como argumento uma chave (caracteres numéricos ou letras) que será salva na matriz juntamente com o endereço correspondente na memória externa. Sempre que se utilizar STORE\_FAST ou LOAD\_FAST com esta chave, o endereço será automaticamente adicionado juntamente com a instrução na memória de instruções.
+
+Assim sendo, a manipulação de variáveis é facilitada em \hw{} por um sistema baseado na mesma manipulação em alto nível. Isso permite agilidade e rapidez na criação e carregamento de variáveis.
+
+\subsection{Menu de ajuda}
+
+O conversor, por utilizar alguns atalhos para algumas instruções, tais como os códigos de operação de comparação (0 para \textit{igual}, 1 para \textit{menor que} e 2 para \textit{maior que}), possui um menu de ajuda para quem for utilizá-lo. 
+
+Tal menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra "\textit{help}" seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instrções possam possuir. 
+
+A figura %\ref{img_conv_help} apresenta um exemplo de informação apresentada pela função \textit{help} para a instrução COMPARE\_OP.
+
+\section{Arquivos Gerados}
+\label{conv_arq}
+
+Como já foi dito anteriormente, são duas as ferramentas utilizadas para a implementação deste projeto em \hw{}. Cada uma delas possui um arquivo de inicialização da memória diferente, sendo o \modelsim{} possuindo um arquivo \mem{} e o \quartus{} um \mif{}. 
+
+Então, para facilitar a execução em abas as ferramentas, o conversor gera os dois formatos de arquivos. O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. 
+
+Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4} e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha.
+
+A figura % \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo conversor.
+
+Já o arquivo \mif{} é utilizado para se inicializar a memória no \quartus{}. Ele é automaticamente importado pela ferramenta e seu formato é simplesmente uma linha de palavras de memória, apresentando suas posições, em decimal, e instruções, em binário.
+
+A ferramenta \quartus{}, ao gerá-los, utiliza simplificações quando várias posições consecutivas possuem o mesmo valor binário. Essa simplificação é no formato: 
+
+\begin{center}
+\textit{[2..10]	:	0000000000000000;}
+\end{center}
+
+Isso significa que da posição 2 até a posição 10 todas as posições receberão o valor 0 em binário, contendo 16 \bis{}.
+
+A figura % \ref{img_conv_mif} apresenta um exemplo de arquivo \mif{} criado pelo conversor.
+
+\section{Erros Verificados}
+\label{conv_erros}
+
+Após se implementar um algoritmo em alto nível, executa-se uma compilação. Tal ato permitirá que erros léxicos ou sintáticos sejam evitados. Alguns erros lógicos previsíveis podem ser capturados pelo compilador e evitar problemas futuros.
+
+Tendo em vista essa funcionalidade, foram adicionadas duas camadas de verificação de erros neste projeto. A segunda, abordada na seção \ref{errorMod} e implementada diretamente na unidade de controle física do processador, permite a detecção de erros que evitam que a arquitetura fique funcionando em estado de erro. 
+
+Contudo, essa segunda camada é somente uma camada extra que evita erros gerados quando não se utiliza o conversor. Toda a arquitetura precisa evitar erros por conta própria, porém, com a utilização deste conversor, não espera-se encontrar erros nos códigos binários. Isso porque a primeira camada de verificação de erros é feita em \sw{} na geração dos arquivos de memória de instrução.
+
+Os erros verificados em \sw{} são, na sua maioria, os mesmos verificados em \hw{}. Porém, em \sw{}, são verificados erros voltados diretamente para a digitação da instruções \as{} e não para monitorar o funcionamento de componentes da arquitetura que podem ficar em estado de erro.
+
+\subsection{Erros de digitação}
+
+Quando o conversor está rodando e recebe uma instrução, essa instrução deverá ser verificada e reconhecida. Então, primeiramente, ela passa pela verificação do seu "nome", o qual deve corresponder exatamente ao gerado pela função \textit{Disassembler} do compilador \py{}. Caso contrário, o conversor retorna um erro e ignora o que foi digitado.
+
+O segundo passo de verificação é referente ao argumento. Para instruções de entrada de dados, como LOAD\_CONST, espera-se que o argumento possa ser escrito em 8 \bis{} e, portanto, seja um valor decimal positivo entre 0 e 255. Já para endereços, espera-se que o valor possa ser escrito com o número de \bis{} de endereçamento, o qual, conforme seção \ref{estMod}, pode ser modificado facilmente e, portanto, deve ser modificado também no conversor.
+
+Algumas instruções, contudo, não possuem argumento e, por isso, quando não há a entrada de argumento, a entrada é verificada para analisar a correspondência com uma instrução que não precisa de argumento.
+
+Ao escrever as instruções digitadas no arquivo de memória, sabe-se que todas as entradas salvas são correspondentes a instruções suportadas pelo conversor e pela arquitetura. Sendo assim, seus códigos binários já estão salvos e são digitados corretamente no arquivos de memória. As posições das entradas, no caso de instruções de desvios, por exemplo, que utilizam duas palavras, é também corretamente escrita nos arquivos (PC = instrução + parte do endereço; PC+1 = endereço). 
+
+\subsection{Erros lógicos previsíveis}
+
+A verificação de erros lógicos é feita com o objetivo de evitar que nenhum componente entre em estado de erro. O erro mais comum, por exemplo, é fazer com que o valor de topo da pilha (TOS) torne-se um valor negativo e, portanto, inválido. Isso ocorre quando executa-se uma leitura na pilha sem antes escrever nela. 
+
+Então, o conversor possui um variável de controle do topo da pilha, o qual é incrementado sempre que recebe-se uma instrução válida de adiciona algo à pilha e decrementado quando uma instrução retira algo da pilha. Com essa variável, é possível verificar, sempre que uma instrução de leitura da pilha for inserida, se ela pode ou não ser executada.
+
+Um exemplo simples é qualquer uma das instruções BINARY\_, que necessitam de duas posições da pilha para serem lidas. Então, caso não haja, a instrução não será adicionada ao arquivo. Caso haja, será decrescido apenas 1 da variável da pilha, pois essa instrução retorna um resultado a ser salvo na pilha. 
+
+Seguindo a mesma teoria de prevenção de erro do TOS, ao ser inserida a função CALL\_FUNCTION, o topo da pilha de funções é incrementado e, com a instrução RETURN\_VALUE, decrementado. Assim sendo, não é possível inserir a instrução RETURN\_VALUE sem antes inserir CALL\_FUNCTION. A correção desse erro é idêntica à utilizada no método anterior, porém com outra variável.
+
+Além desses erros, existe outro erro que pode estar ligado à instrução LOAD\_FAST. Esse erro evita que um essa instrução seja executada com um endereço que não foi salvo anteriormente (com a instrução STORE\_FAST). Então, como tem-se uma matriz de variáveis, sempre que é inserida a instrução LOAD\_FAST, faz-se uma busca e, caso a variável inserida exista, a instrução é formalmente inserida no arquivo, caso contrário, sua inserção é negada.
+
+Outro erro lógico previsto está ligado às instruções de desvio condicional, onde precisa-se de uma comparação prévia para que ela seja executada. Assim sendo, sempre que for inserida a instrução COMPARE\_OP, uma variável de controle é ativada. Ela permite que haja a inserção de uma das instruções de desvio condicional (POP\_JUMP\_IF\_TRUE ou FALSE).
+
+Somente depois de todas essas verificações de erros que uma instrução pode, finalmente, ser inserida no arquivo de memória. Assim sendo, portanto, todas as verificações de erros da primeira camada são de notável importância para que o sistema funcione corretamente, tanto \hw{} quanto \sw{}. É esperado que as correções/verificações de erro da segunda camada, em \hw{}, não sejam executadas, pois, se forem, existe uma grande chance da solução do erro ser a arquitetura entrar em um estado irreversível de erro até que seja reiniciada.  
