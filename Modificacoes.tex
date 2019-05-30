@@ -1,57 +1,105 @@
 Todo o trabalho que visa a implementação de alguma funcionalidade ou que tem um objetivo específico a ser atendido pode sofrer com modificações de projeto caso necessário. Assim, durante a implementação do projeto, é possível que seja percebido que, para atingir os objetivos, alguns pontos pré-definidos durante a fase de projeto precisam ser modificados. 
 
-Esta seção trata de todas as modificações e aprimorações feitas com o objetivo de melhorar o projeto como um todo e expandir o leque de opções a ser comportado pelo sistema final. Tais modificações incluem: modificações de algoritmos (\ref{algoMod}), modificações estruturais (\ref{estMod}), adição de funcionalidades (\ref{addMod}) e, por último, adição de verificação e controle de erros (\ref{errorMod}).
+Esta seção trata de todas as modificações e aprimoramentos feitas com o objetivo de melhorar o projeto como um todo e expandir o leque de opções a ser comportado pelo sistema final. Tais modificações incluem: modificações de algoritmos (\ref{algoMod}), modificações estruturais (\ref{estMod}), adição de funcionalidades (\ref{addMod}) e, por último, adição de verificação e controle de erros (\ref{errorMod}).
 
 \section{Modificações de Algoritmos}
 \label{algoMod}
 
-Quando se inicia um projeto, começa-se pensando no método mais eficiente de implementação conhecido. Seguindo essa ideia, este trabalho foi implementado visando atingir todos os objetivos pré-definidos da melhor forma possível.
+Quando se inicia um projeto, começa-se pensando no método mais eficiente de implementação conhecido. Seguindo essa ideia, este trabalho foi implementado visando atingir todos os objetivos pré-definidos da melhor forma possível e, inicialmente, pensando-se, erroneamente, pouco em modificações futuras e organização.
 
-Contudo, dentro do projeto, é esperado que haja, além de eficiência, compreensibilidade dentro do código, podendo ele ter pontos importantes modificados desembaraçadamente. Tal fato não foi percebido quando viu-se a necessidade de modificar uma característica básica de um processador: as capacidades das memórias (que será abordada na seção \ref{est_mod}).
+Contudo, dentro do projeto, é esperado que haja, além de eficiência, compreensibilidade dentro do código, podendo ele ter pontos importantes modificados desembaraçadamente. Tal fato não foi percebido quando viu-se a necessidade de modificar uma característica básica de um processador: as capacidades das memórias (que será abordada na seção \ref{estMod}).
 
 \subsection{O Problema}
 
-Dentro da criação dos arquivos VHDL que compunham o servidor, não havia qualquer entrada de configuração inicial. Tornando necessário que, caso haja a necessidade de modificar uma característica básica do processador, tal modificação precise ser feita diretamente em cada um dos vários arquivos.
+Dentro da criação dos arquivos VHDL que compunham o processador, não havia qualquer entrada de configuração inicial. Em outras palavras, era necessário que, caso houvesse a necessidade de modificar uma característica básica do processador, tal modificação precisasse ser feita diretamente em cada um dos vários arquivos.
 
-Aliado a isso, não existia qualquer reaproveitamento de arquivos. Ou seja, cada componente tinha, imprudentemente, um arquivo próprio que somente era utilizado por ele mesmo.
+Aliado a isso, não existia qualquer reaproveitamento de arquivos. Ou seja, cada componente possuia, imprudentemente, um arquivo próprio que somente era utilizado por ele mesmo. Isso aumentava demasiadamente a complexidade de se modificar alguma característica e, até mesmo, entender o que já havia sido feito.
 
 A combinação destes dois problemas e o objetivo principal evidente de modificar as memórias fez com que fosse necessária uma modificação drástica dentro dos arquivos que davam origem ao processador.
 
 \subsection{A Solução}
 
-Para solucionar os problemas de desorganização dos arquivos e falta de maleabilidade do projeto frente a modificações, tomou-se como primeiro objetivo diminuir o número de arquivos \textit{vhd} que compunham o projeto. Para isso, foram analisados todos os componentes que possuíam as mesmas entradas e as mesmas saídas.
+Para solucionar os problemas de desorganização dos arquivos e falta de maleabilidade do projeto frente a modificações, tomou-se como primeiro objetivo diminuir o número de arquivos \textit{.vhd} que compunham o projeto. Para isso, foram analisados todos os componentes que possuíam as mesmas entradas e as mesmas saídas, mesmo que com número de \bis{} diferente.
 
-Ao listar-se todos os componentes que suportavam utilizar um mesmo arquivo, foi desenvolvido um arquivo padrão que já estava pronto para receber valores vindos da entidade topo que definem as larguras dos sinais internos. Assim sendo, o segundo problema também foi resolvido simplesmente com a organização do projeto.
+Assim, listou-se todos os componentes que suportavam utilizar um mesmo arquivo e, então, foi desenvolvido um arquivo padrão que já estava pronto para receber valores vindos da entidade topo que definem as larguras de cada um dos seus sinais internos. Assim sendo, o segundo problema (modificar descomplicadamente uma característica básica da arquitetura) também foi resolvido simplesmente com a organização do projeto.
 
 \section{Modificações Estruturais}
 \label{estMod}
 
-Durante fases de testes e conversas com avaliadores externos, foi percebida a grande necessidade de elevar as capacidades das memórias (ou pelo menos tornar tal ação possível). Como dito nos capítulos anteriores, foi definido que as larguras dos endereços de memórias seria de 8 \bis{} e que os cálculos de incremento e decremento de PC e TOS seriam feitos pela ULA. 
+Durante fases de testes e conversas com avaliadores externos, foi percebida a grande necessidade de elevar as capacidades das memórias (ou pelo menos tornar tal ação possível no futuro). Como dito nos capítulos anteriores, foi definido que as larguras dos endereços de memórias seriam de 8 \bis{} e que os cálculos de incremento e decremento dos ponteiros PC e TOS seriam feitos pela própria ULA. 
 
 \subsection{Larguras de endereços de memória}
 
-Tinha-se como objetivo aumentar os comprimentos das memórias, aumentando, consequentemente, a largura dos seus endereços. Contudo, foi encontrado um problema: os endereços, que antes entravam no sistema como argumentos de instruções de 16 \bis{} (ou seja, 8 \bis{} de argumento) agora precisavam entrar com um número de \bis{} superior. 
+Tinha-se como objetivo aumentar os comprimentos das memórias, aumentando, consequentemente, a largura dos seus endereços. Contudo, foi encontrado um problema: os endereços, que antes entravam no sistema como argumentos de instruções de 16 \bis{} (ou seja, 8 \bis{} de argumento) agora precisavam entrar com número de \bis{} superior. 
 
-Para resolver tal problema, primeiramente, foi pensado que podia-se expandir a largura das palavras da memória de instruções. Porém, como encontrado em bibliografia da própria máquina virtual da linguagem \py{}, as instruções recebidas são sempre de 8 \bis{} \cite{insidePVM}. Assim sendo, tal característica não poderia ser modificada.
+Para resolver tal problema, primeiramente, foi pensado que podia-se expandir a largura das palavras da memória de instruções. Porém, como encontrado em bibliografia da própria máquina virtual da linguagem \py{}, as instruções recebidas são sempre de 16 \bis{} \cite{insidePVM}. Assim sendo, tal característica não poderia ser modificada.
 
 Então, para solucionar o problema, pensou-se em utilizar uma segunda palavra, aliada à palavra que carrega o código da instrução com 8 \bis{}, para carregar o endereço. E, para melhor aproveitamento futuro, caso seja encontrada a necessidade de expandir ainda mais a memória, existe a possibilidade de utilizar os 8 \bis{} remanescentes da primeira palavra concatenados com a segunda palavra inteira, totalizando 24 \bis{} de endereçamento de memória. 
+%imagem explicando a utilização dos endereços (16 pra 24 bits e como poderia ser feito)
 
-Para isso, foi criado e adicionado um registrador responsável pela concatenação dos dois vetores, chamado de \textit{regJump}. Sua função é receber dados do registrador de argumentos (8 \bis{}) e receber uma palavra inteira da memória de instruções (16 \bis{}), entregando, como saída, um vetor de 24 \bis{} aos registradores de endereços das memórias. 
+Para isso, foi criado e adicionado à arquitetura um registrador responsável pela concatenação dos dois vetores, chamado de \textit{regJump}. Sua função é receber dados do registrador de argumentos (8 \bis{}) e receber uma palavra inteira da memória de instruções (16 \bis{}), entregando, como saída, um vetor de até 24 \bis{}, dependendo da largura de endereços vigente, aos registradores de endereços das memórias. 
+%imagem da nova arquitetura de "básicas" incluindo o regJump
 
-Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
+Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras em cada memória, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
+%imagem mostrando onde é feita a configuração da arquitetura no códgio VHDL
 
 \subsection{Manter cálculos na ULA}
 
-Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de 24 \bis{} ou menos. Assim sendo, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
+Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de até 24 \bis{} ou menos. Sendo assim, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
 
-Então, evitando o incremento no número de componentes, a segunda opção foi seguida e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor. E, ainda, houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima seção (\ref{addMod}). 
+Então, evitando o incremento no número de componentes utilizados, a segunda opção foi adotada e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor (o endereço ADDR\_MAX\_WIDTH da figura % linha 44). Além disso, ainda houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima seção (\ref{addMod}). 
 
 \section{Adição de funcionalidades}
 \label{addMod}
 
 Ao realizar-se as modificações citadas na seção \ref{estMod}, viu-se necessário que houvesse adição de algumas funcionalidades na ULA. Assim sendo, foi adicionado um \bi{} no sinal seletor da ULA, totalizando 4 \bis{}.
 
-Basicamente, as funcionalidades adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos muxes da ULA.
+Basicamente, as funcionalidades básicas adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos muxes da ULA, o que deixava os muxes ocupados e impediam a adição de outras possíveis funcionalidades.
+
+Quanto à adição de operações lógicas, foi realizada uma checagem na documentação da linguagem \py{} em busca de instruções que realizassem operações lógicas. Foram, então, encontradas as instruções BINARY\_AND, BINARY\_OR e BINARY\_XOR, que seguem o mesmo fluxo das operações BINARY\_ explicadas na subseção \ref{op-arit}. Com isso, elas puderam ser implementadas utilizando-se a mesma máquina de estados das outras instruções similares.
+
+Já referente à operação lógica NOT, também suportada pela ULA, foi encontrada na documentação da linguagem \py{} a instrução UNARY\_NOT, a qual realiza a operação NOT no \tos{} e retorna seu resultado para a pilha.
 
 \section{Verificação e Controle de Erros}
 \label{errorMod}
+
+Para realizar as verificações de erros da arquitetura e identificar quando ocorreu algum erro que compromete o resultado de alguma execução, foram levantados algumas possibilidades de erros para serem corrigidas diretamente na arquitetura. Em sua maioria, são erros considerados \textit{warnings}, que alteram apenas o resultado do algoritmo mas não a execução.
+
+As subseções a seguir tratarão sobre: os tipos de erros verificados (\ref{errorTipos}) e método adotado para a verificação (\ref{errorModos}). É importante salientar que os erros verificados diretamente na arquitetura são os que tornam a arquitetura inválida. Outros erros lógicos mais complexos que podem ser considerados erros sem tornar a arquitetura inválida são verificados diretamente no Conversor, como será explicado na seção \ref{conv_erros}. 
+
+\subsection{Erros Verificados}
+\label{errorTipos}
+
+Os erros verificados na arquitetura giram em torno dos sinais de controle que podem se tornar inválidos e, por conseguinte, impedir a correta execução de algum algoritmo. Os erros podem ser divididos em erros críticos, que tornam a arquitetura inválida e, portanto, devem forçar a parada da execução, ou \textit{warnings}, onde sabe-se que ocorreu um erro mas é possível continuar a execução.
+
+Os \textit{warnings} tem o poder de influenciar nos resultados, mas não na execução em geral. Eles podem, por exemplo, influenciar no resultado de uma longa sequência de somas sucessivas. 
+
+Já os erros críticos impedem que a arquitetura execute e, quando detectados, levam o controle a um estado \textit{loop} infinito de erro.
+
+Os erros críticos são:
+\begin{enumerate}
+	\item Quando o ponteiro de \tos{} se torna inválido (normalmente negativo). Esse erro é causado ao realizar-se uma leitura com a pilha vazia ou uma leitura dupla (instruções BINARY\_) com apenas um dado na pilha;
+	\item Quando é recebida uma instrução que não é reconhecida;
+\end{enumerate} 
+
+Já os \textit{warnings} são:
+\begin{enumerate}
+	\item Quando a memória externa recebe um endereço maior que o esperado. Os \bis{} mais significativos em excesso são ignorados e realiza-se uma leitura na posição apontada pelos menos significativos;
+	\item Quando a ULA retorna um \textit{overflow} em uma de suas operações. Os \bis{} em excesso são ignorados e é salvo apenas os menos significativos do tamanho do dado ou endereço;
+	\item Quando tenta-se realizar um desvio condicional sem antes realizar-se uma comparação. O desvio é sempre negado e o valor de PC é incrementado para a próxima instrução.
+\end{enumerate}
+
+\subsection{Método de Verificação de Erros}
+\label{errorModos}
+
+O grande objetivo, ao se reconhecer os erros durante uma execução é saber o que aconteceu para, então, ser possível identificar o que pode ser corrigido para evitar isso. Para tal finalidade, foi atribuido um código de erro, de 8 \bis{}, para cada um dos erros citados na subseção \ref{errorTipos}. Com isso, foi possível gerar a tabela abaixo:
+
+%tabela de erros e códigos
+
+Já com os códigos de erros, era necessário então salvar o código de erro quando um erro específico ocorrer. Para isso, foi adicionado um novo registrador, chamado \textit{regError}, responsável por salvar e manter os códigos de erro sempre que ocorrerem. 
+
+O principal objetivo do \textit{regError} é permitir, através de uma análise temporal da execução de determinado algoritmo, identificar qual instrução estava sendo executada quando o registrador foi escrito com o código de erro. E, com tabela de erros acima, é possível identificar o tipo de erro que ocorreu. 
+
+Portanto, sempre que foi executado um algoritmo no processador, é de extrema importância que o \textit{regError} seja verificado. Caso seu valor não seja zero, existe uma grande chance do resultado estar inválido ou nem existir (no caso quando um erro crítico ocorre no início da execução). 
+
+A prevenção de erros na arquitetura é considera a última camada de proteção do processador, visto que não é esperado que ela seja utilizada, já que é recomendável que os arquivos de inicialização das memórias sejam criados diretamente pelo Conversor, o qual já verifica a existência de erros.
