@@ -25,7 +25,7 @@ Esta seção apresentará como são feitos:
 
 Ao ser inicializado, o conversor gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
 
-A palavra de memória é a posição de memória que é apontada por PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a figura ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
+A palavra de memória é a posição de memória que é apontada por PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a Figura \ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
 
 \begin{figure}[htp]
 \centering
@@ -62,7 +62,7 @@ A figura %\ref{img_conv_help} apresenta um exemplo de informação apresentada pel
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/conversor/img_conv_help.jpg}
+\includegraphics[scale=0.5]{images/conversor/img_conv_help.jpg}
 \caption{Apresentação das informações para a instrução COMPARE\_OP.}
 \label{img_conv_help}
 \end{figure}
@@ -114,7 +114,7 @@ profundidade\_memoria = \frac{2^{ADDR\_WIDTH}}{4}
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/conversor/img_conv_mem.jpg}
+\includegraphics[scale=0.5]{images/conversor/img_conv_mem.jpg}
 \caption{Exemplo de arquivo \textit{.mem}.}
 \label{img_conv_mem}
 \end{figure}

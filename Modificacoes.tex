@@ -38,7 +38,15 @@ Então, para solucionar o problema, pensou-se em utilizar uma segunda palavra, al
 %imagem explicando a utilização dos endereços (16 pra 24 bits e como poderia ser feito)
 
 Para isso, foi criado e adicionado à arquitetura um registrador responsável pela concatenação dos dois vetores, chamado de \textit{regJump}. Sua função é receber dados do registrador de argumentos (8 \bis{}) e receber uma palavra inteira da memória de instruções (16 \bis{}), entregando, como saída, um vetor de até 24 \bis{}, dependendo da largura de endereços vigente, aos registradores de endereços das memórias. 
-%imagem da nova arquitetura de "básicas" incluindo o regJump
+
+A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações básicas do processador, responsável por ler instrução, argumento e dar início a execução. Com o \textit{regJump} se conectando à saída do \textit{regArg}, que também possui saída para outros componentes, é possível gerar endereços de até 24 \bis{}. Porém, como foi dito anteriormente, os endereços definidos para os testes deste trabalho serão apenas 12 \bis{}, o que fará o \textit{regJump} retornar apenas os 12 \bis{} menos significativos lidos da sua conexão direta com a memória de instruções.  
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/modificacoes/new_basics.png}
+\caption{Nova arquitetura parcial de operações básicas (a antiga é a Figura \ref{img_analisebasicos}).}
+\label{img_new_basics}
+\end{figure}
 
 Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras em cada memória, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
 %imagem mostrando onde é feita a configuração da arquitetura no códgio VHDL
