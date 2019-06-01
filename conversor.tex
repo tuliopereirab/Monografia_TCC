@@ -101,9 +101,13 @@ RETURN\_VALUE        & rval             \\ \hline
 \section{Arquivos Gerados}
 \label{conv_arq}
 
-Como já foi dito anteriormente, são duas as ferramentas utilizadas para a implementação deste projeto em \hw{}. Cada uma delas possui um arquivo de inicialização da memória diferente, sendo o \modelsim{} possuindo um arquivo \mem{} e o \quartus{} um \mif{}. 
+Como já foi dito anteriormente, são duas as ferramentas utilizadas para a implementação deste projeto em \hw{}. Cada uma delas possui um arquivo de inicialização da memória diferente, sendo o \modelsim{} possuindo um arquivo \mem{} (subseção \ref{conv_arq_mem}) e o \quartus{} um \mif{} (subseção \ref{conv_arq_mif}). 
 
-Então, para facilitar a execução em abas as ferramentas, o conversor gera os dois formatos de arquivos. O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. 
+Então, para facilitar a execução em abas as ferramentas, o conversor gera os dois formatos de arquivos e, como normalmente são gerados vários arquivos, é gerado ainda um arquivo de texto com as instruções escritas (subseção \ref{conv_arq_texto}).
+
+\subsection{Arquivo \textit{.mem}}
+\label{conv_arq_mem}
+O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. 
 
 Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4}, considerando que a equação (\ref{eq_prof}) que descreve o valor \textit{profundidade de memória}, e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha.
 
@@ -121,6 +125,8 @@ profundidade\_memoria = \frac{2^{ADDR\_WIDTH}}{4}
 
 A Figura \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo conversor.
 
+\subsection{Arquivo \textit{.mif}}
+\label{conv_arq_mif}
 Já o arquivo \mif{} é utilizado para se inicializar a memória no \quartus{}. Ele é automaticamente importado pela ferramenta e seu formato é simplesmente composto por linhas com uma palavra cada, apresentando, respectivamente, posição de memória, em decimal, e instrução, em binário.
 
 A ferramenta \quartus{}, ao gerá-los, utiliza simplificações quando várias posições consecutivas possuem o mesmo valor binário. Essa simplificação é no formato: 
@@ -139,6 +145,22 @@ Isso significa que da posição 2 até a posição 10 todas as posições receberão o v
 \end{figure}
 
 A Figura \ref{img_conv_mif} apresenta um exemplo de arquivo \mif{} criado pelo conversor.
+
+\subsection{Arquivo texto}
+\label{conv_arq_texto}
+
+O último arquivo, gerado apenas para suprir uma eventual necessidade de análise do que foi executado, é um arquivo de texto contendo todas as instruções em suas devidas posições. Ele se faz importante pois sempre que geram-se arquivos de testes e execução, são gerados vários. 
+
+Alguns complexos, outros nem tanto, é necessário que todos eles possam ser lidos para que seja possível comparar o que foi executado e o que era esperado. Antes de existir um arquivo texto, era necessário ler a memória (em código binário) e decodificar cada uma das posições manualmente, algo que levava certo tempo.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/conversor/img_conv_arq_texto.jpg}
+\caption{Exemplo de arquivo texto.}
+\label{img_conv_arq_texto}
+\end{figure}
+
+O arquivo texto, basicamente, recebe o número da linha, a instrução e o argumento, quando este último existe. A Figura \ref{img_conv_arq_texto} apresenta um exemplo de um arquivo texto.
 
 \section{Erros Verificados}
 \label{conv_erros}

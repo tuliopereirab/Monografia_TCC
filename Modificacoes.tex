@@ -37,6 +37,15 @@ Para resolver tal problema, primeiramente, foi pensado que podia-se expandir a l
 Então, para solucionar o problema, pensou-se em utilizar uma segunda palavra, aliada à palavra que carrega o código da instrução com 8 \bis{}, para carregar o endereço. E, para melhor aproveitamento futuro, caso seja encontrada a necessidade de expandir ainda mais a memória, existe a possibilidade de utilizar os 8 \bis{} remanescentes da primeira palavra concatenados com a segunda palavra inteira, totalizando 24 \bis{} de endereçamento de memória. 
 %imagem explicando a utilização dos endereços (16 pra 24 bits e como poderia ser feito)
 
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/modificacoes/addr_16_24.png}
+\caption{Funcionamento básico do \textit{regJump}.}
+\label{img_addr_16_24}
+\end{figure}
+
+A Figura \ref{img_addr_16_24} apresenta o funcionamento básico do \textit{regJump}, sendo que a largura de sua saída depende exclusivamente da constante ADDR\_WIDTH, que será apresentada em seguida, na Figura \ref{img_config_vhdl}.
+
 Para isso, foi criado e adicionado à arquitetura um registrador responsável pela concatenação dos dois vetores, chamado de \textit{regJump}. Sua função é receber dados do registrador de argumentos (8 \bis{}) e receber uma palavra inteira da memória de instruções (16 \bis{}), entregando, como saída, um vetor de até 24 \bis{}, dependendo da largura de endereços vigente, aos registradores de endereços das memórias. 
 
 A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações básicas do processador, responsável por ler instrução, argumento e dar início a execução. Com o \textit{regJump} se conectando à saída do \textit{regArg}, que também possui saída para outros componentes, é possível gerar endereços de até 24 \bis{}. Porém, como foi dito anteriormente, os endereços definidos para os testes deste trabalho serão apenas 12 \bis{}, o que fará o \textit{regJump} retornar apenas os 12 \bis{} menos significativos lidos da sua conexão direta com a memória de instruções.  
@@ -49,8 +58,25 @@ A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações 
 \end{figure}
 
 Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras em cada memória, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
-%imagem mostrando onde é feita a configuração da arquitetura no códgio VHDL
 
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/modificacoes/config_vhdl.png}
+\caption{Apresentação de como é feita a configuração da arquitetura.}
+\label{img_config_vhdl}
+\end{figure}
+
+A Figura \ref{img_config_vhdl} apresenta as constantes em VHDL que recebem as características da arquitetura. Basicamente, as entradas e as modificações mais importantes são:
+
+\begin{itemize}
+	\item DATA\_WIDTH para aumentar a largura dos dados (o que pode gerar problemas, visto que as instruções continuarão recebendo apenas 8 \bis{} de argumento);
+	\item ADDR\_WIDTH modifica as larguras dos endereços de todas as memórias, exceto as relacionadas a funções;
+	\item ADDR\_WIDTH\_FUNCTION modifica as larguras de endereços das memórias relacionadas à funções;
+	\item INSTRUCTION\_WIDTH indica a largura das instruções e, portanto, largura de dados da memória de instruções;
+	\item ADDR\_WIDTH\_MAX é a constante que define a largura de dados máxima suportada pela ULA e as entradas e saídas dos componentes que, respectivamente, recebem e enviam dados para ela; e
+	\item ULA\_CTRL\_WIDTH indica o número de \bis{} do seletor da ULA, atualmente definido como 4 \bis{} e sendo alterado caso seja necessário adicionar alguma outra operação nela.
+
+\end{itemize} 
 \subsection{Manter cálculos na ULA}
 
 Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de até 24 \bis{} ou menos. Sendo assim, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
