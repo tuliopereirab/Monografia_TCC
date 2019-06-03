@@ -1,34 +1,34 @@
-Um trabalho acadêmico é algo que engloba tanto a implementação propriamente dita quando o levantamento de informações e, posteriormente, inserção dessas informações em uma monografia. Este trabalho, recebendo essa classificação, foi desenvolvido durante um ano e passou por diversos passos de levantamento de informações e projeto.
+Um trabalho acadêmico é algo que engloba tanto a implementação propriamente dita quanto o levantamento de informações e, posteriormente, inserção dessas informações em um documento escrito. Este trabalho, recebendo essa classificação, foi desenvolvido durante um ano e passou por diversos passos de levantamento de informações e projeto.
 
-Este capítulo apresenta como foi feito o projeto completo, desde seu início até o resultado final. Nele, podem ser encontradas informações sobre levantamento de informações (seção \ref{newMeto_levantamento}), análises pré-implementação (seção \ref{newMeto_analises}), implementação e testes(seção \ref{newMeto_implementacao} e, por último, levantamento de resultados (seção \ref{newMeto_resultados}).
+Este capítulo apresenta como foi feito o projeto completo, desde seu início até o resultado final. Nele, podem ser encontradas informações sobre levantamento de informações (seção \ref{newMeto_levantamento}), análises pré-implementação (seção \ref{newMeto_analises}), implementação e testes (seção \ref{newMeto_implementacao} e, por último, levantamento de resultados (seção \ref{newMeto_resultados}).
 
 Como este projeto foi dividido em duas grandes fases, houveram algumas modificações simples no projeto que, tendo em vista que parte desse documento já estava escrita, foi adicionado um novo capítulo explicando as modificações e as necessidades delas. A seção \ref{newMeto_modificacoes} discorre brevemente sobre este tema.
 
 \section{Levantamento de Informações}
 \label{newMeto_levantamento}
 
-Primeiramente, antes que fosse tomada qualquer ação dentro do projeto, foi preciso que houvesse aquisição de informações fundamentais. Dentre elas, foi necessário, primeiramente, entender como a linguagem \py{} é executada, em detalhes.
+Primeiramente, antes que fosse tomada qualquer ação dentro do projeto, foi preciso que houvesse levantamento de informações fundamentais. Dentre elas, foi necessário, primeiramente, entender como a linguagem \py{} é executada, em detalhes.
 
-Sabendo, então, que ela é executada utilizando uma máquina virtual chamada \pvm{}, foi possível definir os objetivos deste trabalho: tornar possível executar algoritmos escritos em \py{} diretamente em uma arquitetura em \hw{}.
+Sabendo, então, que ela é executada utilizando uma máquina virtual chamada \textit{Python Virtual Machine} (PVM), foi possível definir os objetivos deste trabalho: tornar possível executar algoritmos escritos em \py{} em uma arquitetura projetada em \hw{}.
 
-Com a informação de que a máquina virtual existia, foi possível obter a documentação oficial que a descreve e outros documentos não oficiais, já apresentados no capítulo \ref{ref-teorico}. Com essa documentação, foi possível observar, principalmente, as instruções \as{} que compõem a máquina virtual, as quais são geradas através de uma compilação.
+Com a informação de que a máquina virtual existia, foi possível obter a documentação oficial que a descreve e outros documentos fornecidos por autores de fora da \textit{Python Software Foundation}, todos já apresentados no capítulo \ref{ref-teorico}. Com essa documentação, foi possível observar, principalmente, as instruções \as{} que compõem a máquina virtual, as quais são geradas através de compilação utilizando o compilador próprio da linguagem, \textit{CPython}.
 
-De posse das informações básicas sobre as instruções, foi possível analisar quais seriam as instruções necessárias para que algoritmos de baixa complexidades pudessem ser executados diretamente em \hw{}. 
+De posse das informações básicas sobre as instruções, foi possível analisar quais seriam as instruções necessárias para que algoritmos de baixa complexidades pudessem ser executados diretamente em \hw{}. De posse de uma arquitetura que consegue executar algoritmos \py{} simples, é possível adicionar módulos capazes de aumentar o leque de aplicações suportadas. Tais incrementos ficarão para trabalhos futuros, tendo em vista que o objetivo deste trabalho é gerar a arquitetura básica. 
 
 \section{Análises e Planejamentos}
 \label{newMeto_analises}
 
-Com várias informações básicas já adquiridas, tinha-se as o conhecimento sobre o funcionamento básico da máquina virtual e podia-se iniciar a implementação. Contudo, o que implementar exatamente? Esta fase do projeto é responsável por responder essa pergunta.
+Com várias informações básicas já obtidas, possuia-se conhecimento sobre o funcionamento básico da máquina virtual e podia-se iniciar a implementação. Contudo, o que implementar exatamente? Esta fase, chamada fase de projeto, é responsável por responder essa pergunta.
 
 \subsection{Análise das Instruções}
 
-Foi então iniciada a fase de análises de planejamentos do que deveria ser implementado. Primeiramente, com a aceitação de que seria impossível, no período deste trabalho, implementar todas as instruções existentes na máquina virtual \py{}, foi necessário analisar quais eram as mais importantes.
+Foi então iniciada a fase de análises e planejamentos do que deveria ser implementado. Primeiramente, com a aceitação de que seria impossível, no período deste trabalho, implementar todas as instruções existentes na máquina virtual \py{} tampouco todas as funcionalidades suportadas por ela, foi necessário analisar quais eram as mais importantes.
 
-Para isso, alguns algoritmos extremamente simples foram criados e implementados diretamente em \py{}. Utilizando a ferramenta \textit{Disassembler} presente na própria máquina virtual, foi possível entender as instruções \as{} utilizada para a geração desses algoritmos.
+Para isso, alguns algoritmos de baixa complexidade foram implementados diretamente em \py{}. Utilizando a ferramenta \textit{Disassembler} presente na própria máquina virtual, foi possível observar as instruções \as{} utilizadas para a geração desses algoritmos.
 
-Com essa informação, foi levantada uma lista básica de instruções que deveriam ser suportadas pela arquitetura física. Todas as análises feitas para definir as instruções básicas a serem suportas podem ser encontradas como leitura adicional no apêndice %citar apêndice da metodologia.
+Assim, foi criada uma lista básica de instruções que deveriam ser suportadas pela arquitetura física. Todas as análises feitas para definir as instruções básicas a serem suportas podem ser encontradas como leitura adicional no apêndice %citar apêndice da metodologia.
 
-A lista de instruções suportadas inicialmente é:
+A lista de instruções suportadas inicialmente era:
 
 \begin{itemize}
 	\item \textbf{Memória: }LOAD\_CONST, LOAD\_FAST e STORE\_FAST;
@@ -37,43 +37,45 @@ A lista de instruções suportadas inicialmente é:
 	\item \textbf{Funções: }CALL\_FUNCTION e RETURN\_VALUE.
 \end{itemize}
 
+No decorrer do projeto, como será abordado no capítulo \ref{modificacoes}, foram adicionadas à lista instruções as BINARY\_AND, BINARY\_OR, BINARY\_XOR e UNARY\_NOT. Todas elas se encaixam perfeitamente na classe de instruções aritméticas, visto que utilizam os mesmos componentes.
+
 \subsection{Análise dos Componentes Necessários}
 
 Com a lista de instruções já definida, foi necessário realizar uma análise dos componentes necessários antes de gerar o modelo da arquitetura final.
 
 Então, as instruções, separadas nas classes que foram apresentadas na subseção anterior, tiveram a definição dos componentes necessários. Para instruções de memória, por exemplo, foram definidos componentes como: pilha, registrador de pilha, registrador de topo, memória externa, registrador de memória externa e registrador de endereço. 
 
-Todas as análises explicações sobre as decisões tomadas nessa fase de projeto podem ser encontradas na leitura adicional contida no apêndice %citar apêndice.
+Todas as análises explicações sobre as decisões tomadas nesta fase de projeto podem ser encontradas como leitura adicional contida no apêndice %citar apêndice.
 
-Em resumo, esta fase definiu-se pela definição de componentes presentes em cada uma das arquiteturas parciais, as quais seram definidas no capítulo \ref{desenvolvimento}. Com esses componentes, foi possível identificar componentes que poderiam ser reutilizados e, portanto, reduzir a área ocupada pela arquitetura final.
+Nesta fase, em resumo, foram definidos os que estariam componentes presentes em cada uma das arquiteturas parciais, as quais seram apresentadas no capítulo \ref{desenvolvimento}. Com esses componentes, foi possível identificar quais deles poderiam ser reutilizados e, portanto, reduzir a área ocupada pela arquitetura final.
 
 \section{Implementação e Testes}
 \label{newMeto_implementacao}
 
-Nesta fase de projeto, foram definidas as arquiteturas parciais e como as análises feitas anteriormente foram utilizadas na criação da arquitetura final. Além disso, foi necessária a realização de testes para validar o que foi implementado. As subseções \ref{newMeto_desenvolvimento} e \ref{newMeto_testes} apresentarão, respectivamente, como foram feitos o desenvolvimento e os testes.
+Nesta fase de projeto, foram definidas as arquiteturas parciais e, juntamente com as análises feitas anteriormente, foi possível criar uma arquitetura final. Além disso, foi necessária a realização de testes para validar o que foi implementado. As subseções \ref{newMeto_desenvolvimento} e \ref{newMeto_testes} apresentarão, respectivamente, como foram feitos o desenvolvimento e os testes.
 
 \subsection{Fase de desenvolvimento}
 \label{newMeto_desenvolvimento}
 
-Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem a ser utilizada e a plataforma que seria utilizada para compilação e testes. Então, definiu-se que todo o projeto do \hw{} seria implementado em VHDL e o conversor, apresentado no capítulo \ref{conversor}, em C.
+Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem e, por conseguinte, a plataforma que seriam utilizadas para implementação, compilação e testes. Assim, foi definido que todo o projeto do \hw{} seria implementado em VHDL, utilizando a ferramenta \textit{Quartus}. Já o conversor, apresentado no capítulo \ref{conversor}, seria implementado C.
 
-A fase de desenvolvimento fala apenas sobre a criação do \hw{}, visto que o Conversor foi algo a mais utilizado, principalmente, para os testes. Então, para a criação do \hw{}, foi utilizada a ferramenta \textit{Quartus}, provida pela empresa Altera. 
+A fase de desenvolvimento fala apenas sobre a criação do \hw{}, visto que o Conversor foi uma implementado para ser uma ferramenta extra, utilizado, principalmente, para gerar arquivos de testestestes. A criação do conversor, tanto quanto seus métodos para evitar erros, são explicados no capítulo \ref{conversor}.
 
-Com isso definido, foram criadas arquiteturas parciais para cada classe de instruções e, ao final, uma arquitetura final contendo todas as parciais. A criação dessas arquiteturas é explicada com detalhes no capítulo \ref{desenvolvimento}. 
+Isto definido, foram criadas arquiteturas parciais para cada classe de instruções e, ao final, uma arquitetura final englobando todas as parciais, com adição de multiplexadores para que fosse possível reaproveitar componentes. A criação dessas arquiteturas é explicada com detalhes no capítulo \ref{desenvolvimento}. 
 
 \subsection{Fase de testes}
 \label{newMeto_testes}
 
-Após realizada a implementação da arquitetura completa com sua unidade de controle, foram realizados testes para cada uma das instruções e para algoritmos de baixa complexidade. Para a realização desses testes, foi utilizada a ferramenta \textit{Modelsim}, também criada pela empresa Altera.
+Após realizada a implementação da arquitetura completa, assim como sua unidade de controle, foram realizados testes para cada uma das instruções e funcionalidades, utilizando algoritmos de baixa complexidade. Para a realização desses testes, foi utilizada a ferramenta \textit{Modelsim}.
 
-Com essa ferramenta, é possível analisar cada um dos sinais internos e externos de cada um dos componentes que compõem a arquitetura. Essa funcionalidade é fundamental visto que podem haver erros internos que, sem ela, seriam extremamente difíceis de serem identificados.
+Com essa ferramenta, é possível analisar cada um dos sinais internos e externos de cada um dos componentes que fazem parte da arquitetura. Essa funcionalidade é fundamental, visto que podem haver erros internos que, sem ela, seriam extremamente difíceis de serem identificados.
 
 \section{Modificações}
 \label{newMeto_modificacoes}
 
-Com a divisão deste projeto em duas grandes partes (a primeira de implementação e levantamente de instruções e a segunda de realização de testes e refinamento do projeto), houveram algumas modificações simples diretamente na arquitetura que precisavam ser inseridas neste documento. 
+Com a divisão deste projeto em duas grandes partes (a primeira de levantamento de informações e implementação, e a segunda de realização de testes e refinamento do projeto), foram necessárias algumas modificações simples, aplicadas diretamente na arquitetura, que precisavam ser inseridas neste documento. 
 
-Contudo, parte deste documento, responsável por explicar o desenvolvimento, já estava concluída e, então, decidiu-se incluir um capítulo a parte explicando as modificações e as motivações que levaram a elas. As informações completas e detalhadas de todas as modificações podem ser encontradas no capítulo \ref{modificacoes} deste documento.
+Contudo, parte deste documento, responsável por explicar o desenvolvimento em detalhes, já estava concluída e, então, decidiu-se incluir um capítulo a parte explicando as modificações e as motivações que levaram a elas. As informações completas e detalhadas de todas as modificações podem ser encontradas no capítulo \ref{modificacoes}.
 
 Basicamente, todas as modificações tiveram como objetivo refinar a arquitetura para que fosse possível suportar futuras funcionalidades, as quais poderão ser acopladas como componentes externos à arquitetura. No resultado deste projeto, é esperado que a amplicação da arquitetura aqui descrita possa ser ampliada com trabalhos futuros sem modificar nada, além da unidade de controle. 
 
