@@ -1,0 +1,213 @@
+Nesta, serão apresentados os resultados preliminares obtidos durante a primeira de duas partes de implementação. Como já dito, foi realizada a implementação de um processador capaz de executar os \bc{} da linguagem \py{}. Contudo, por ora, somente existe a arquitetura física implementada, capaz de executar as instruções apresentadas neste trabalho.
+
+Como ainda não existe uma conexão entre o compilador \py{} e a arquitetura, existe a necessidade de se inserir os dados a serem computados nela manualmente diretamente no componente memória de instruções (\textit{memInstr}). Além disso, o código binário correspondente a cada instruções ainda não é o mesmo definido na compilação da linguagem \py{}, visto que ainda não foi realizado um estudo aprofundado sobre o código binário que de cada instrução \py{} que será lido ao ser executado na \pvm{}. Então, foi definido um código padrão, o qual é reconhecido pelo controle, para que seja possível executar as instruções corretamente.
+
+Na segunda parte deste trabalho, tem-se como objetivos: modificar o controle para que se utilize os códigos binários \py{} e realizar uma ligação entre o compilador \py{} e a arquitetura, permitindo a execução automática, por meio de um intermediário (\sw{}), na arquitetura. 
+
+Assim, por ora, serão apresentados no neste capítulo apenas resultados gerais, juntamente com exemplos de código executados e os resultados obtidos deles. A primeira seção apresentará as características gerais da arquitetura (frequência de operação, área ocupada, etc.). Já a segunda seção apresentará uma análise sobre os resultados obtidos até o momento com a arquitetura.
+
+\section{Características Gerais}
+\label{carac_gerais}
+Para iniciar a análise das características gerais encontradas para a arquitetura, precisa-se definir quais ferramentas foram utilizadas para obter tais informações. Como foi dito na subseção \ref{desc_hw_vhdl}, foi utilizada uma ferramenta que possibilita a aquisição de resultados e, posteriormente, prototipação em um FPGA. Seu nome é \textit{Quartus} e ela foi criada, inicialmente, pela Altera, que foi comprada pela Intel. Essa última incorporou a primeira em seus produtos e os gerencia.
+
+A ferramenta \textit{Quartus} possibilita desenvolver o projeto em VHDL e, após, compilá-lo. Ao fazer esse procedimento, gera-se uma lista de características sobre a arquitetura e, dentre elas, estão a frequência de operação e total de componentes utilizados para criá-la. A primeira subseção, de número \ref{freq_op}, apresentará a frequência de operação máxima adquirida até o momento, juntamente com uma análise baseada nos trabalhos correlatos apresentados na seção \ref{trab_correlatos}. A segunda subseção apresentará os valores obtidos com relação à área ocupada pela arquitetura quando prototipada em no FPGA Cyclone III da Altera, dispositivo de número EP3C25F324C6. 
+
+\subsection{Frequência Máxima de Operação}
+\label{freq_op}
+
+Utilizando-se a ferramenta \textit{Quartus}, foi possível visualizar que a frequência máxima de funcionamento obtida foi de 89,29 MHz. Tal valor significa que o período máximo da arquitetura é de 11,19 ns. Esse dado, por sua vez, indica o tempo necessário entre duas bordas de subida. 
+
+O valor do período pode ser obtido obtido através do valor inverso da frequência, tal como mostra a equação \ref{periodo}, onde "T" representa o período e "f" a frequência. 
+
+\begin{equation}
+\label{periodo}
+T = 1/f
+\end{equation}
+
+Nos trabalhos correlatos analisados, foi possível observar que, na maioria deles, as frequências de operações máximas definidas pelos projetistas giraram em torno dos 100 MHz. É possível que suas frequências máximas reais tenham sido pouco superior a isso, mas foram, provavelmente, arredondadas para um valor abaixo.
+
+A Figura \ref{quartus_freq} mostra uma imagem obtida diretamente da ferramenta \textit{Quartus}. Nela, pode ser vista a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk\_geral}, o qual representa o sinal de entrada do \clock{}. Ao entrar nesse pino, o sinal de \clock{} é transmitido para o controle e para todos os componentes que necessitam dele (registradores e memórias).  
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/freq_quartus.png}
+\caption{Frequência máxima de operação obtida através da ferramenta \textit{Quartus}.}
+\label{quartus_freq}
+\end{figure}
+
+Para melhorar a frequência de funcionamento da arquitetura, juntamente com seu desempenho, serão feitas modificações ainda não definidas durante a segunda parte de implementação deste trabalho. Espera-se superar os 100 MHz de frequência máxima, assim como os trabalhos correlatos analisados.
+
+\subsection{Área Ocupada em um FPGA}
+
+Ainda utilizando a ferramenta \textit{Quartus}, porém dessa vez analisando a área ocupada pela arquitetura implementada, foi possível obter a Figura \ref{area_quartus}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/area_quartus.png}
+\caption{Área obtida através da ferramenta \textit{Quartus}.}
+\label{area_quartus}
+\end{figure}
+
+Analisando ela, é possível observar que a arquitetura implementada não ocupou muito espaço do FPGA, visto que ele foi criado para suportar implementações bem maiores que essa. Dentre os dados obtidos, estão:
+
+\begin{description}
+	\item[Total de elementos lógicos:] foram encontrados um total de 409 elementos lógicos, utilizados em 314 funções combinacionais e 256 registradores lógicos dedicados. Esse valor total encontrado equivale a 2\% do total suportado pelo FPGA, que é 24.624.
+	\item[Total de registradores:] foram ocupados 256 registradores. Além disso, a ferramenta ainda adiciona registradores extras quando entende que é necessário.
+	\item[Total de pinos:] foram ocupados apenas três pinos do FPGA, pois existem apenas três pinos externos. Dois deles de entrada (\textit{clk\_geral} e \textit{reset\_geral}) e um deles de saída (\textit{overflow\_geral}). Esses valores caracterizam 1\% do total presente no FPGA.
+	\item[Total de \bis{} de memória:] foram ocupados 12.288 \bis{} de memória dos 608.256 existentes no FPGA. Tal valor caracteriza 2\% da capacidade do FPGA. 
+	\item[Multiplicador de elementos de 9 \bis{} embarcado:] como a unidade lógica aritmética possui a função de multiplicação, foi utilizado um multiplicador nativo do FPGA, o qual foi adicionado a arquitetura. Esse um multiplicador equivale a menos de 1\% do total presente em um FPGA. 
+\end{description}
+
+Ao final deste trabalho, é esperado que a arquitetura ganhe mais componentes implementados, mas também espera-se reduzir o número de recursos utilizados pelo FPGA, como por exemplo o número de registrador e de estados na máquina de estados. Para isso, serão empregadas técnicas de redução de área, visto que o objetivo é realizar o maior número de funcionalidades no menor espaço possível. 
+
+\section{Resultados de Simulações}
+\label{resultados_imp}
+Nesta seção, serão apresentados os resultados obtidos após a simulação de alguns códigos \as{} diretamente na arquitetura. Então, aqui, serão apresentados apenas resultados em códigos binários, os quais serão explicados.
+
+Para a realização das simulações, foi utilizada a ferramenta criada e mantida pela Altera, atualmente pertencente à Intel, chamada \textit{Modelsim}. Foi criado um arquivo de \textit{testbench}, o qual definiu que ocorreria uma troca de borda de \clock{} a cada 5,595 ns, definindo-se, então, o período de \clock{} como sendo 11,19 ns.
+
+Antes de iniciar, alguns pontos cruciais precisam ser destacados. O primeiro deles, e mais importante, diz respeito ao código binário utilizado para as instruções. Como ainda não foi realizada a conexão entre compilador \py{} e a arquitetura, a arquitetura ainda não responde a nenhum código binário da linguagem \py{}. Assim, para que as simulações fossem realizadas, foram definidos códigos binários para cada uma das instruções. A tabela \ref{table_binaryCode} apresenta os códigos binários utilizados para cada uma das instruções.
+
+\input{tables/resultados/table_binary_code}
+
+O segundo ponto a ser destacado diz respeito ao endereçamento. Como foi dito no decorrer do texto, a memória de instruções possui blocos de 2 \bys{}. Assim, cada endereço nela presente possui 16 \bis{}, sendo os 8 \bis{} primeiros referentes ao argumento da instrução e os 8 \bis{} subsequentes referentes ao código da instrução.
+
+Para a instrução COMPARE\_OP, a qual precisa receber códigos indicando o tipo de operação a ser realizada, foram definidos códigos binários referentes a cada operação. Por ora, só foram adicionados três tipos de comparação. A tabela \ref{table_compare} apresenta os códigos binários referentes às comparações. Esse códigos, por sua vez, serão adicionados como argumentos de uma chamada da instrução COMPARE\_OP.
+
+\input{tables/resultados/table_compareOp}
+
+Cada uma das subseções a seguir apresenta os testes realizados para determinada funcionalidade, a qual pode ser observada em seus títulos. Dessa forma, torna-se mais fácil encontrar a execução de um tipo de instrução específico.
+
+Como todos os dados estão em códigos binários, as imagens apresentadas serão as originais retiradas diretamente da ferramenta \textit{Modelsim}. Nelas, serão mostradas as memórias (incluindo a pilha) e serão explicados os pontos a serem observados em cada uma. Já é esperado que as imagens apresentadas possam ser de difícil entendimento, então o máximo de informações possível será adicionado ao texto.
+
+\subsection{Teste 1: Soma entre variável e constante}
+
+Para a realização do primeiro teste, foi criado um algoritmo que utiliza todas as instruções listadas no título. A Figura \ref{teste1_code} apresenta o código criado.
+
+As duas primeiras linhas do código inicializam uma variável com o valor 00011000 (serão utilizados os valores em binário porque os resultados também serão apresentados em binário). A variável fica salva na posição 00000000 da memória externa. Após, insere-se o valor 00000011 na pilha e lê-se da memória externa a variável criada, passando-a para a pilha também. Com os dois operandos no topo da pilha, executa-se uma soma, tal como foi explicada no capítulo \ref{metodologia}. Após, salva-se na memória externa, posição 00000001, o resultado da operação.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste1/teste_loadC-F_store_add.png}
+\caption{Algoritmo utilizado para o Teste 1.}
+\label{teste1_code}
+\end{figure}
+
+A Figura \ref{teste1_memInstr} apresenta o mesmo algoritmo mostrado na Figura \ref{teste1_code}, porém agora adicionado diretamente na memória de instruções. Na memória de instruções, o primeiro dado aparece na última posição. Ou seja, a posição 00000000 da memória está na posição mais à direita da última linha. Assim, é definido que as instruções na memória de instruções aparecem da direita para a esquerda e de baixo para cima.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste1/memInstr.png}
+\caption{Algoritmo do Teste 1 adicionado na memória de instruções.}
+\label{teste1_memInstr}
+\end{figure}
+
+Passando para os resultados do Teste 1, temos a Figura \ref{teste1_memExt}, que apresenta uma visão da memória externa após a simulação. Nela, podemos perceber que na posição 00000000 está salvo o valor 00011000 referente à variável criada nas duas primeiras linhas. Já na outra posição ocupada, a posição de número 00000001, está presente o valor salvo após a operação de soma, representando seu resultado. Como foi realizada a soma de 00011000 e 00000011, o resultado é 00011011, valor que está salvo na segunda posição.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste1/memExt.png}
+\caption{Resultados presentes na memória externa após o Teste 1.}
+\label{teste1_memExt}
+\end{figure}
+
+Uma imagem da pilha não é necessária, visto que ela encontra-se vazia, já que todos os dados a ela adicionados foram apagados dela e salvos na memória ou utilizados como operando. 
+
+A Figura \ref{teste1_wave} apresenta uma representação, gerada pela ferramenta, dos valores de sinais internos à arquitetura no decorrer dos testes. Como a imagem é muito grande, torna-se inviável entender. Porém, alguns pontos ainda podem ser percebidos, tais como o sinal de \textit{reset} ativo nos primeiros nanossegundos de execução e o valor do \clock{} sendo trocado a cada metade de período. Ambos os sinais estão na segunda e primeira linhas, respectivamente. Na terceira e na quarta linhas aparece, respectivamente, o sinal indicando o estado atual (o qual muda a cada ciclo de \clock{}) e o sinal indicando o valor de PC (o qual muda ao final de cada instrução).
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.5]{images/resultados/teste1/waveForm.png}
+\caption{Forma de onda gerada após a simulação do Teste 1.}
+\label{teste1_wave}
+\end{figure}
+
+Para os próximos testes, não serão apresentadas as imagens mostrando as formas de ondas, visto que não é possível entendê-las.
+
+\subsection{Teste 2: Chamada e retorno de função}
+
+Para o segundo teste, foi utilizado o algoritmo encontrado na Figura \ref{teste2_code}. Seguindo a mesma sequência de apresentação do teste 1, a Figura \ref{teste2_memInstr} apresenta a memória de instruções já com o código binário adicionado. 
+
+É possível observar, na Figura \ref{teste2_memInstr}, que existem posições preenchidas com U entre a chamada do código inicial e o código da função. Isso acontece porque as posições estão vazias. Tal fato não causa problemas, visto que ao chamar-se uma função, executa-se um pulo diretamente para o endereço passado como argumento da chamada, o qual representa o valor 12 em decimal (00001100 em binário).
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste2/teste_loadC-F_callF_returnF_sub.png}
+\caption{Algoritmo utilizado para o Teste 2.}
+\label{teste2_code}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste2/memInstr.png}
+\caption{Algoritmo adicionado à memória de instruções antes da simulação do Teste 2.}
+\label{teste2_memInstr}
+\end{figure}
+
+Obtendo-se como resultado, foi feita uma operação de subtração entre os valores 10000000 e 00000001 no interior da função. Após a operação, houve um retorno do valor obtido como resultado para a pilha e, após, o mesmo foi salvo na memória externa. A Figura \ref{teste2_memExt} apresenta uma visão da memória externa. Nela, pode ser visto o resultado da operação, 01111111, salvo na posição 00000000. Como a instrução STORE\_FAST salva apenas o topo da pilha na memória externa, assume-se que a chamada e o retorno da função ocorrerão corretamente.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste2/memExt.png}
+\caption{Visão da memória externa com o resultado da subtração após a simulação do Teste 2.}
+\label{teste2_memExt}
+\end{figure}
+
+Como a instrução STORE\_FAST salva apenas o topo da pilha na memória externa, assume-se que a chamada e o retorno da função ocorrerão corretamente. A Figura \ref{teste2_pilha} apresenta uma imagem da pilha após a execução. É possível observar que, na posição 00000010, existe o valor resultado da função (retornado dela) e na posição 00000001 existe o valor inserido no primeiro LOAD\_CONST, o qual não foi utilizado. 
+
+Conclui-se, através dessa Figura, que ao chamar-se uma função, foi alocado um bloco na pilha e, ao retornar da mesma, esse bloco foi excluído o resultado retornado tornou-se o topo da pilha. O grande e crucial detalhe é que o dado que já existia na pilha antes da função permaneceu nela sem sofrer nenhuma modificação. Esse dado, vindo de um LOAD\_CONST, pode ser comparado a uma sequência de dados de uma extensa execução anterior, a qual não sofreria nenhuma perda quando uma função fosse chamada.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=1]{images/resultados/teste2/pilha.png}
+\caption{Visão da pilha após a simulação do Teste 2.}
+\label{teste2_pilha}
+\end{figure}
+
+Ainda sobre a Figura \ref{teste2_pilha}, é possível observar que na posição 00000011 existe um dado representando o segundo operando da função. Sua existência é completamente ignorada pelo sistema, visto que, para o sistema, só existem dados até o ponteiro de topo, o qual se encontra apontando para a posição 00000010. Assim, no primeiro LOAD realizado, a posição 00000011 será sobrescrita. 
+
+\subsection{Teste 3: Procedimento \textit{if}}
+
+A última simulação realizada, chamada de Teste 3, tem como algoritmo utilizado o conteúdo da Figura \ref{teste3_code}. Nele, foram definidas duas comparações e dois pulos caso essa comparação retornasse como sendo falsa. A primeira comparação tem como operando dois valores idênticos e compara se eles são iguais. A segunda, tem os valores 00000001 e 00000000 e compara se o primeiro é menor que o segundo. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste3/teste_loadC_compare_popJ.png}
+\caption{Algoritmo utilizado para o Teste 3.}
+\label{teste3_code}
+\end{figure}
+
+Após cada uma das comparações, foi adicionado um pulo condicional levando a uma instrução que executa um LOAD\_CONST de valores diferentes para que seja possível distinguir qual foi o destino do desvio. Caso nenhum desvio seja tomado, tem-se uma representação NOP, a qual não é nenhuma instrução específica mas representa um espaço vazio. Quando se executa um espaço vazio de memória, o sistema simplesmente reconhece que o algoritmo foi finalizado, não escrevendo, portanto, nenhum valor na pilha e executando um \textit{loop} infinito durante o resto do tempo definido para a execução. Esse \textit{loop} é definido ficando apenas no estado inicial, o qual salvará o valor de \textit{OpCode} e, como não encontrará nada, reiniciará e salvará novamente. Tal sequência acontece até que se chegue ao final do tempo de simulação definido.
+
+A Figura \ref{teste3_memInstr} apresenta uma visão da memória de instruções mostrando o código binário adicionado nela para a execução do Teste 3. É possível visualizar os destinos dos pulos em posições na primeira linha da imagem, de cima para baixo.
+
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/resultados/teste3/memInstr.png}
+\caption{Algoritmo adicionado à memória de instruções antes da simulação do Teste 3.}
+\label{teste3_memInstr}
+\end{figure}
+
+O resultado desta simulação pode ser visto na Figura \ref{teste3_pilha}, a qual apresenta uma imagem da pilha após a execução. É possível perceber que foi salvo na pilha o valor 11111111, referente à posição de memória de instruções 20. Isso indica que apenas o segundo desvio ocorreu, como era esperado. Ainda existe mais um valor, o qual é ignorado visto que o ponteiro está indicando que o topo da pilha é o valor 11111111. Esse outro valor é o segundo operando da segunda operação, o qual já foi utilizado.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=1]{images/resultados/teste3/pilha.png}
+\caption{Visão da pilha após a simulação do Teste 3.}
+\label{teste3_pilha}
+\end{figure}
+
+\section{Conclusões referentes aos resultados}
+
+Os resultados apresentados na seção \ref{carac_gerais} estão de acordo com o que era esperado. A frequência máxima de operação apresentada, a qual foi retirada da ferramenta \textit{Quartus}, combina com os resultados encontrados pelos trabalhos correlatos.
+
+Tanto características como frequência e área não foram otimizadas e não foram uma preocupação nesta parte da implementação. Por ora, foram preocupações apenas questões de funcionalidade e correções de \textit{bugs}. Após finalizadas as implementações gerais, quando for possível declarar que a arquitetura está pronta e funcional, conforme previsto, serão aplicadas técnicas de melhoria de desempenho e economia de área e energia. 
+
+Os resultados referentes à eficiência energética não foram apresentados pois ocorreram erros durante a implementação da sequência de testes energéticos, definida pelo próprio \textit{Quartus}. Um dos arquivos principais, o qual deveria ser carregado no processo automaticamente pela ferramenta, não foi encontrado. Informações referentes à eficiência energética serão apresentadas apenas na parte final deste trabalho.
+
+Quanto aos resultados apresentados na seção \ref{resultados_imp}, conclui-se que ocorreu exatamente o que era esperado. Algumas das instruções implementadas ficaram de fora. Foram escolhidas as instruções mais utilizadas e de maior complexidade, tais como comparações, desvios condicionais e manipulações de funções. A utilização de comparações e algumas operações aritméticas indica que essa classe de instruções está funcionando corretamente.
+
+Ao se utilizar desvios condicionais, é possível concluir, também, que os desvios incondicionais estão funcionando, visto que JUMP\_ABSOLUTE realiza a mesma operação que POP\_JUMP\_IF\_FALSE, porém sem uma comparação. Já a instrução JUMP\_FORWARD realiza praticamente a mesma operação, só que, ao invés de substituir o valor de PC, executa uma soma de PC+arg, sendo \textit{arg} uma abreviação para argumento.
+
+Portanto, para a primeira parte de implementação, todos os resultados obtidos condizem com o esperado. Espera-se aprimorar os dados obtidos, visando maior frequência e menor área ocupada. Também espera-se utilizar os códigos binários exatos da linguagem \py{}.
