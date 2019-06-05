@@ -1,0 +1,257 @@
+Para iniciar o desenvolvimento do sistema, foi necessário, anteriormente, definir o conjunto de instruções básico que seria implementado. Isso porque, para propor uma arquitetura funcional e que atenda todos os requisitos, é preciso já possuir o conjunto de instruções básico que deve ser implementado. Dessa forma, é possível fazer uma análise concreta dos componentes necessários na arquitetura.
+
+A seção \ref{a_instrucoes} apresenta detalhadamente como foi escolhido o conjunto de instruções a ser implementado nesse trabalho. Após a escolha do mesmo, foi feita uma análise de requisitos do sistema, onde todas as instruções escolhidas foram analisadas e foram definidos os componentes que devem estar presentes na arquitetura final. Esta parte do projeto está detalhada na seção \ref{a_requisitos}.
+
+\section{Análise das instruções}
+\label{a_instrucoes}
+
+Antes de começar, então, o planejamento para desenvolvimento da arquitetura propriamente dita, com suas ligações entre componentes e seu controle, foi preciso definir o que a arquitetura seria capaz de fazer, ou seja, quais instruções seriam suportadas por ela. Como o tempo para o desenvolvimento deste trabalho não permite que todas as instruções presentes na máquina virtual da linguagem \textit{Python} sejam implementadas, foi preciso definir um conjunto de instruções que possa ser implementado dentro do prazo e que permita que algoritmos simples sejam executados. 
+
+A subseção \ref{a_algo_sim} apresenta alguns algoritmos simples que foram implementados em alto nível e, após, foram obtidos seus códigos \as{}. De posse desses códigos, foi feita, na subseção \ref{a_instrucoes_algo}, uma análise dos resultados obtidos e, portanto, uma seleção das instruções a serem implementadas diretamente na arquitetura.
+
+\subsection{Apresentação dos algoritmos utilizados}
+\label{a_algo_sim}
+Para escolher as instruções, foi necessária uma análise de diversos algoritmos implementados em \textit{Python} e que são considerados simples. Tais algoritmos servem como base para diversos outros algoritmos, já que são operações matemáticas básicas, manipulação de dados dados e pulos (\textit{jumps} ou desvios). 
+
+Então, foram definidos alguns algoritmos que seriam utilizados como base para projetar a arquitetura, já que os trechos que código que os são básicos e muito utilizados em algoritmos \textit{Python} mais complexos. Os algoritmos escolhidos são:
+
+\begin{description}
+	\item[Criação de variáveis numéricas]: é um algoritmo que simplesmente cria uma variável \textit{Python} e atribui um valor numérico a ela, podendo ser qualquer valor. O propósito desse algoritmo é entender como uma variável é salva na memória externa (\textit{RAM}) do sistema.
+	\item[Comparação simples]: criou-se um algoritmo que continha uma comparação \textit{if} simples com um bloco de instruções internas que seria executado caso a afirmação feita na comparação fosse verdadeira, ou então seria ignorado por completo. A comparação foi criada para que fosse possível entender como é feita uma comparação dentro do código \textit{Assembly Python} e entender quais as instruções encarregadas por desvios, comparação e carregamento de variáveis da memória para a pilha.
+	\item[Comparação com \textit{else}]: é um algoritmo que contém uma chamada \textit{if} e, após, uma chamada \textit{else}. Este algoritmo foi utilizado para analisar como funciona, do ponto de vista do código \textit{Assembly}, o uso de um \textit{else}, indicando que, caso a afirmação contida no \textit{if} retorne como sendo falsa, o trecho de código interno ao \textit{else} seria executado. 
+	\item[Comparação com \textit{elif} e \textit{else}]: é o algoritmo que contém, além do \textit{if} e \textit{else} no início e no final, respectivamente, uma comparação intermediária chamada, na linguagem \textit{Python}, de \textit{elif}. Essa segunda comparação será executada caso ela seja verdadeira e a primeira seja falsa. Esse algoritmo foi utilizado para verificar a existência de diferenças entre o uso do \textit{elif} e os outros algoritmos de comparação apresentados anteriormente.
+	\item[Estrutura de repetição \textit{while}]: foi criado um algoritmo que implementa uma estrutura de repetição \textit{while}. Sua criação foi necessária para que fosse possível evidenciar os diferentes pulos que são utilizados no código \textit{Assembly Python} ao se utilizar diferentes estruturas de repetição.
+	\item[Estrutura de repetição \textit{for}]: algoritmo idêntico ao anterior, porém utilizando, no lugar do \textit{while}, a estrutura de repetição \textit{for}. Foi possível analisar, com ele, as diferenças entre os dois algoritmos.
+	\item[Operação aritmética de soma simples]: foi criada uma operação aritmética de soma simples, a qual foram somados dois valores constantes e, após, seu resultado foi salvo em uma variável. 
+	\item[Operação aritmética de soma de constante com variável]: algoritmo executa uma soma de uma variável previamente salva na memória com uma constante, salvando o resultado em outra variável. Esse algoritmo foi criado para permitir a análise de como são feitos os carregamentos de dados já existentes e os dados chamados como constantes, sem estarem salvos e como são manipulados dentro de uma operação aritmética.
+	\item[Operação aritmética de soma com duas variáveis]: algoritmo executa a soma de duas variáveis previamente salvas na memória e armazena o resultado em outra variável. Com ele, é possível entender como são feitos os carregamentos das variáveis e a ordem em que é feito.
+	\item[Operação aritmética de subtração de variáveis]: algoritmo executa a subtração de dois valores salvos na memória. Sua implementação foi influenciada pelo fato de ser possível analisar quais tipos de operações aritméticas a máquina virtual \textit{Python} é capaz de executar nativamente, sem a necessidade de quebrar uma operação em pequenas operações internas.
+	\item[Operação aritmética de multiplicação de variáveis]: executa a multiplicação de dois valores salvos em variáveis. Foi necessário para entender se, dentro da máquina virtual \textit{Python}, uma multiplicação era feita por uma sequência de somas separadas, definidas no código \textit{Assembly}, ou se existia uma instrução específica para executar a multiplicação.
+	\item[Operação aritmética de divisão de variáveis]: implementa uma divisão entre dois valores. Sua necessidade de implementação vem do fato de ser preciso entender, assim como na multiplicação, se existia uma instrução específica para tal operação ou se eram feitas subtrações sucessívas.  
+\end{description}
+
+\subsection{Análise dos algoritmos utilizados}
+\label{a_instrucoes_algo}
+
+
+De posse dos algoritmos acima apresentados, foi utilizada uma ferramenta presente no próprio compilador \textit{Python}, chamada \textit{dis} (fazendo referência à \textit{disassembler}), capaz de mostrar o código \textit{Assembly} do algoritmo implementado em alto nível. Então, colocando os algoritmos prontos na ferramenta, ela retornava o código \textit{Assembly} referente ao algoritmo. Tal código é o que é enviado para a máquina virtual para ser executado.
+
+A Figura \ref{img_1_simple} apresenta o código \textit{Assembly} do primeiro algoritmo apresentado. Ele cria uma variável, salvando o valor em um endereço de memória específico. Após, ele carrega o valor novamente para a pilha e imprime na tela. Todos os algoritmos apresentados aqui contém as instruções de impressão na tela \textit{PRINT\_ITEM} e \textit{PRINT\_NEWLINE}, porém, elas não são o foco para o projeto da arquitetura, já que elas serão implementadas diretamente em \textit{software}, não em \hw{}.
+
+Então, com a análise da Figura \ref{img_1_simple}, é possível perceber instruções básicas para um código \textit{Assembly Python}, tais como LOAD\_CONST, STORE\_FAST e LOAD\_FAST. A primeira é responsável por encaminhar para a pilha um valor constante, passado como argumento. Tal valor será salvo no \tos{} e será manipulado de acordo com a próxima instrução. A segunda instrução encontrada salva o valor encontrado no \tos{} na memória externa do sistema, definindo o endereço onde ele será salvo e o passando como argumento. O endereço definido será o mesmo utilizado para acessar tal variável futuramente. Então, ao se afirmar que determinada variável terá o nome de "\textit{variavel}", define-se o endereço desta e, toda vez que ela precisar ser acessada, será o endereço dela que será passado como parâmetro da instrução STORE\_FAST e não seu nome diretamente. Por fim, a terceira instrução executa um carregamento de uma variável diretamente da memória principal para a o \tos{}. O endereço onde a variável foi salva na memória será informado no argumento. 
+
+A definição dos argumentos de cada instrução cabe ao compilador, então ele deverá escolher um endereço onde a variável será salva e passar tal endereço todas as vezes em que a mesma variável precisar ser acessada ou modificada. Uma variável, por exemplo, de nome "\textit{var}" recebe o endereço de 8 \textit{bits} 00001100. Logo, ao ser salva na memória, ela será salva na posição de memória referente a este endereço utilizando STORE\_FAST e, ao ser acessada com um futuro LOAD\_FAST, deverá ser passado como argumento da instrução o mesmo endereço 00001100. 
+
+É possível perceber, ainda, através da análise da Figura \ref{img_1_simple}, que um valor precisa ser carregado na pilha antes de se tornar uma variável. Isso acontece porque a instrução encarregada por salvar determinado valor na memória principal age apenas na pilha. Ou seja, a instrução sempre executará tendo como foco salvar o \tos{} na memória principal. Logo, a criação de uma variável, que em alto nível é feita simplesmente utilizando "\(var = 10\)", em baixo nível utiliza duas instruções: LOAD\_CONST e STORE\_FAST.
+
+Por último, após a execução de todo o código, é feita uma chamada da instrução RETURN\_VALUE, que finaliza a execução dessa função. Como o algoritmo só tinha essa função, finalizar a execução dela significa finalizar a execução do algoritmo por completo.
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/1_simple.png}
+\caption{Código \textit{Assembly} de uma criação de variável.}
+\label{img_1_simple}
+\end{figure}
+
+A análise da Figura \ref{img_2_if} nos permite entender como é feita uma comparação em código \textit{Assembly} da linguagem \py{}. O algoritmo apresentado nela implementa uma chamada \textit{if} sozinha, sem acompanhamento de \textit{elif} ou \textit{else}. Isso significa que o trecho de código contido no corpo do \textit{if} somente irá impactar na execução do sistema se a comparação for verdadeira, não tendo, portanto, nenhuma execução caso a primeira afirmação seja falsa. Em outras palavras, caso a afirmação retorne como sendo falsa, a chamada \textit{if} será completamente ignorada, diferente do que acontece nas Figuras \ref{img_2_if_else} e \ref{img_2_if_elif_else}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/2_if.png}
+\caption{Código \textit{Assembly} de uma comparação \textit{if} simples.}
+\label{img_2_if}
+\end{figure}
+
+Então, ao analisar-se a Figura \ref{img_2_if}, pode-se perceber que acontece o que já foi visto na Figura \ref{img_1_simple} no que diz respeito ao armazenamento de uma variável na memória principal. Assim, após salvar uma variável que será utilizada para fazer a comparação na memória principal, ela é carregada para a pilha novamente para que seja efetuada a comparação. Contudo, é preciso realizar uma operação que depende de outro valor, uma constante, que ainda não está na pilha, mas precisa estar. Então é feito um carregamento da constante diretamente para a pilha. Tal constante é o valor que será comparado com a variável e resultará em um resultado afirmativo ou negativo para a comparação. 
+
+Com os dois operandos carregados (variável e constante), é possível notar a existência de uma nova instrução, a qual ainda não foi analisada. Tal instrução é chamada de COMPARE\_OP e ela é encarregada por executar uma comparação entre o \tos{} e a posição logo abaixo dele. Ela define o tipo de comparação que será feita através dos valores passados como argumento. No caso da Figura \ref{img_2_if}, está sendo executada uma comparação "maior que" (>). O compilador define que tal comparação recebe o valor 4, em decimal, indicando a chamada do "maior que", e o coloca como argumento. 
+
+Após a comparação, pode ser encontrada uma instrução chamada POP\_JUMP\_IF\_FALSE, que executa um pulo caso a comparação anterior seja falsa. Para entender melhor isso, é necessário analisar diretamente em um algoritmo de alto nível. Em um algoritmo de alto nível, ao ser chamado um \textit{if}, logo abaixo, sequencialmente, é escrito o trecho de código que será executado caso a afirmação seja verdadeira. Contudo, caso seja falsa, esse código não deverá ser executado. Então, quando se fala de um código \textit{Assembly}, para não executar determinado trecho de código, precisa-se pulá-lo/desviá-lo. Portanto, a instrução POP\_JUMP\_IF\_FALSE executa um desvio, caso a afirmação feita no \textit{if} seja falsa, com o intuito de pular o trecho de código que deveria ser executado apenas quando a afirmação fosse verdadeira.
+
+Ainda na mesma figura, pode-se ver que aparece outra instrução que ainda não foi apresentada, chamada JUMP\_FORWARD. Tal instrução executa um pulo incondicional, ou seja, sem depender de uma comparação prévia. Esse pulo sempre acontecerá quando a instrução for lida, diferentemente da instrução anterior, onde o pulo só acontecerá se a comparação anterior for falsa. A instrução JUMP\_FORWARD executa um pulo em que o valor atual do contador de programa (PC) é incrementado com um valor fixo, chamado de "\textit{delta}". É importante observar que o valor de PC não é substituído por completo pelo novo valor, mas sim é feita uma soma entre o valor de PC atual e o \textit{delta}. O resultado da soma será o novo valor de PC.
+
+Finalizando a análise do código \textit{Assembly} da Figura \ref{img_2_if}, pode-se perceber que após a comparação, então, é feito um pulo condicional para a linha de código após o trecho de código interno ao \textit{if}. Isso porque o desvio incondicional só é executado caso o bloco de código encontrado no corpo do \textit{if} seja executado, fazendo com que o algoritmo finalize após sua execução. O destino deste pulo, então, são as linhas de código que finalizam o algoritmo. 
+
+A Figura \ref{img_2_if_else} apresenta um código quase igual ao apresentado na Figura \ref{img_2_if}. Contudo, ele acrescenta um trecho de código que deverá ser executado caso a afirmação feita no \textit{if} seja falsa. Então, não se pode dizer que a estrutura \textit{if} será completamente ignorada nesse caso. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/2_if_else.png}
+\caption{Código \textit{Assembly} de uma comparação \textit{if} contendo \textit{else}.}
+\label{img_2_if_else}
+\end{figure}
+
+Porém, do ponto de vista do código \textit{Assembly}, não é adicionada nenhuma instrução nova. A grande diferença dos dois códigos \textit{Assembly}, portanto, é que o pulo condicional de quando a comparação resulta como sendo falsa direciona o \pc{} para executar o trecho de código responsável pela saída alternativa ao \textit{if}. Na imagem anterior, não existia tal saída, portanto, o pulo direcionava o contador para fora da estrutura \textit{if} e, como o algoritmo só possuia tal estrutura, para o final da sua execução. 
+
+Continua-se tendo um pulo incondicional idêntico ao da figura anterior, o qual direciona o programa para o final da sua execução. Pode-se observar que só existe pulo incondicional após o trecho de código executado caso a comparação seja verdadeira. No trecho executado caso ela seja falsa, não se tem um pulo pois é esperado que esse trecho somente seja executado como última instância, não sendo preciso realizar nenhum pulo após ele, já que ao finalizar sua execução já estar-se-á fora da estrutura \textit{if}. 
+
+Nesse algoritmo, fica claro o motivo de se utilizar um desvio incondicional relacionado a um \textit{delta} e não um desvio absoluto, que será visto a seguir, e que substitui o valor do \pc{} por um valor. O motivo, então, é que o compilador calcula a quantidade de linhas necessárias para pular completamente o trecho de código contido em \textit{else} e o adiciona ao \pc{}, fazendo com que o algoritmo seja executado uma linha após a última linha do trecho. Um pulo absoluto não seria ideal, pois o valor deveria ser exatamente o valor da última linha de \textit{else} somado com um, se tornando, portanto, mais difícil e custoso para o compilador montar o código \as{}.
+
+Na Figura \ref{img_2_if_elif_else}, segue-se a mesma lógica vista nas Figuras \ref{img_2_if} e \ref{img_2_if_else}, porém com a adição de uma nova comparação após a primeira. Como neste algoritmo implementa-se uma estrutura \textit{if} que contém duas comparações e uma saída padrão, que será executada caso as duas sejam falsas, é possível perceber isso também no código \textit{Assembly}. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/2_if_elif_else.png}
+\caption{Código \textit{Assembly} de uma comparação \textit{if}, contendo \textit{elif} e \textit{else}.}
+\label{img_2_if_elif_else}
+\end{figure}
+
+Assim como na Figura anterior, não é possível verificar nenhuma instrução diferente das que já foi visto até o momento. Contudo, a estrutura do código \textit{Assembly} é levemente diferente. Após executar-se a primeira comparação e o \pc{} estar apontando para o primeiro pulo, ele é então direcionado diretamente para a segunda comparação, caso a primeira retorne falsa. Caso a segunda retorne falsa também, o valor de PC recebe a linha de código inicial do trecho de código padrão, que será executado somente se as duas retornem falsas. 
+
+Com a inserção de uma nova comparação, agora também pode ser visto mais de um pulo incondicional. Pode-se observar, também, que ainda não é encontrado um pulo incondicional após a segunda comparação, somente após o trecho de código presente no seu corpo. O motivo para isso é o mesmo apresentado anteriormente.  
+
+A Figura \ref{img_3_while} é a primeira que apresenta a implementação de uma estrutura de repetição em \textit{Assembly}. Através de sua análise, pode-se perceber a inserção de algumas novas instruções. Porém, mantém-se a sequência de chamada de instruções para executar operações mais simples, tais como comparações, onde as constantes a serem comparadas são carregadas para a pilha antes de executar a instrução COMPARE\_OP. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/3_while.png}
+\caption{Código \textit{Assembly} de uma estrtutura de repetição \textit{while}.}
+\label{img_3_while}
+\end{figure}
+
+Analisando este código, pode-se perceber que, primeiramente, ocorre a criação de uma variável na memória. Tal variável será utilizada para gerenciar a estrutura de repetição. Ela será iniciada com um valor, no caso da Figura o valor é zero, e irá receber uma sequência de somas. Quando seu valor exceder um valor pré-definido, no caso 10, a estrutura será finalizada. 
+
+Após a criação e atribuição de valor à variável, é chamada a primeira instrução nova, SETUP\_LOOP. Tal instrução é encarregada por inicializar um bloco, responsável pela estrutura de repetição (\textit{loop}) na pilha. Um bloco na pilha nada mais é do que uma região de posições de memória, ao topo da pilha, com variáveis que são modificadas. Ao finalizar-se um \aloop{}, o bloco é retirado da pilha e a pilha volta ao que era. 
+
+A instrução seguinte inicia um procedimento de comparação, onde os dois valores a serem comparados são carregados para a pilha. O primeiro valor, a variável a ser comparada, e o segundo, o valor que define o final da execução da estrutura, serão os operandos da instrução COMPARE\_OP, executada exatamente na sequência dos dois carregamentos. 
+
+Assim como em uma instrução \textit{if}, existe um trecho de código que só deverá ser executado enquanto o programa estiver rodando dentro do \textit{loop}. Logo, após a comparação, existe um POP\_JUMP\_IF\_FALSE, que visa evitar a execução de tal trecho caso o valor da variável seja maior que 10. Então, o pulo é feito diretamente para a instrução que define a retirada do bloco da pilha. Essa instrução, chamada POP\_BLOCK, retira o bloco do \aloop{} da pilha e finaliza, então, a execução dele. Ou seja, foram separadas posições da pilha para receberem as variáveis do \aloop{} e, ao utilizar-se POP\_BLOCK, esse bloco é excluído, fazendo com que a pilha retorne a ter o seu topo antigo, sem nenhum bloco.
+
+Caso o programa siga sendo executado dentro do \textit{loop}, o trecho de código presente no corpo da repetição será executado e, após, é feito um incremento ao valor da variável, o qual será salvo exatamente na mesma posição de memória que define a variável. Para essa operação, é utilizada a instrução INPLACE\_ADD. Sua execução é similar às operações BINARY\_, que será visto a seguir. Contudo, ela permite que o resultado seja salvo em uma das variáveis utilizadas como operando. Essa instrução executa a funcionalidade \(i = i+1\) ou \(i++\).
+
+Para reiniciar a estrutura de repetição, é feito um JUMP\_ABSOLUTE, onde o valor do contador de programa é completamente substituído pelo valor que aponta para a primeira linha de execução do \textit{loop}, no caso linha 9. 
+
+A Figura \ref{img_4_for} apresenta a segunda estrutura de repetição implementada, a qual é chamada de \textit{for}. Tal instrução apresenta algumas instruções novas, porém, sua execução é bem similar à vista na Figura \ref{img_3_while}. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/4_for.png}
+\caption{Código \textit{Assembly} de uma estrutura de repetição \textit{for}.}
+\label{img_4_for}
+\end{figure}
+
+Exatamente como a análise anterior, pode-se observar que a estrutura de repetição começa salvando a variável que irá gerenciar o \textit{loop} e, após, aloca-se um bloco de repetição na pilha, com a instrução SETUP\_LOOP. A adição de uma nova instrução à lista de instruções escolhidas se dá na linha exatamente abaixo a essa, na qual é chamada a instrução LOAD\_GLOBAL. Tal instrução é responsável por carregar um alcance para a estrutura de repetição, o qual dirá qual será a última vez que o \textit{loop} será executado.
+
+Diferentemente da estrutura \textit{while}, a estrutura \textit{for} define os parâmetros de execução antes mesmo de realizar o início do \textit{loop}. Então, são carregados para a pilha como constantes o valor inicial, zero, e o valor final, cinco. Após, é feita uma chamada de função, realizada pela instrução CALL\_FUNCTION, onde o número de parâmetros serão passados como argumento. Ao realizar a chamada desta instrução, o número de parâmetros é analisado pelo sistema e é realizado o carregamento destes parâmetros, para que possam ser utilizados na execução do \textit{loop}. É então feita as chamadas das instruções GET\_ITER e FOR\_ITER, que criam os blocos de \textit{loop} dentro da pilha. Tais blocos serão utilizados para que as chamadas de instruções internas ao \textit{loop} possam utilizar variáveis sem que as variáveis iniciais sejam perdidas.
+
+Para finalizar a execução do \textit{loop}, é executado o trecho de código interior à estrutura, após é realizado um incremento na variável que gerencia o \textit{loop} e, então, é feito um pulo para a primeira linha da estrutura. Note que, no caso do \textit{for}, a primeira linha considerada não é a chamada de variáveis para realizar a comparação inicial, mas sim a linha 22, onde se encontra a instrução FOR\_ITER. Isso se deve ao fato de que tal instrução gerencia a saída do \textit{loop} ao seu final, e não uma comparação, como no \textit{while}. Essa instrução executa o que seria feito por uma repetição em conjunto com um \textit{jump}, comparando se o final do \aloop{} já foi alcançado ou não. 
+
+A próxima imagem, Figura \ref{img_5_add}, apresenta a primeira operação aritmética realizada. Através dela, é possível perceber como é feita a conversão de um código alto nível, escrito em \textit{Python}, feita pelo compilador, que realiza uma atribuição de variáveis com soma. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/5_add.png}
+\caption{Código \textit{Assembly} de uma operação aritmética de soma com duas constantes.}
+\label{img_5_add}
+\end{figure}
+
+Pode-se perceber, porém, que na Figura, só existe uma instrução de carregamento para a pilha, diferentemente das outras operações aritméticas. Tal instrução, LOAD\_CONST, pega o valor 15, e o carrega para a pilha. No entanto, ao escrever o código em alto nível, foi definido que o valor a ser salvo na pilha seria \(10 + 5\). Logo, pode-se concluir que o compilador, visando simplificar a operação e retirar linha de códigos de baixo nível, realizou a soma antes de definir qual seria o argumento da instrução LOAD\_CONST, definindo, então, como sendo o resultado da soma. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/5_add_var_int.png}
+\caption{Código \textit{Assembly} de uma operação de soma com uma variável e uma constante.}
+\label{img_5_add_var_int}
+\end{figure}
+
+Diferentemente da Figura \ref{img_5_add}, a Figura \ref{img_5_add_var_int} mostra um código \textit{Assembly} que vem de um algoritmo \textit{Python} que realiza a soma de uma variável com uma constante e armazena o resultado em outra variável. Para isso, primeiramente, como já visto nas figuras anteriores, existe a criação da primeira variável, onde ela é carregada como constante para a pilha e, após, é salva na memória em um endereço que é referenciado como sendo a primeira variável ("\textit{val1}").
+
+Logo após, carrega-se a variável novamente para a pilha, com a instrução responsável por executar um carregamento de uma variável previamente criada, e carrega-se também o segundo operando, a constante, a qual será somada à "\textit{val1}". Com os dois operandos dispostos nas duas posições mais superiores à pilha, executa-se a primeira instrução responsável por executar uma operação aritmética. 
+
+No caso de uma soma, as instruções que carregam os operandos para a pilha podem ser executadas em qualquer ordem, já que o resultado será o mesmo. Contudo, ao realizar-se uma subtração ou divisão, os resultados obtidos poderiam ser diferentes dependendo da ordem dos operandos. Para garantir a ordem, o operando encontrado à esquerda da operação (operando 1) seria o primeiro a ser carregado e, em seguida, carrega-se o operando 2. Assim, quando os dados são lidos para serem somados, o \tos{} é lido primeiro e, nessa posição, encontra-se o operando 2. Portanto, pode-se considerar que a leitura dos operandos na pilha é inversa à ordem em que eles devem ser posicionados na operação, já que o operando 1 é o segundo a ser carregado.
+
+A instrução aritmética é então, chamada para realizar a operação. Tal instrução recebe o nome de BINARY\_ADD e executa uma soma entre dois operandos. Os dois operandos utilizados vêm das posições na pilha apontadas por \(TOS-1\) e TOS, respectivamente. Essa instrução não necessita de valores presentes no \textit{byte} de argumento, visto que seus operandos serão sempre os mesmos e que a operação também será sempre a mesma. Para realizar-se outra operação aritmética, utiliza-se códigos de instrução diferentes. Então, seu campo de argumento pode aparecer qualquer valor, pois ele será completamente ignorado. No caso da Figura \ref{img_5_add_var_int}, o campo aparece em branco, mas ao se converter para um código binário, ele precisa aparecer, mesmo que seja aleatório.
+
+A execução de todas as operações aritméticas, as quais estão sendo mostradas também nas Figuras \ref{img_5_add_var_var}, \ref{img_5_sub}, \ref{img_5_multi} e \ref{img_5_div}, se dá de maneira semelhante. As duas posições topo da pilha, aqui chamadas de TOS e TOS1, sendo a segunda considerada a posição logo abaixo ao topo, são retiradas da pilha e carregadas para uma unidade que realizará a operação aritmética dentro da \pvm{}, que por sua vez usará a unidade arimética da máquina física subjacente.
+
+Então, ao serem carregados os dois operandos, executa-se a operação definida pela instrução, que pode ser soma, subtração, multiplicação ou divisão. Ao realizar tal operação, o resultado dela é armazenado no lugar antes ocupado pelo operando TOS1. Então, considera-se, do ponto de vista de posições na pilha, que a operação acontece tal como a Equação \ref{eq_arit_pilha} mostra.
+
+\begin{equation} \label{eq_arit_pilha}
+	TOS1 = TOS1 + TOS
+\end{equation}
+
+Todas as operações aritméticas acontecem da mesma forma, onde a primeira variável a ser carregada (TOS) se torna o segundo operando da equação e, a segunda (TOS1), o primeiro operando. O resultado é salvo no lugar onde estava TOS1.
+
+\begin{figure}[htp]
+\centering
+\includegraphics{images/5_add_var_var.png}
+\caption{Código \textit{Assembly} de uma operação aritmética de soma com duas variáveis.}
+\label{img_5_add_var_var}
+\end{figure}
+
+A Figura \ref{img_5_add_var_var} realiza a mesma operação aritmética mostrada na Figura \ref{img_5_add_var_int}, com a diferença apenas nas origens dos operandos. Ao invés de ser executada a soma entre uma variável e uma constante, é executada a soma entre duas variáveis. Então, para isso, é preciso que as duas variáveis tenham sido salvas na memória e, então, carregadas novamente para a pilha. Para tal procedimento, é necessário o uso das instruções STORE\_FAST e LOAD\_FAST uma vez a mais do que o que foi visto anteriormente, na Figura \ref{img_5_add_var_int}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/5_sub.png}
+\caption{Código \textit{Assembly} de uma operação aritmética de subtração.}
+\label{img_5_sub}
+\end{figure}
+
+Já as Figura \ref{img_5_sub}, \ref{img_5_multi} e \ref{img_5_div} seguem a mesma lógica empregada na Figura \ref{img_5_add_var_var}, com a diferença de que realizam operações aritméticas diferentes, sendo elas subtração, multiplicação e divisão, respectivamente. Perceba que as instruções aritméticas de cada uma delas estão destacadas nas figuras.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/5_multi.png}
+\caption{Código \textit{Assembly} de uma operação aritmética de divisão.}
+\label{img_5_multi}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.8]{images/5_div.png}
+\caption{Código \textit{Assembly} de uma operação aritmética de divisão.}
+\label{img_5_div}
+\end{figure}
+
+\subsection{Definição das instruções escolhidas}
+\label{def_inst_esc}
+
+Baseados nas análises de algoritmos com baixa complexidade e sabendo que tais algoritmos estão presentes, por tendência, na maioria dos programas escritos em \textit{Python}, foi possível definir o conjunto de instruções mínimo para ser suportado arquitetura. As instruções escolhidas para serem implementadas deverão possuir suporte na arquitetura e serem executadas completamente em \textit{hardware}.
+
+Para iniciar a lista, começar-se-á com as instruções de manipulação de dados. Estas instruções são responsáveis por definir quais dados entram e saem da pilha, assim como a ordem que eles entram e o endereço onde o \tos{} será salvo na memória principal. As instruções dessa categoria que serão implementadas são:
+
+\begin{description}
+	\item[LOAD\_CONST]: carregamento de um valor constante, passado por argumento, para o topo da pilha. Tal valor ocupa a posição de \textit{opArg} e, portanto, deverá conter 8 \textit{bits}. Esta instrução é a única que permite a entrada de um valor externo no sistema. Sem ela, nenhum valor poderia ser salvo na memória ou sequer utilizado no sistema.
+	\item[LOAD\_FAST]: é a instrução que permite a existência de variáveis. Quando se fala de uma arquitetura física, possui-se números limitados de registradores e palavras que podem ser salvas na pilha, então precisa-se salvar os valores que não estão sendo utilizados no momento em algum lugar onde eles possam ser recuperados posteriormente, sem serem perdidos. Este lugar é a memória principal. Portanto, esta instrução é a única que permite a recuperação de um valor previamente salvo na memória principal. Sem ela, seria impossível a existência e manipulação de variáveis dentro de uma arquitetura física. Portanto, ela é de grande importância para o sistema e deverá ser suportada na arquitetura.
+	\item[STORE\_FAST]: a instrução anterior, LOAD\_FAST, é de extrema importância para a manipulação de variáveis. Porém ela só atende um lado dessa manipulação de variáveis, que é o carregamento da memória para a pilha. Contudo, uma variável precisa ser salva na memória principal previamente para, então, poder ser carregada. O salvamento de uma variável na memória é feito por essa instrução, sendo, portanto, também fundamental para a existência de variáveis na arquitetura.
+	\item[LOAD\_GLOBAL]: essa é a instrução presente, até o que foi analisado, nas estruturas \textit{for}. Ela realiza o carregamento de um \textit{range} (alcance) que a estrutura terá para dentro do sistema. Ou seja, quando se executa um \textit{for}, tem-se um valor inicial e um valor final. O \textit{range} é a "distância" entre esses dois valores, indicando quantas vezes dever-se-á executar o código interno à estrutura.
+\end{description}
+
+As quatro instruções de manipulação de dados apresentadas acima possuem grande importância para uma arquitetura física, porque ela deverá ser capaz de suprir uma necessidade básica da linguagem \textit{Python}, que é a manipulação de variáveis e dados. Então, a escolha delas é justificada pela grande importância e pela elevada taxa de utilização destas instruções, que estão presentes praticamente todos os algoritmos, desde os mais simples até os mais complexos. 
+
+Das instruções analisadas na subseção \ref{a_instrucoes_algo}, foi definido que as quatro operações aritméticas elementares da matemática seriam suportadas na arquitetura física. Para isso, o código \textit{Assembly Python} possui uma instrução específica para cada uma das operações. São elas:
+
+\begin{description}
+	\item[BINARY\_ADD]: executa uma soma binária, ou seja, entre dois valores. Os valores escolhidos para tal operação são o TOS e a posição exatamente abaixo dele, salvando o resultado na posição desta última. A operação de soma é uma das operações mais importantes de um sistema, pois ela é necessária para definir-se o topo da pilha e para avançar para outra instrução, incrementando o contador de programa. Contudo, tais operações são operações básicas do sistema e que não dependem desta instrução, apenas dessa funcionalidade. Mas, como elas deverão ser implementadas, adicionar também uma instrução que execute uma operação de soma entre dois operandos reaproveitará os mesmos componentes da arquitetura. As operações aritméticas são importantes, visto que a maioria dos algoritmos executam uma hora ou outra uma manipulação de valores.
+	\item[BINARY\_SUBTRACT]: é a instrução responsável por executar uma subtração entre dois operandos. Assim como a instrução anterior, ela executa tal operação entre o TOS e TOS-1, e salva o resultado em TOS-1. 
+	\item[BINARY\_MULTIPLY]: é a instrução responsável por executar uma multiplicação entre dois operandos. Caso ela não fosse implementada, sempre que uma operação de multiplicação fosse solicitada na linguagem de alto nível, ela deveria ser realizada através de uma soma sucessiva manualmente (contendo cada instrução de soma no código \textit{Assembly}).
+	\item[BINARY\_DIVIDE]: realiza uma divisão entre dois operandos. Sua implementação, assim como a multiplicação, se faz necessária para simplificar o código \textit{Assembly} e acelerar a execução dentro da arquitetura.
+\end{description}
+
+Em anexo às instruções de operações aritméticas, pode-se incluir da instrução INPLACE\_ADD, que possui seu funcionamento muito semelhante à instrução BINARY\_ADD, porém com a diferença de aceitar que o resultado da operação seja salvo diretamente em um dos operandos. Ela é utilizada principalmente na estrutura de repetição \textit{while}, quando executa-se um incremento de um em um valor (\(i = i+1\)).
+
+Portanto, as instruções responsáveis por operações aritméticas são importantes, visto que a existência de operações com números dentro de algoritmos escritos em qualquer linguagem é uma exigência mínima. Para viabilizar a utilização de tais operações dentro da arquitetura física, as operações principais foram definidas e receberão suporte na arquitetura.
+
+Pode-se citar ainda instruções que executam pulos (\textit{jumps}). Elas são importantes, pois nenhum algoritmo de programação executa em uma sequência estática. Muitas vezes, os trechos de código que serão executados dependem de resultados anteriores, podendo, então, pular trechos e voltar para executar novamente outros. As instruções do código \textit{Assembly Python} escolhidas para serem suportadas dentro da arquitetura aqui proposta foram:
+
+\begin{description}
+	\item[POP\_JUMP\_IF\_FALSE]: é a instrução utilizada, principalmente, em estruturas \textit{if}, onde se precisa executar um trecho de código escrito logo após uma comparação, quando ela é falsa. Ela executa um pulo onde o valor do contador de programa (PC) é completamente substituido pelo valor contido no argumento (\textit{opArg}) da chamada desta instrução. Porém, só ocorrerá a substituição caso o resultado de uma comparação executada anteriormente seja negativo. Ela é extremamente importante para facilitar a tomada de decisão dentro de um algoritmo.
+	\item[POP\_JUMP\_IF\_TRUE]: é exatamente a operação inversa à instrução anterior. Ela não aparece em nenhum dos algoritmos apresentados na subseção \ref{a_algo_sim}, porém sua implementação utiliza a mesma base da instrução anterior. Logo, sua implementação simplesmente precisa ser executada caso a comparação retorne como sendo positiva.
+	\item[JUMP\_FORWARD]: é a instrução utilizada, principalmente, para executar a saída do trecho executado em uma comparação, quando a mesma retorna como sendo positiva. Ela realiza um incremento do valor do contador de programa, substituindo-o pelo novo valor. Seu argumento é chamado de \textit{delta} e é o valor usado para ser somado a PC. Ela é utilizada dentro das estruturas \textit{if} porque seu funcionamento permite que o compilador, sabendo quantas linhas de código devem ser executadas quando a comparação for positiva, possa utilizar esse valor para incrementar o valor do contador. Isso acontece porque, quando tal instrução é escrita pelo compilador, ainda não foi definido qual será o primeiro valor de PC que estará fora da estrutura \textit{if}. Sendo assim, se torna difícil utilizar a próxima instrução.
+	\item[JUMP\_ABSOLUTE]: é a instrução responsável por substituir completamente o valor de PC pelo seu argumento. Ela é utilizada, principalmente, em estruturas de repetição, pois é preciso retornar ao início da estrutura sem realizar nenhuma comparação prévia. Então, salva-se como \textit{OpArg} desta instrução o valor da primeira linha da estrutura e, ao ser executada essa instrução, o valor de PC é substituído e reinicia-se a repetição.
+\end{description}
+
+\begin{description}
+	\item[COMPARE\_OP]: é a instrução responsável por realizar uma comparação entre dois valores. Ela possui um formato semelhante às instruções aritméticas, porém seu argumento contém o tipo de comparação que deverá ser feito (>, <, =). Após ser executada, ela gera um sinal (\textit{flag}) indicando que seu resultado foi verdadeiro ou falso para que possa-se executar um desvio condicional na sequência.
+	\item[SETUP\_LOOP]: inicia, na pilha, um bloco de repetição. Esse bloco guardará os valores envolvidos diretamente na repetição. 
+	%\item[GET\_ITER]: .........
+	%\item[FOR\_ITER]: .........
+\end{description}
+
+
+\begin{description}
+	\item[CALL\_FUNCTION]: é a instrução responsável por inicializar uma função. Sua chamada causa o salvamento do valor de PC+1 (indicando o ponto de volta da instrução a seguir), um desvio para o bloco de código que deve ser executado e uma alocação de um bloco de função na pilha, o qual receberá os valores manipulados dentro da função e, após seu fim, os apagará.
+	\item[RETURN\_VALUE]: é a instrução que define o final de uma função. Ela retorna o valor no \tos{} presente no bloco da função para a função anterior, a qual chamou essa função. Ao executar essa instrução, o valor de PC é atualizado com o valor salvo na chamada da função e, portanto, realiza-se um desvio para que o código siga executando a função antiga de onde parou. 
+	\item[POP\_BLOCK]: retira um bloco completo da pilha. É utilizado ao final de uma função, para retirar o bloco que foi adicionado na pilha para a execução da função. Então, o \tos{} retorna para o TOS anterior à chamada da função. 
+\end{description}
