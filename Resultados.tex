@@ -17,7 +17,7 @@ Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste proje
 
 Todo o projeto do \hw{} foi desenvolvido utilizando-se a linguagem de descrição de \hw{} chamada VHDL, que possibilitou a criação de cada componente individualmente e, posteriormente, a integração dos mesmos. Contudo, antes de iniciar-se o desenvolvimento com a linguagem, foi utilizada a ferramenta \textit{Logisim} para montar o \textit{register-transfer level}, comumente conhecido como RTL, o qual permitiu melhor visibilidade sobre os objetivos da arquitetura e, posteriormente, da implementação. 
 
-Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia e potência (subseção \ref{result_energia}).
+Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia e potência (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os cíclos de \clock{} necessários para sua execução.
 
 \subsection{Frequência Máxima de Operação}
 \label{result_freq}
@@ -37,16 +37,64 @@ Nos trabalhos correlatos analisados na seção \ref{trab_correlatos}, foi possível
 
 A Figura \ref{img_freq} o resultado da análise de frequência realizada pela ferramenta \textit{Quartus} no decorrer da compilação. Nela pode ser objservada a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk}, referente à entrada de \clock{} do sistema.
 
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.7]{images/resultados/freq.jpg}
+\caption{Frequência máxima de operação gerada pela ferramenta \textit{Quartus}.}
+\label{img_freq}
+\end{figure}
+
 \subsection{Área Ocupada em um FPGA}
 \label{result_carac_area}
 
 Ainda analisando dados obtidos através da ferramenta \textit{Quartus}, pode-se analisar, na Figura \ref{img_area}, as informações referentes à área ocupada em um FPGA. 
 
-%% adicionar dados da área falando sobre cada um dos elementos
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.7]{images/resultados/area.jpg}
+\caption{Área ocupada em um FPGA gerada pela ferramenta \textit{Quartus}.}
+\label{img_area}
+\end{figure}
+
+Na imagem, é possível perceber que como foi feita a utilização de cada componente dentro da arquitetura. Analisando ela, é possível identificar os seguintes componentes:
+
+\begin{description}
+
+	\item[Total de elementos lógicos:] A ferramenta retornou um valor de 751 elementos lógicos de um total suportado de 24.624 (caracterizando 3\% do total). 
+	\item[Total de registradores:] Foi apresentado pela ferramenta um total de 366 registradores. Esse número é dado conforme o número de \bis{} dos componentes. Ou seja, um registrador, como descrito nos capítulos anteriores, com 12 \bis{}, gera 12 registradores lógicos nesses dados.
+	\item[Total de pinos:] O valor total de pinos apresentado foi de 33 pinos de um total suportado de 216 (15\% da capacidade utilizada). Os pinos que a ferramenta se refere são os sinais que entram ou saem da entitade topo, ou seja, do processador. Cada pino apresentado corresponde a um \bi{}, tal como os registradores.
+	\item[Total de \bis{} de memória:] Conforme o capítulo \ref{modificacoes} mostrou, houve um grande aumento em cada uma das memórias do processador. Esse valor representa o número de \bis{} de memória presentes nesta arquitetura, sendo ele 137.216 de um total suportado de 608.256 (caracterizando 23\% do total). Esse valor depende diretamente no número de \bis{} dos endereços das memórias, assim como o valor total de registradores também.
+	\item[Multiplicadores de elementos de 9 \bis{} embarcados:] Foram utilizados 4 multiplicadores de elementos de 9 \bis{} de um total existente de 132.
+
+\end{description}
+
+Os valores acima apresentados como sendo a área ocupada do processador são válidos apenas se o número de \bis{} dos endereços das memórias for 12. Qualquer outro valor gera alterações significativas nos valores acima, principalmente no número de registradores e de \bis{} de memória.
 
 \subsection{Análises de Energia e Potência}
 \label{result_energia}
 
+\subsection{Análises das Instruções Implementadas}
+\label{result_analise_instrucoes}
+
+Como foi explicado nos capítulos anteriores, para que cada instrução fosse executada corretamente, foram criadas máquinas de estados que, ao serem integradas, deram origem a uma máquina de estados maior. Contudo, o fluxo de execução de cada uma das instruções continuou previsível e, por isso, pode ser calculado o tempo necessário para a execução de cada instrução.
+
+Assim sendo, criou-se o gráfico apresentado na Figura \ref{graf_ciclos_instr}, o qual apresenta o número de ciclos de \clock{} necessários para a execução de cada uma das instruções. Em alguns casos, principalmente com as instruções BINARY\_, não foi necessário apresentar todas as instruções individualmente, visto que todas elas seguem o mesmo fluxo de execução.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.5]{images/resultados/ciclos_instrucao.png}
+\caption{Gráfico de barras com os ciclos de \clock{} necessários para a execução de cada instrução.}
+\label{graf_ciclos_instr}
+\end{figure}
+
+Assim, com a análise do gráfico, é possível perceber que instruções que acessam a memória e instruções que fazem mais de uma leitura na pilha utilizam maior número de ciclos para serem executadas. É possível, por exemplo, comparar as instruções BINARY\_ com as UNARY\_, sendo que a diferença delas, como o gráfico mostra, é de 2 ciclos. Esses dois ciclos são os responsável pela leitura do segundo dado da pilha, tendo em vista que essa é a única diferença entre as duas instruções.
+
+A instrução COMPARE\_OP está na liderança no que diz respeito à quantidade de ciclos necessários para sua execução. O motivo, para isso é que tal instrução não salva nenhum dado na pilha após ser executada. Algo que deveria torná-la mais rápida é o que a torna mais lenta e o motivo para isso pode ser visto em uma comparação com as instruções BINARY\_. O fluxo de execução de ambas as instruções é basicamente o mesmo: ler 2 dados da pilha e executar na ULA. 
+
+Após passar pela ULA, as instruções BINARY\_ salvam o dado novamente na pilha, não sendo necessário, portanto, decrementar o ponteiro de \tos{} duas vezes. Já a instrução COMPARE\_OP, por ler dois dados e não salvar nada na pilha após, necessita executar dois decrementos no valor do ponteiro TOS, algo que, como visto na comparação entre BINARY\_ e UNARY\_, custa exatamente 2 ciclos de \clock{}. O ciclo extra decorre do fato de a ULA precisar esperar até salvar o resultado no \textit{regComp}, não podendo serem modificadas suas entradas. O apêndice \ref{ap_me_binary} apresenta a máquina de estados da instrução COMPARE\_OP, onde pode ser visto que o estado "co7" apenas realiza o salvamento no registrador regComp.
+
+Para concluir, pode-se perceber que instruções relacionadas a desvios e carregamento de dados externos para a pilha são extremamente rápidas de serem executadas, como já era esperado. O ciclo de erros é a máquina de estados parcial mais rápida de ser executada, com apenas 3 estados.
 
 \section{Testes Realizados}
 \label{result_testes}
+

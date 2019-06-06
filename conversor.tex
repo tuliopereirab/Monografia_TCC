@@ -2,14 +2,14 @@ A realização de testes, tanto de simulação utilizando o \textit{Modelsim}, quant
 
 Os arquivos em questão, os quais serão abordados especificamente na seção \ref{conv_arq}, são os \textit{.mem} e \textit{.mif}. Sendo utilizados, respectivamente, nas ferramentas \modelsim{} e \quartus{}. 
 
-O principal objetivo da criação deste conversor é agilizar a execução de algoritmos \py{} diretamente no processador. Simplificando, portanto, a execução dos testes e permitindo que algoritmos mais complexos sejam executados na arquitetura sem a necessidade de escrever código binário em cada uma das posições de memória.
+O principal objetivo da criação deste conversor, chamado de \textit{pyConv}, é agilizar a execução de algoritmos \py{} diretamente no processador. Simplificando, portanto, a execução dos testes e permitindo que algoritmos mais complexos sejam executados na arquitetura sem a necessidade de escrever código binário em cada uma das posições de memória.
 
-O conversor tem ainda como objetivo evitar ao máximo a inicialização da memória com algoritmos que contenham erros. A verificação desses erros, que será assunto da seção \ref{conv_erros}, permite a identificação de erros léxicos, sintáticos e até lógicos, os quais poderiam tornar algum sinal da arquitetura inválido (assunto da seção \ref{errorMod}).
+O \textit{pyConv} tem ainda como objetivo evitar ao máximo a inicialização da memória com algoritmos que contenham erros. A verificação desses erros, que será assunto da seção \ref{conv_erros}, permite a identificação de erros léxicos, sintáticos e até lógicos, os quais poderiam tornar algum sinal da arquitetura inválido (assunto da seção \ref{errorMod}).
 
 \section{Funcionalidades}
 \label{conv_func}
 
-O conversor, desenvolvido em C, recebe como entrada os códigos \as{} no mesmo formato gerado pelo compilador \py{}, utilizando a funcionalidade \textit{Disassembler}. 
+O a ferramenta \textit{pyConv}, desenvolvida em C, recebe como entrada os códigos \as{} no mesmo formato gerado pelo compilador \py{}, utilizando a funcionalidade \textit{Disassembler}. 
 
 Tais formatos, que já foram vistos no capítulo \ref{ref-teorico}, definem uma instrução no formato "\textit{LOAD\_CONST [argumento]}", por exemplo. Essas instruções servem, então, de entrada para o conversor.
 
@@ -23,9 +23,9 @@ Esta seção apresentará como são feitos:
 \subsection{Recebimento de instruções}
 \label{conv_func_instr}
 
-Ao ser inicializado, o conversor gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
+Ao ser inicializado, o \textit{pyConv} gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
 
-A palavra de memória é a posição de memória que é apontada por PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a Figura \ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
+A palavra de memória é a posição de memória que é apontada pelo ponteiro PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a Figura \ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
 
 \begin{figure}[htp]
 \centering
@@ -36,7 +36,7 @@ A palavra de memória é a posição de memória que é apontada por PC na arquitetura
 
 Então, com a palavra (ou palavras, no caso de instruções que recebem endereços) salva na matriz, retorna-se para a função inicial que espera uma nova instrução. A posição de memória é, então, atualizada para a próxima, conforme o tipo de instrução inserido anteriormente. Caso seja uma instrução que recebe endereços e, então, necessita de duas palavras de memória para funcionar, a linha atual recebe um incremento de 2, caso contrário, apenas 1.
 
-Quando existe um desvio, é necessário que seja escrito na memória em uma posição fora de ordem. Para isso, dentro do conversor, existe o comando "\textit{line}", que permite que o conversor passe a escrever em uma linha diferente, indicada pelo usuário. Tal comando pode ser utilizado tanto para desvios quanto para corrigir erros de digitação cometidos anteriormente, reescrevendo uma posição. 
+Quando existe um desvio, é necessário que seja escrito na memória em uma posição fora de ordem. Para isso, dentro do \textit{pyConv}, existe o comando "\textit{line}", que permite que o conversor passe a escrever em uma linha diferente, indicada pelo usuário. Tal comando pode ser utilizado tanto para desvios quanto para corrigir erros de digitação cometidos anteriormente, reescrevendo uma posição. 
 
 Ao final da inserção das instruções, utiliza-se o comando "\textit{quit}", que dispara uma verificação geral e final do algoritmo, explicada na subseção \ref{conv_erros_sim}, e então libera-se a escrita nos arquivos a serem gerados.
 
@@ -54,7 +54,7 @@ Assim sendo, a manipulação de variáveis é facilitada em \hw{} por um sistema bas
 
 \subsection{Menu de ajuda}
 \label{conv_func_help}
-O conversor, por utilizar alguns atalhos para algumas instruções, tais como os códigos de operação de comparação (0 para \textit{igual}, 1 para \textit{menor que} e 2 para \textit{maior que}), possui um menu de ajuda para quem for utilizá-lo. 
+O \textit{pyConv}, por utilizar alguns atalhos para algumas instruções, tais como os códigos de operação de comparação (0 para \textit{igual}, 1 para \textit{menor que} e 2 para \textit{maior que}), possui um menu de ajuda para quem for utilizá-lo. 
 
 Tal menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra "\textit{help}" seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instruções possam possuir. 
 
@@ -67,7 +67,7 @@ A figura %\ref{img_conv_help} apresenta um exemplo de informação apresentada pel
 \label{img_conv_help}
 \end{figure}
 
-Além disso, o menu de ajuda é de extrema importância se for considerado o fato de que as instruções de entrada no conversor podem ser iguais ou diferentes às instruções de \as{} da linguagem \py{}. Ou seja, foram criados apelidos para as instruções \py{}, o que facilita a inserção de dados no conversor. Um exemplo disso é a instrução LOAD\_CONST, que recebe o apelido de \textit{lconst}. A tabela \ref{img_conv_help_instr} apresenta a tabela de instruções e apelidos. 
+Além disso, o menu de ajuda é de extrema importância se for considerado o fato de que as instruções de entrada no \textit{pyConv} podem ser iguais ou diferentes às instruções de \as{} da linguagem \py{}. Ou seja, foram criados apelidos para as instruções \py{}, o que facilita a inserção de dados no conversor. Um exemplo disso é a instrução LOAD\_CONST, que recebe o apelido de \textit{lconst}. A tabela \ref{img_conv_help_instr} apresenta a tabela de instruções e apelidos. 
 
 \begin{table}[]
 \centering
@@ -123,7 +123,7 @@ profundidade\_memoria = \frac{2^{ADDR\_WIDTH}}{4}
 \label{img_conv_mem}
 \end{figure}
 
-A Figura \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo conversor.
+A Figura \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo \textit{pyConv}.
 
 \subsection{Arquivo \textit{.mif}}
 \label{conv_arq_mif}
@@ -169,7 +169,7 @@ Após se implementar um algoritmo em alto nível, executa-se uma compilação. Tal a
 
 Tendo em vista essa funcionalidade, foram adicionadas duas camadas de verificação de erros neste projeto. A segunda, abordada na seção \ref{errorMod} e implementada diretamente na unidade de controle física do processador, permite a identificação de erros que passaram pelo conversor e chegaram à arquitetura.
 
-Como a ideia do projeto que é que os algoritmos executados na arquitetura sejam gerados pelo conversor, não é esperado que a camada de verificação de erros em \hw{} seja utilizada. Ela está presente apenas para a segurança do processador caso algum erro não seja encontrado pelo conversor ou algum usuário realize a criação dos arquivos de inicialização de memória manualmente.
+Como a ideia do projeto que é que os algoritmos executados na arquitetura sejam gerados pelo \textit{pyConv}, não é esperado que a camada de verificação de erros em \hw{} seja utilizada. Ela está presente apenas para a segurança do processador caso algum erro não seja encontrado pelo conversor ou algum usuário realize a criação dos arquivos de inicialização de memória manualmente.
 
 Os erros verificados em \sw{} são, na sua maioria, os mesmos verificados em \hw{}. Em \sw{} são analisados tanto erros de digitação (subseção \ref{error_dig}) quanto erros lógicos previsíveis (subseção \ref{error_form}), que levam a arquitetura a funcionar em estado de erro. E ainda, para finalizar, existe uma verificação final (subseção \ref{conv_erros_sim}), onde são detectados erros lógicos de elevada complexidade.
 
@@ -189,7 +189,7 @@ Ao escrever as instruções digitadas no arquivo de memória, sabe-se que todas as 
 
 A verificação de erros lógicos é feita com o objetivo de evitar que nenhum componente entre em estado de erro. O erro mais comum, por exemplo, é fazer com que o valor de topo da pilha (TOS) se torne um valor negativo e, portanto, inválido. Isso ocorre quando executa-se uma leitura na pilha sem antes haver uma escrita. 
 
-Então, o conversor possui uma variável de controle do topo da pilha, o qual é incrementado sempre que recebe uma instrução válida que adiciona algo à pilha e decrementado quando uma instrução retira algo da pilha. Com essa variável, é possível verificar, sempre que uma instrução de leitura da pilha for inserida, se ela pode ou não ser executada.
+Então, o \textit{pyConv} possui uma variável de controle do topo da pilha, o qual é incrementado sempre que recebe uma instrução válida que adiciona algo à pilha e decrementado quando uma instrução retira algo da pilha. Com essa variável, é possível verificar, sempre que uma instrução de leitura da pilha for inserida, se ela pode ou não ser executada.
 
 Um exemplo simples é qualquer uma das instruções BINARY\_, que necessitam de duas posições da pilha para serem lidas. Então, caso não haja, a instrução não será adicionada ao arquivo. Caso haja, será decrescido apenas 1 da variável da de controle, pois essa instrução retorna um resultado a ser no \tos{}. 
 

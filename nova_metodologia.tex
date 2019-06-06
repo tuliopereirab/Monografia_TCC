@@ -13,7 +13,7 @@ Sabendo, então, que ela é executada utilizando uma máquina virtual chamada \text
 
 Com a informação de que a máquina virtual existia, foi possível obter a documentação oficial que a descreve e outros documentos fornecidos por autores de fora da \textit{Python Software Foundation}, todos já apresentados no capítulo \ref{ref-teorico}. Com essa documentação, foi possível observar, principalmente, as instruções \as{} que compõem a máquina virtual, as quais são geradas através de compilação utilizando o compilador próprio da linguagem, \textit{CPython}.
 
-De posse das informações básicas sobre as instruções, foi possível analisar quais seriam as instruções necessárias para que algoritmos de baixa complexidades pudessem ser executados diretamente em \hw{}. De posse de uma arquitetura que consegue executar algoritmos \py{} simples, é possível adicionar módulos capazes de aumentar o leque de aplicações suportadas. Tais incrementos ficarão para trabalhos futuros, tendo em vista que o objetivo deste trabalho é gerar a arquitetura básica. 
+De posse das informações básicas sobre as instruções, foi possível analisar quais seriam as instruções necessárias para que algoritmos de baixa complexidades pudessem ser executados diretamente em \hw{}. De posse de uma arquitetura que consegue executar algoritmos \py{} simples, é possível adicionar módulos capazes de aumentar o leque de aplicações suportadas. Tais incrementos ficarão para trabalhos futuros, tendo em vista o pouco tempo para a realização deste.
 
 \section{Análises e Planejamentos}
 \label{newMeto_analises}
@@ -57,9 +57,9 @@ Nesta fase de projeto, foram definidas as arquiteturas parciais e, juntamente co
 \subsection{Fase de desenvolvimento}
 \label{newMeto_desenvolvimento}
 
-Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem e, por conseguinte, a plataforma que seriam utilizadas para implementação, compilação e testes. Assim, foi definido que todo o projeto do \hw{} seria implementado em VHDL, utilizando a ferramenta \textit{Quartus}. Já o conversor, apresentado no capítulo \ref{conversor}, seria implementado C.
+Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem e, por conseguinte, a plataforma que seriam utilizadas para implementação, compilação e testes. Assim, foi definido que todo o projeto do \hw{} seria implementado em VHDL, utilizando a ferramenta \textit{Quartus}. Já o conversor, chamado de \textit{pyConv} e apresentado no capítulo \ref{conversor}, seria implementado C.
 
-A fase de desenvolvimento fala apenas sobre a criação do \hw{}, visto que o Conversor foi uma implementado para ser uma ferramenta extra, utilizado, principalmente, para gerar arquivos de testestestes. A criação do conversor, tanto quanto seus métodos para evitar erros, são explicados no capítulo \ref{conversor}.
+A fase de desenvolvimento fala apenas sobre a criação do \hw{}, visto que o \textit{pyConv} foi uma implementado para ser uma ferramenta extra, utilizado, principalmente, para gerar arquivos de testestestes. A criação do conversor, tanto quanto seus métodos para evitar erros, são explicados no capítulo \ref{conversor}.
 
 Isto definido, foram criadas arquiteturas parciais para cada classe de instruções e, ao final, uma arquitetura final englobando todas as parciais, com adição de multiplexadores para que fosse possível reaproveitar componentes. A criação dessas arquiteturas é explicada com detalhes no capítulo \ref{desenvolvimento}. 
 
@@ -81,3 +81,13 @@ Basicamente, todas as modificações tiveram como objetivo refinar a arquitetura p
 
 \section{Levantamento de Resultados}
 \label{newMeto_resultados}
+
+Para o levantamento dos resultados, foram analisados, principalmente, dados gerados pelas ferramentas utilizadas. Tanto o \textit{Quartus} quanto o \textit{Modelsim} gerando dados que permitem que uma análise sólida do funcionamento da arquitetura seja feita.
+
+O \textit{Quartus} gera dados relacionados à arquitetura em si, permitindo que seja possível verificar dados como área ocupada em um \textit{chip} (quantidade de componentes utilizados) e características básicas, como frequência de operação e energia consumida. Ainda com essa ferramenta é possível realizar simulações, contudo essa não é uma boa funcionalidade para ser utilizada tendo em vista a falta de dados apresentados nas simulações.
+
+As simulações do \textit{Quartus} apenas apresentam dados dos pinos de entrada e saída, não sendo possível analisar dados presentes internamente na arquitetura. Sendo assim, para este quesito, a ferramenta \textit{Modelsim} entra em ação.
+
+Tal ferramenta permite que sejam verificados dados internos aos componentes, facilitando, principalmente, o encontro das causas de problemas na execução de instruções. Um grande exemplo é o fato de algum algoritmo executado não realizar um salvamento na memória, algo que era esperado. Com a ferramenta, é possível identificar o exato componente problemático através de análises de ondas geradas pela execução, indicando os valores presentes em cada um dos sinais internos.
+
+Assim, dividiu-se a utilização do \textit{Quartus} apenas para verificar características da arquitetura e inicializar a mesma em um FPGA, também utilizado para testes. Já com o \textit{Modelsim} ficou toda a parte de simulação e correção de \textit{bugs} encontrados. Somente quando tem-se simulações perfeitas no \textit{Modelsim} que passa-se ao \textit{Quartus} para realizar testes com um FPGA.

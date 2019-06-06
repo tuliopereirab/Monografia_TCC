@@ -99,7 +99,7 @@ Já referente à operação lógica NOT, também suportada pela ULA, foi encontrada na
 
 Para realizar as verificações de erros da arquitetura e identificar quando ocorreu algum erro que compromete o resultado de alguma execução, foram levantados algumas possibilidades de erros para serem corrigidas diretamente na arquitetura. Em sua maioria, são erros considerados \textit{warnings}, que alteram apenas o resultado do algoritmo mas não a execução.
 
-As subseções a seguir tratarão sobre: os tipos de erros verificados (\ref{errorTipos}) e método adotado para a verificação (\ref{errorModos}). É importante salientar que os erros verificados diretamente na arquitetura são os que tornam a arquitetura inválida. Outros erros lógicos mais complexos que podem ser considerados erros sem tornar a arquitetura inválida são verificados diretamente no Conversor, como será explicado na seção \ref{conv_erros}. 
+As subseções a seguir tratarão sobre: os tipos de erros verificados (\ref{errorTipos}) e método adotado para a verificação (\ref{errorModos}). É importante salientar que os erros verificados diretamente na arquitetura são os que tornam a arquitetura inválida. Outros erros lógicos mais complexos que podem ser considerados erros sem tornar a arquitetura inválida são verificados diretamente no conversor \textit{pyConv}, como será explicado na seção \ref{conv_erros}. 
 
 \subsection{Erros Verificados}
 \label{errorTipos}
@@ -136,4 +136,4 @@ O principal objetivo do \textit{regError} é permitir, através de uma análise tem
 
 Portanto, sempre que foi executado um algoritmo no processador, é de extrema importância que o \textit{regError} seja verificado. Caso seu valor não seja zero, existe uma grande chance do resultado estar inválido ou nem existir (no caso quando um erro crítico ocorre no início da execução). 
 
-A prevenção de erros na arquitetura é considera a última camada de proteção do processador, visto que não é esperado que ela seja utilizada, já que é recomendável que os arquivos de inicialização das memórias sejam criados diretamente pelo Conversor, o qual já verifica a existência de erros.
+A prevenção de erros na arquitetura é considera a última camada de proteção do processador, visto que não é esperado que ela seja utilizada, já que é recomendável que os arquivos de inicialização das memórias sejam criados diretamente pelo conversor \textit{pyConv}, o qual já verifica a existência de erros.
