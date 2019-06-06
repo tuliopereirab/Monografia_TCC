@@ -1,6 +1,6 @@
 Neste capítulo serão apresentados os resultados das pesquisas e implementações concebidas durante o período de realização deste trabalho. Como já dito no decorrer do texto, foram implementados um processador \py{}, em \hw{}, capaz de executar algoritmos escritos em \py{}, e um conversor, capaz de dar origem aos arquivos utilizados para inicialização das memórias.
 
-Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados dos testes realizados (seção \ref{result_testes}.
+Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados das simulações realizadas (seção \ref{result_testes}.
 
 Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na seção \ref{result_algo_final}, para ser executado na arquitetura. 
 
@@ -95,6 +95,31 @@ Após passar pela ULA, as instruções BINARY\_ salvam o dado novamente na pilha, n
 
 Para concluir, pode-se perceber que instruções relacionadas a desvios e carregamento de dados externos para a pilha são extremamente rápidas de serem executadas, como já era esperado. O ciclo de erros é a máquina de estados parcial mais rápida de ser executada, com apenas 3 estados.
 
-\section{Testes Realizados}
+\section{Simulações}
 \label{result_testes}
 
+Ao se implementar uma arquitetura em \hw{}, é preciso que sejam feitas simulações capazes de validar a execução da mesma. No caso da arquitetura desenvolvida neste projeto, as simulações se baseiam em algoritmos binários gerados através da ferramenta \textit{pyConv}, apresentada no capítulo \ref{conversor}.
+
+Os algoritmo gerados pelo conversor dependem exclusivamente do algoritmo digitado como entrada dele. A entrada de instruções ocorre digitando-se as instruções da \pvm{} (suas palavras chaves). Tais instruções são geradas diretamente pela ferramenta \textit{Disassembler} e podem ser copiadas diretamente para o \textit{pyConv}.
+
+O código binário gerado, por sua vez, é baseado na tabela \ref{table_opCode}. Nela, é possível verificar os códigos binários para cada uma das instruções suportadas no processador.
+
+\input{tables/resultados/table_binary_code}
+
+Contudo, só a tabela \ref{table_opCode} não é suficiente para todas as funcionalidades, visto que a instrução COMPARE\_OP recebe como argumento o código binário de uma operação de comparação. Então, criou-se a tabela \ref{table_comp}, que apresenta os códigos binários que devem ser utilizados como argumento da operação de comparação.
+
+\input{tables/resultados/table_compareOp}
+
+Feita essa apresentação prévia de informações, as subseções seguintes apresentarão simulações realizadas na arquitetura. Para isso, utilizou-se a ferramenta \textit{Modelsim}. Primeiramente, apresentou-se uma simulação mostrando o funcionamento de todas as operações BINARY\_ e UNARY\_ (subseção \ref{result_arith}. Após, foram apresentados resultados de simulações com algoritmos de \textit{loop} (subseção \ref{result_loop}), chamada e retorno de funções (subseção \ref{result_func}) e comparações múltiplas com desvios variádos (subseção \ref{result_algoritmo_maior}.
+
+\subsection{Instruções BINARY\_ e UNARY\_}
+\label{result_arith}
+
+\subsection{Algoritmo com \textit{Loop}}
+\label{result_loop}
+
+\subsection{Chamada e Retorno de Funções}
+\label{result_func}
+
+\subsection{Algoritmo com instruções Variáveis}
+\label{result_algoritmo_maior}
