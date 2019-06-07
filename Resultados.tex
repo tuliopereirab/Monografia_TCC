@@ -141,12 +141,16 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \subsection{\textbf{TESTE 2:} Algoritmo com \textit{Loop}}
 \label{result_loop}
 
+O teste número 2 consiste na execução de um \textit{loop}, o qual vai de zero a 10. A cada ciclo de repetição, como mostra a Figura \ref{img_ass2} entre as linhas 3 e 15, são executadas instruções de carregamento de dados da memória, comparação e operação aritmética de soma. Nessa Figura, é possível perceber o código \as{} gerado pelo \textit{pyConv} no mesmo formato já apresentado na subseção \ref{result_arith}.
+
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste2.jpg}
 \caption{Código \textit{Assembly} do teste 2.}
 \label{img_ass2}
 \end{figure}
+
+O código \as{} é, então, carregado para a memória de instruções e aparece no formato apresentado na Figura \ref{img_bin2}. Para todos os testes existe esse processo, contudo tal imagem só será mostrada aqui para evitar repetições desnecessárias.
 
 \begin{figure}[htp]
 \centering
@@ -155,12 +159,20 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \label{img_bin2}
 \end{figure}
 
+A Figura \ref{img_graf2} apresenta o gráfico mostrando a proporção das classes de instruções executadas nesse teste. Essa informação é importante para ser gerada uma estimativa do tempo de execução esperado. É expressivo que a maior quantidade de instruções, 56,8\%, são de leitura ou acesso à memória. Nesse valor também é incluído a entrada de constantes internas. Contudo, como já vimos anteriormente, instruções aritméticas e de comparação precisam de bastante tempo para serem executadas. 
+
+O fato de instruções relacionadas a desvios aparecerem em segunda posição nas que mais aparecem não incrementa praticamente nada no tempo de execução, visto que essas instruções são as mais rápidas de serem executadas.
+
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.4]{images/resultados/Simulacoes/pizza_teste2.png}
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 2.}
 \label{img_graf2}
 \end{figure}
+
+Com a análise das instruções utilizadas para a realização desta simulação, foi possível estimar o tempo como sendo 11.457 ns. Ao executar a simulação, percebeu-se que houve um pequeno incremento no tempo teórico calculado, obtendo-se um tempo de 11.514 ns.
+
+A Figura \ref{img_final2} apresenta a memória externa com os resultados da execução. É possível perceber o valor 10, em binário, salvo na posição 0, a qual foi destinada para ser o contador do \textit{loop}. O valor 255 aparece na posição 1, o qual é executado após a finalização do \textit{loop}.
 
 \begin{figure}[htp]
 \centering
@@ -172,6 +184,10 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \subsection{\textbf{TESTE 3:} Chamada e Retorno de Funções}
 \label{result_func}
 
+O teste 3 consiste na implementação de uma operação aritmética com o resultado retornado de uma função. Para isso, primeiramente carrega-se uma constante para ser o operando 1. Então, chama-se uma função que carrega dois operandos, executa uma subtração e retorna o valor. 
+
+É então que o valor retornado é multiplicado pelo valor carregado previamente e, o resultado, salvo na memória externa. A Figura \ref{img_ass3} apresenta o código \as{} deste algoritmo.
+
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste3.jpg}
@@ -179,6 +195,7 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \label{img_ass3}
 \end{figure}
 
+Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na Figura \ref{img_graf3}, que mostra a proporção das classes de instruções utilizadas. O tempo teórico calculado para essa execução foi de 921 ns. 
 
 \begin{figure}[htp]
 \centering
@@ -186,6 +203,8 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 3.}
 \label{img_graf3}
 \end{figure}
+
+Após a execução, observou-se que o tempo de execução foi levemente menor que o teórico, sendo este 894 ns. A Figura \ref{img_final3} apresenta o valor final, 30, salvo na posição zero da memória externa. 
 
 \begin{figure}[htp]
 \centering
@@ -197,6 +216,8 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \subsection{\textbf{TESTE 4:} Algoritmo com instruções Variáveis}
 \label{result_algoritmo_maior}
 
+Para a última simulação, a de número 4, foi criado um algoritmo com o objetivo único de executar a maior variedade de instruções possível. Assim, como pode ser visto na Figura \ref{img_ass4}, o algoritmo executa diversos desvios, operações aritméticas e até uma comparação. Ele pode ser considerado como um agrupamento dos três testes feitos anteriormente.
+
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste4.jpg}
@@ -204,6 +225,7 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \label{img_ass4}
 \end{figure}
 
+Seu gráfico de proporção entre as classes de instruções executadas é apresentado na Figura \ref{img_graf4}. Nele, percebe-se que a maior parte das instruções são de acesso à memória. Os devios, que aparecem em segundo, não geram tanto incremento no tempo de execução quanto as operações aritméticas, em terceiro.
 
 \begin{figure}[htp]
 \centering
@@ -211,6 +233,10 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 4.}
 \label{img_graf4}
 \end{figure}
+
+O resultado de todas essas execuções podem ser vistos na Figura \ref{img_final4}. O valor salvo na posição 0 corresponde ao valor inserido na primeira posição da memória de instruções. O valor da posição 1 corresponde ao resultado da multiplicação de 15 (valor da posição 0) por 2 (carregado na linha 52), resultando 30. 
+
+Nas posições 2 e 3, respectivamente, aparecem o resultado da soma da posição 0 com a 1 e o resultado de 20 somado com 120 (valor retornado da função que soma 100 e 20).
 
 \begin{figure}[htp]
 \centering
