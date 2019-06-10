@@ -26,7 +26,7 @@ Utilizando-se a mesma ferramenta utilizada para o desenvolvimento e posterior pr
 
 Primeiramente, realizar-se-á uma comparação entre os resultados obtidos em uma implementação parcial desta mesma arquitetura, a qual não dispunha de, basicamente, nenhuma possibilidade simples modificar suas configurações básicas, tampouco de algumas instruções suportadas atualmente(mais informações sobre as diferenças entre a versão atual e a anterior podem ser encontradas no capítulo \ref{modificacoes}). Essa versão parcial possuia uma frequência máxima de operação de 89,29 MHz. 
 
-Já a versão atual, organizada e com maior leque de instruções suportadas, teve leve queda dessa frequência, possuindo, atualmente, 78,44 MHz. Com esse valor, é possível definir, através da equação \ref{eq_periodo}, um período de \clock{} de 12,74 ns.
+Já a versão atual, organizada e com maior leque de instruções suportadas, teve leve queda dessa frequência, possuindo, atualmente, 84,35 MHz. Com esse valor, é possível definir, através da equação \ref{eq_periodo}, um período de \clock{} de 11,85 nanosegundos (ns).
 
 \begin{equation}
 \label{eq_periodo}
@@ -115,6 +115,7 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \subsection{\textbf{TESTE 1:} Instruções BINARY\_ e UNARY\_}
 \label{result_arith}
 
+A primeira simulação realizada foi responsável por executar um algoritmo de teste para todas as operações binárias e unárias do processador. O código \as{} deste algoritmo pode ser visto na Figura \ref{img_ass1}. 
 
 \begin{figure}[htp]
 \centering
@@ -123,6 +124,7 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \label{img_ass1}
 \end{figure}
 
+Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o objetivo de verificar as classes de instruções implementadas e fazer uma estimativa de tempo teórico de execução. Como pode ser visto na Figura \ref{img_graf1}, a classe de instruções que mais aparece neste algoritmo é a escrita e leitura na memória, caracterizando 77,1\%. 
 
 \begin{figure}[htp]
 \centering
@@ -131,12 +133,18 @@ Feita essa apresentação prévia de informações, as subseções seguintes apresentar
 \label{img_graf1}
 \end{figure}
 
-%\begin{figure}[htp]
-%\centering
-%\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste1.jpg}
-%\caption{Resultado da simulação do teste 1.}
-%\label{img_final1}
-%\end{figure}
+Este fato é importante quando calcula-se o tempo teórico para a execução, visto que instruções de acesso à memória utilizam tempo considerável de execução e causam grande impacto quando aparece diversas vezes. O tempo teórico encontrado foi de 4.681 ns, enquanto o tempo prático observado foi de 5.200 ns.
+
+Para fazer a verificação de que o algoritmo funcionou corretamente, analisou-se a memória externa, a qual recebeu cada um dos resultados das operações realizadas. A Figura \ref{img_final1} mostra uma imagem do trecho de memória onde os resultados foram salvos. As posições zero e 1, ou seja, as que estão na linha mais abaixo e à direita, receberam os operandos das operações. Eles são, respectivamente, 15 e 2.
+
+Já as outras posições, na ordem em que aparecem, receberam as operações: soma, subtração, multiplicação, divisão, AND, OR, XOR, NOT do operando 1 e NOT do operando 2. Pode-se observar que os valores binários apresentados correspondem aos resultados esperados para cada uma das operações.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste1.jpg}
+\caption{Resultado da simulação do teste 1.}
+\label{img_final1}
+\end{figure}
 
 \subsection{\textbf{TESTE 2:} Algoritmo com \textit{Loop}}
 \label{result_loop}
@@ -170,7 +178,7 @@ O fato de instruções relacionadas a desvios aparecerem em segunda posição nas qu
 \label{img_graf2}
 \end{figure}
 
-Com a análise das instruções utilizadas para a realização desta simulação, foi possível estimar o tempo como sendo 11.457 ns. Ao executar a simulação, percebeu-se que houve um pequeno incremento no tempo teórico calculado, obtendo-se um tempo de 11.514 ns.
+Com a análise das instruções utilizadas para a realização desta simulação, foi possível estimar o tempo como sendo 9.800 ns. Ao executar a simulação, percebeu-se que houve um pequeno incremento no tempo teórico calculado, obtendo-se um tempo de 11.514 ns.
 
 A Figura \ref{img_final2} apresenta a memória externa com os resultados da execução. É possível perceber o valor 10, em binário, salvo na posição 0, a qual foi destinada para ser o contador do \textit{loop}. O valor 255 aparece na posição 1, o qual é executado após a finalização do \textit{loop}.
 
@@ -195,7 +203,7 @@ O teste 3 consiste na implementação de uma operação aritmética com o resultado r
 \label{img_ass3}
 \end{figure}
 
-Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na Figura \ref{img_graf3}, que mostra a proporção das classes de instruções utilizadas. O tempo teórico calculado para essa execução foi de 921 ns. 
+Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na Figura \ref{img_graf3}, que mostra a proporção das classes de instruções utilizadas. O tempo teórico calculado para essa execução foi de 782 ns. 
 
 \begin{figure}[htp]
 \centering
@@ -204,7 +212,7 @@ Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na 
 \label{img_graf3}
 \end{figure}
 
-Após a execução, observou-se que o tempo de execução foi levemente menor que o teórico, sendo este 894 ns. A Figura \ref{img_final3} apresenta o valor final, 30, salvo na posição zero da memória externa. 
+Após a execução, observou-se que o tempo de execução foi maior que o teórico, sendo este 894 ns. A Figura \ref{img_final3} apresenta o valor final, 30, salvo na posição zero da memória externa. 
 
 \begin{figure}[htp]
 \centering
@@ -237,6 +245,8 @@ Seu gráfico de proporção entre as classes de instruções executadas é apresentado
 O resultado de todas essas execuções podem ser vistos na Figura \ref{img_final4}. O valor salvo na posição 0 corresponde ao valor inserido na primeira posição da memória de instruções. O valor da posição 1 corresponde ao resultado da multiplicação de 15 (valor da posição 0) por 2 (carregado na linha 52), resultando 30. 
 
 Nas posições 2 e 3, respectivamente, aparecem o resultado da soma da posição 0 com a 1 e o resultado de 20 somado com 120 (valor retornado da função que soma 100 e 20).
+
+O tempo teórico calculado para a execução deste algoritmo foi de 2.548 ns, enquanto o tempo observado na prática foi de 2.874 ns.
 
 \begin{figure}[htp]
 \centering
