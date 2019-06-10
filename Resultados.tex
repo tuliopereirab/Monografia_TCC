@@ -1,19 +1,19 @@
 Neste capítulo serão apresentados os resultados das pesquisas e implementações concebidas durante o período de realização deste trabalho. Como já dito no decorrer do texto, foram implementados um processador \py{}, em \hw{}, capaz de executar algoritmos escritos em \py{}, e um conversor, capaz de dar origem aos arquivos utilizados para inicialização das memórias.
 
-Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados das simulações realizadas (seção \ref{result_testes}.
+Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados das simulações realizadas (seção \ref{result_testes}).
 
 Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na seção \ref{result_algo_final}, para ser executado na arquitetura. 
 
-O principal objetivo desse trabalho, como já foi dito anteriormente, é abrir portas para o desenvolvimento da máquina virtual \py{} completamente em \hw{}. Portanto, esperava-se que fosse possível realizar a implementação básica que servisse de ponto de partida e, assim sendo, pode-se considerar que o objetivo foi atingido. 
+O principal objetivo desse trabalho, como também já foi dito anteriormente, é abrir portas para o desenvolvimento da máquina virtual \py{} completamente em \hw{}. Portanto, esperava-se que fosse possível realizar a implementação básica que servisse de ponto de partida e, assim sendo, pode-se considerar que o objetivo foi atingido. 
 
-Com essa arquitetura, trabalhos futuros poderão se preocupar simplesmente em adicionar módulos responsáveis por suportar funcionalidades ainda não suportadas aqui até então. 
+Com essa arquitetura, trabalhos futuros poderão se preocupar simplesmente em adicionar módulos responsáveis por suportar funcionalidades ainda não suportadas nesta versão. 
 
 \section{Características Gerais}
 \label{result_carac_gerais}
 
 Para iniciar a análise dos resultados deste projeto, precisa-se introduzir as ferramentas utilizadas para a realização dos testes. Dados como frequência de operação e energia dissipada dependem diretamente do dispositivo utilizado como alvo de prototipação.
 
-Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste projeto o programa, desenvolvido pela empresa \textit{Altera}, chamado \textit{Quartus II}. A mesma empresa desenvolvedora do \sw{} também desenvolve sistemas FPGA e, como dispositivo alvo da prototipação, então, utilizou-se o FPGA \textit{Cyclone III} número EP3C25F324C6. 
+Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste projeto a ferramenta, desenvolvida pela empresa \textit{Altera}, chamada \textit{Quartus II}. A mesma empresa desenvolvedora do \sw{} também desenvolve sistemas FPGA e, como dispositivo alvo da prototipação, então, utilizou-se o FPGA \textit{Cyclone III} número EP3C25F324C6. 
 
 Todo o projeto do \hw{} foi desenvolvido utilizando-se a linguagem de descrição de \hw{} chamada VHDL, que possibilitou a criação de cada componente individualmente e, posteriormente, a integração dos mesmos. Contudo, antes de iniciar-se o desenvolvimento com a linguagem, foi utilizada a ferramenta \textit{Logisim} para montar o \textit{register-transfer level}, comumente conhecido como RTL, o qual permitiu melhor visibilidade sobre os objetivos da arquitetura e, posteriormente, da implementação. 
 
@@ -24,9 +24,9 @@ Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, c
 
 Utilizando-se a mesma ferramenta utilizada para o desenvolvimento e posterior prototipação em FPGA, foi possível obter dados referentes à frequência e, por conseguinte, periodo de \clock{}, da arquitetura criada. 
 
-Primeiramente, realizar-se-á uma comparação entre os resultados obtidos em uma implementação parcial desta mesma arquitetura, a qual não dispunha de, basicamente, nenhuma possibilidade simples modificar suas configurações básicas, tampouco de algumas instruções suportadas atualmente(mais informações sobre as diferenças entre a versão atual e a anterior podem ser encontradas no capítulo \ref{modificacoes}). Essa versão parcial possuia uma frequência máxima de operação de 89,29 MHz. 
+Primeiramente, realizar-se-á uma comparação entre os resultados obtidos em uma implementação parcial desta mesma arquitetura, a qual não dispunha de, basicamente, nenhuma possibilidade simples modificar suas configurações básicas, tampouco de algumas instruções suportadas atualmente (mais informações sobre as diferenças entre a versão atual e a anterior foram apresentadas no capítulo \ref{modificacoes}). Essa versão parcial possuia uma frequência máxima de operação de 89,29 MHz. 
 
-Já a versão atual, organizada e com maior leque de instruções suportadas, teve leve queda dessa frequência, possuindo, atualmente, 84,35 MHz. Com esse valor, é possível definir, através da equação \ref{eq_periodo}, um período de \clock{} de 11,85 nanosegundos (ns).
+Já a versão atual, organizada e com maior leque de instruções suportadas, teve uma leve queda no valor da frequência, possuindo, atualmente, 84,35 MHz. Com esse valor, é possível definir, através da equação \ref{eq_periodo}, um período de \clock{} de 11,85 nanosegundos (ns).
 
 \begin{equation}
 \label{eq_periodo}
@@ -35,7 +35,7 @@ T = 1/f
 
 Nos trabalhos correlatos analisados na seção \ref{trab_correlatos}, foi possível observar que, na maioria deles, as frequências de operação máximas definidas pelos projetistas giraram em torno dos 100 MHz. É possível que suas frequências máximas reais tenham sido levemente superior a isso, mas foram, provavelmente, arredondadas para um valor abaixo. 
 
-A Figura \ref{img_freq} o resultado da análise de frequência realizada pela ferramenta \textit{Quartus} no decorrer da compilação. Nela pode ser objservada a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk}, referente à entrada de \clock{} do sistema.
+A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada pela ferramenta \textit{Quartus} no decorrer da compilação. Nela pode ser observada a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk}, referente à entrada de \clock{} do sistema.
 
 \begin{figure}[htp]
 \centering
@@ -60,7 +60,7 @@ Na imagem, é possível perceber que como foi feita a utilização de cada component
 
 \begin{description}
 
-	\item[Total de elementos lógicos:] A ferramenta retornou um valor de 751 elementos lógicos de um total suportado de 24.624 (caracterizando 3\% do total). 
+	\item[Total de elementos lógicos:] A ferramenta retornou um valor de 728 elementos lógicos de um total suportado de 24.624 (caracterizando 3\% do total). 
 	\item[Total de registradores:] Foi apresentado pela ferramenta um total de 366 registradores. Esse número é dado conforme o número de \bis{} dos componentes. Ou seja, um registrador, como descrito nos capítulos anteriores, com 12 \bis{}, gera 12 registradores lógicos nesses dados.
 	\item[Total de pinos:] O valor total de pinos apresentado foi de 33 pinos de um total suportado de 216 (15\% da capacidade utilizada). Os pinos que a ferramenta se refere são os sinais que entram ou saem da entitade topo, ou seja, do processador. Cada pino apresentado corresponde a um \bi{}, tal como os registradores.
 	\item[Total de \bis{} de memória:] Conforme o capítulo \ref{modificacoes} mostrou, houve um grande aumento em cada uma das memórias do processador. Esse valor representa o número de \bis{} de memória presentes nesta arquitetura, sendo ele 137.216 de um total suportado de 608.256 (caracterizando 23\% do total). Esse valor depende diretamente no número de \bis{} dos endereços das memórias, assim como o valor total de registradores também.
@@ -68,7 +68,7 @@ Na imagem, é possível perceber que como foi feita a utilização de cada component
 
 \end{description}
 
-Os valores acima apresentados como sendo a área ocupada do processador são válidos apenas se o número de \bis{} dos endereços das memórias for 12. Qualquer outro valor gera alterações significativas nos valores acima, principalmente no número de registradores e de \bis{} de memória.
+Os valores acima apresentados como sendo a área ocupada do processador são válidos apenas se o número de \bis{} dos endereços das memórias for igual a 12. Qualquer outro valor gera alterações significativas nos valores acima, principalmente no número de registradores e de \bis{} de memória.
 
 \subsection{Análises de Energia e Potência}
 \label{result_energia}
@@ -82,16 +82,16 @@ Assim sendo, criou-se o gráfico apresentado na Figura \ref{graf_ciclos_instr}, o
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.5]{images/resultados/ciclos_instrucao.png}
+\includegraphics[scale=0.7]{images/resultados/ciclos_instrucao.png}
 \caption{Gráfico de barras com os ciclos de \clock{} necessários para a execução de cada instrução.}
 \label{graf_ciclos_instr}
 \end{figure}
 
 Assim, com a análise do gráfico, é possível perceber que instruções que acessam a memória e instruções que fazem mais de uma leitura na pilha utilizam maior número de ciclos para serem executadas. É possível, por exemplo, comparar as instruções BINARY\_ com as UNARY\_, sendo que a diferença delas, como o gráfico mostra, é de 2 ciclos. Esses dois ciclos são os responsável pela leitura do segundo dado da pilha, tendo em vista que essa é a única diferença entre as duas instruções.
 
-A instrução COMPARE\_OP está na liderança no que diz respeito à quantidade de ciclos necessários para sua execução. O motivo, para isso é que tal instrução não salva nenhum dado na pilha após ser executada. Algo que deveria torná-la mais rápida é o que a torna mais lenta e o motivo para isso pode ser visto em uma comparação com as instruções BINARY\_. O fluxo de execução de ambas as instruções é basicamente o mesmo: ler 2 dados da pilha e executar na ULA. 
+A instrução COMPARE\_OP está na liderança no que diz respeito à quantidade de ciclos necessários para sua execução. O motivo, para isso é que tal instrução não salva nenhum dado na pilha após ser executada. Algo que deveria torná-la mais rápida é o que a torna mais lenta e o motivo para isso pode ser visto em uma comparação com as instruções BINARY\_. 
 
-Após passar pela ULA, as instruções BINARY\_ salvam o dado novamente na pilha, não sendo necessário, portanto, decrementar o ponteiro de \tos{} duas vezes. Já a instrução COMPARE\_OP, por ler dois dados e não salvar nada na pilha após, necessita executar dois decrementos no valor do ponteiro TOS, algo que, como visto na comparação entre BINARY\_ e UNARY\_, custa exatamente 2 ciclos de \clock{}. O ciclo extra decorre do fato de a ULA precisar esperar até salvar o resultado no \textit{regComp}, não podendo serem modificadas suas entradas. O apêndice \ref{ap_me_binary} apresenta a máquina de estados da instrução COMPARE\_OP, onde pode ser visto que o estado "co7" apenas realiza o salvamento no registrador regComp.
+O fluxo de execução de ambas as instruções é basicamente o mesmo: ler 2 dados da pilha e executar na ULA. Após passar pela ULA, as instruções BINARY\_ salvam o dado novamente na pilha, não sendo necessário, portanto, decrementar o ponteiro de \tos{} duas vezes. Já a instrução COMPARE\_OP, por ler dois dados e não salvar nada na pilha, necessita executar dois decrementos no valor do ponteiro TOS, algo que, como visto na comparação entre BINARY\_ e UNARY\_, custa exatamente 2 ciclos de \clock{}. O ciclo extra decorre do fato de a ULA precisar esperar até salvar o resultado no \textit{regComp}, não podendo serem modificadas suas entradas. O apêndice \ref{ap_me_binary} apresenta a máquina de estados da instrução COMPARE\_OP, onde pode ser visto que o estado "co7" apenas realiza o salvamento no registrador \textit{regComp}.
 
 Para concluir, pode-se perceber que instruções relacionadas a desvios e carregamento de dados externos para a pilha são extremamente rápidas de serem executadas, como já era esperado. O ciclo de erros é a máquina de estados parcial mais rápida de ser executada, com apenas 3 estados.
 
@@ -100,7 +100,7 @@ Para concluir, pode-se perceber que instruções relacionadas a desvios e carregam
 
 Ao se implementar uma arquitetura em \hw{}, é preciso que sejam feitas simulações capazes de validar a execução da mesma. No caso da arquitetura desenvolvida neste projeto, as simulações se baseiam em algoritmos binários gerados através da ferramenta \textit{pyConv}, apresentada no capítulo \ref{conversor}.
 
-Os algoritmo gerados pelo conversor dependem exclusivamente do algoritmo digitado como entrada dele. A entrada de instruções ocorre digitando-se as instruções da \pvm{} (suas palavras chaves). Tais instruções são geradas diretamente pela ferramenta \textit{Disassembler} e podem ser copiadas diretamente para o \textit{pyConv}.
+Os algoritmos gerados pelo conversor dependem exclusivamente do algoritmo digitado como entrada dele. A entrada de instruções ocorre digitando-se as instruções da \pvm{} (suas palavras chaves). Tais instruções são geradas pela ferramenta \textit{Disassembler} e podem ser copiadas para o \textit{pyConv}.
 
 O código binário gerado, por sua vez, é baseado na tabela \ref{table_opCode}. Nela, é possível verificar os códigos binários para cada uma das instruções suportadas no processador.
 
@@ -110,7 +110,7 @@ Contudo, só a tabela \ref{table_opCode} não é suficiente para todas as funcional
 
 \input{tables/resultados/table_compareOp}
 
-Feita essa apresentação prévia de informações, as subseções seguintes apresentarão simulações realizadas na arquitetura. Para isso, utilizou-se a ferramenta \textit{Modelsim}. Primeiramente, apresentou-se uma simulação mostrando o funcionamento de todas as operações BINARY\_ e UNARY\_ (subseção \ref{result_arith}. Após, foram apresentados resultados de simulações com algoritmos de \textit{loop} (subseção \ref{result_loop}), chamada e retorno de funções (subseção \ref{result_func}) e comparações múltiplas com desvios variádos (subseção \ref{result_algoritmo_maior}.
+Feita essa apresentação de informações básicas, as subseções seguintes apresentam simulações realizadas na arquitetura. Para isso, utilizou-se a ferramenta \textit{Modelsim}. Primeiramente, pode ser encontrada uma simulação mostrando o funcionamento de todas as operações BINARY\_ e UNARY\_ (subseção \ref{result_arith}. Após, foram apresentados resultados de simulações com algoritmos de \textit{loop} (subseção \ref{result_loop}), chamada e retorno de funções (subseção \ref{result_func}) e um algoritmo variado, contendo comparações e desvios (subseção \ref{result_algoritmo_maior}.
 
 \subsection{\textbf{TESTE 1:} Instruções BINARY\_ e UNARY\_}
 \label{result_arith}
@@ -254,3 +254,19 @@ O tempo teórico calculado para a execução deste algoritmo foi de 2.548 ns, enqua
 \caption{Resultado da simulação do teste 4.}
 \label{img_final4}
 \end{figure}
+
+\section{Prototipação FPGA}
+
+Para a conclusão deste projeto e atender ao último objetivo proposto, realizou-se a prototipação em um FPGA do processador. Para isso, utilizou-se a ferramenta \textit{Quartus II}, capaz de montar a arquitetura escrita em VHDL diretamente no \textit{chip} do FPGA, fazendo-a ser executada em \hw{}.
+
+Primeiramente, foram realizadas algumas modificações de baixa complexidade na arquitetura. Dentre essas modificações, estava a modificação dos nomes dos pinos de entrada e saída do FPGA e, além disso, a conexão de alguns sinais internos com sinais externos.
+
+A primeira modificação se fez necessária visto que o FPGA reconhece nomes padrões de pinos e os conecta automaticamente com seus pinos físicos. O grande exemplo dessa modificação foi o sinal de \clock{}, o qual precisou receber o nome de "\textit{osc\_clk}". 
+
+Já referente à segunda modificação, para verificar o resultado da simulação, utilizou-se os \textit{leds} do FPGA para apresentar os 4 últimos \bis{} do registrador PC ou os 4 últimos \bis{} do topo ta pilha. Com essa possibilidade de ver o que foi executado, foram feitas simulações em paralelo com a ferramenta \textit{Modelsim} para que os resultados fossem comparados.
+
+Primeiramente, com o valor de PC sendo apresentado pelos \textit{leds}, executou-se uma simulação no \textit{Modelsim} e observou-se o valor final de PC. O motivo desta técnica ser utilizada é o fato de que o valor de PC só é alterado se o processo passou por todos os estados da máquina de estados. E, se isso aconteceu, é porque a instrução foi executada com sucesso.
+
+Para o segundo método, utilizando o \tos{} nos \textit{leds}, realizou-se a mesma simulação no \textit{Modelsim} e comparou-se o \tos{} final da simulação com o encontrado no FPGA. Em todos os casos, foi possível verificar que os dados eram compatíveis.
+
+Uma grande dificuldade encontrada na prototipação FPGA foi o fato de a ferramenta não disponibilizar acesso fácil à sua memória interna após a simulação. É possível carregar a memória ao inicializá-lo, mas não acessá-la facilmente após finalizar a execução.
