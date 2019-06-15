@@ -2,7 +2,7 @@ Neste capítulo serão apresentados os resultados das pesquisas e implementações c
 
 Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados das simulações realizadas (seção \ref{result_testes}).
 
-Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na seção \ref{result_algo_final}, para ser executado na arquitetura. 
+%Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na seção \ref{result_algo_final}, para ser executado na arquitetura. 
 
 O principal objetivo desse trabalho, como também já foi dito anteriormente, é abrir portas para o desenvolvimento da máquina virtual \py{} completamente em \hw{}. Portanto, esperava-se que fosse possível realizar a implementação básica que servisse de ponto de partida e, assim sendo, pode-se considerar que o objetivo foi atingido. 
 
@@ -17,7 +17,7 @@ Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste proje
 
 Todo o projeto do \hw{} foi desenvolvido utilizando-se a linguagem de descrição de \hw{} chamada VHDL, que possibilitou a criação de cada componente individualmente e, posteriormente, a integração dos mesmos. Contudo, antes de iniciar-se o desenvolvimento com a linguagem, foi utilizada a ferramenta \textit{Logisim} para montar o \textit{register-transfer level}, comumente conhecido como RTL, o qual permitiu melhor visibilidade sobre os objetivos da arquitetura e, posteriormente, da implementação. 
 
-Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia e potência (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os cíclos de \clock{} necessários para sua execução.
+Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os cíclos de \clock{} necessários para sua execução. 
 
 \subsection{Frequência Máxima de Operação}
 \label{result_freq}
@@ -43,6 +43,8 @@ A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada
 \caption{Frequência máxima de operação gerada pela ferramenta \textit{Quartus}.}
 \label{img_freq}
 \end{figure}
+
+É importante ressaltar que a frequência apresentada aqui não inclui a operação de divisão na ULA. Ao realizar-se testes adicionando-a ao projeto, houve queda da frequência apresentada até 13 MHz, algo inaceitável. Acredita-se que tal problema decorre do fato de o dispositivo utilizado para prototipação não possuir nenhum divisor lógico nativo, apenas multiplicado. Assim, para realizar uma divisão, utilizam-se outros métodos que não são eficazes e tornam a operação lenta, impactando na frequência final de operação de todo o sistema.
 
 \subsection{Área Ocupada em um FPGA}
 \label{result_carac_area}
@@ -70,8 +72,36 @@ Na imagem, é possível perceber que como foi feita a utilização de cada component
 
 Os valores acima apresentados como sendo a área ocupada do processador são válidos apenas se o número de \bis{} dos endereços das memórias for igual a 12. Qualquer outro valor gera alterações significativas nos valores acima, principalmente no número de registradores e de \bis{} de memória.
 
-\subsection{Análises de Energia e Potência}
+\subsection{Análises de Energia}
 \label{result_energia}
+
+Nos dias atuais, existe uma grande atenção voltada para o consumo energético de todos os sistemas. O grande objetivo visa aumentar o poder de processamento e diminuir o consumo energético. 
+
+Isso se deve, principalmente, ao fato de que a maioria dos dispositivos estão sendo criados para funcionarem com baterias e, portanto, poderem ser levados para qualquer lugar. Assim, realizou-se uma análise de energia dissipada do processador desenvolvido neste trabalho.
+
+A Figura \ref{img_result_energia} apresenta os dados retornados pela ferramenta \textit{Quartus II}. Dentro dela, existe a ferramenta chamada \textit{PowerPlay Power Analyzer}, a qual realiza, juntamente com o auxílio da ferramenta \textit{Modelsim}, levantamento de dados sobre a energia dissipada durante as simulações.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.9]{images/resultados/energia.jpg}
+\caption{Análises de energia gerada pela ferramenta \textit{Quartus}.}
+\label{img_result_energia}
+\end{figure}
+
+Para a realização deste teste, configurou-se o \textit{Quartus} de forma que ele gerasse um arquivo no formato \textit{.vcd}, o qual é utilizado pelo \textit{Modelsim} para analisar dados energéticos durante simulações. 
+
+Conforme mostra a Figura \ref{img_result_energia}, a energia térmica total dissipada foi de 132,56 miliwatts (mW). Esse valor é a soma das energias dinâmica (30,07 mW), estática (81,20 mW) e dos pinos de entrada (21,28 mW). 
+
+Para estes testes, a ferramenta considerou como temperatura ambiente 26,6 ºC e 1,20 V de tensão interna à arquitetura, enquanto a tensão nos pinos de entrada e saída foi considerada 2,5 V. 
+
+Além disso, a ferramenta ainda indica a memória de instruções (\textit{memInstr}) como o componente que mais dissipa energia (6,34 mW) seguida pela pilha (4,03 mW). A unidade de controle é responsável por dissipar 1,90 mW, sendo classificada na quarta posição. A Figura \ref{img_energia_ranking} apresenta os quinze componentes que mais consomem energia. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.7]{images/resultados/energia_ranking.jpg}
+\caption{\textit{Ranking} dos componentes que mais consomem energia.}
+\label{img_energia_ranking}
+\end{figure}
 
 \subsection{Análises das Instruções Implementadas}
 \label{result_analise_instrucoes}
@@ -115,7 +145,7 @@ Feita essa apresentação de informações básicas, as subseções seguintes apresenta
 \subsection{\textbf{TESTE 1:} Instruções BINARY\_ e UNARY\_}
 \label{result_arith}
 
-A primeira simulação realizada foi responsável por executar um algoritmo de teste para todas as operações binárias e unárias do processador. O código \as{} deste algoritmo pode ser visto na Figura \ref{img_ass1}. 
+A primeira simulação realizada foi responsável por executar um algoritmo de teste para todas as operações binárias e unárias do processador. O código \as{} deste algoritmo pode ser visto na Figura \ref{img_ass1}. A única operação que não aparece no algoritmo e, portanto, sendo considerada a exceção, é a de divisão (instrução BINARY\_DIVIDE). Embora ela esteja funcional, sua utilização gera impacto de grandes proporções na frequência, conforme dito na subseção \ref{result_freq}, causando significativas no tempo de execução.
 
 \begin{figure}[htp]
 \centering
@@ -124,7 +154,7 @@ A primeira simulação realizada foi responsável por executar um algoritmo de test
 \label{img_ass1}
 \end{figure}
 
-Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o objetivo de verificar as classes de instruções implementadas e fazer uma estimativa de tempo teórico de execução. Como pode ser visto na Figura \ref{img_graf1}, a classe de instruções que mais aparece neste algoritmo é a escrita e leitura na memória, caracterizando 77,1\%. 
+Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o objetivo de verificar as classes de instruções implementadas e fazer uma estimativa de tempo teórico de execução. Como pode ser visto na Figura \ref{img_graf1}, a classe de instruções que mais aparece neste algoritmo é a escrita e leitura na memória, caracterizando 78,1\%. 
 
 \begin{figure}[htp]
 \centering
@@ -133,7 +163,7 @@ Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o obje
 \label{img_graf1}
 \end{figure}
 
-Este fato é importante quando calcula-se o tempo teórico para a execução, visto que instruções de acesso à memória utilizam tempo considerável de execução e causam grande impacto quando aparece diversas vezes. O tempo teórico encontrado foi de 4.681 ns, enquanto o tempo prático observado foi de 5.200 ns.
+Este fato é importante quando calcula-se o tempo teórico para a execução, visto que instruções de acesso à memória utilizam tempo considerável de execução e causam grande impacto quando aparece diversas vezes. O tempo teórico encontrado foi de 4.171 ns, enquanto o tempo prático observado foi de \textbf{TEMPO PRÁTICO} ns.
 
 Para fazer a verificação de que o algoritmo funcionou corretamente, analisou-se a memória externa, a qual recebeu cada um dos resultados das operações realizadas. A Figura \ref{img_final1} mostra uma imagem do trecho de memória onde os resultados foram salvos. As posições zero e 1, ou seja, as que estão na linha mais abaixo e à direita, receberam os operandos das operações. Eles são, respectivamente, 15 e 2.
 
