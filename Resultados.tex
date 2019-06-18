@@ -17,14 +17,14 @@ Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste proje
 
 Todo o projeto do \hw{} foi desenvolvido utilizando-se a linguagem de descrição de \hw{} chamada VHDL, que possibilitou a criação de cada componente individualmente e, posteriormente, a integração dos mesmos. Contudo, antes de iniciar-se o desenvolvimento com a linguagem, foi utilizada a ferramenta \textit{Logisim} para montar o \textit{register-transfer level}, comumente conhecido como RTL, o qual permitiu melhor visibilidade sobre os objetivos da arquitetura e, posteriormente, da implementação. 
 
-Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os cíclos de \clock{} necessários para sua execução. 
+Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os ciclos de \clock{} necessários para sua execução. 
 
 \subsection{Frequência Máxima de Operação}
 \label{result_freq}
 
 Utilizando-se a mesma ferramenta utilizada para o desenvolvimento e posterior prototipação em FPGA, foi possível obter dados referentes à frequência e, por conseguinte, periodo de \clock{}, da arquitetura criada. 
 
-Primeiramente, realizar-se-á uma comparação entre os resultados obtidos em uma implementação parcial desta mesma arquitetura, a qual não dispunha de, basicamente, nenhuma possibilidade simples modificar suas configurações básicas, tampouco de algumas instruções suportadas atualmente (mais informações sobre as diferenças entre a versão atual e a anterior foram apresentadas no capítulo \ref{modificacoes}). Essa versão parcial possuia uma frequência máxima de operação de 89,29 MHz. 
+Primeiramente, realizar-se-á uma comparação entre os resultados obtidos em uma implementação parcial desta mesma arquitetura, a qual não dispunha de, basicamente, nenhuma possibilidade simples modificar suas configurações básicas, tampouco de algumas instruções suportadas atualmente (mais informações sobre as diferenças entre a versão atual e a anterior foram apresentadas no capítulo \ref{modificacoes}). Essa versão parcial possuía uma frequência máxima de operação de 89,29 MHz. 
 
 Já a versão atual, organizada e com maior leque de instruções suportadas, teve uma leve queda no valor da frequência, possuindo, atualmente, 84,35 MHz. Com esse valor, é possível definir, através da equação \ref{eq_periodo}, um período de \clock{} de 11,85 nanosegundos (ns).
 

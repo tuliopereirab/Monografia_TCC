@@ -13,7 +13,7 @@ Contudo, dentro do projeto, é esperado que haja, além de eficiência, compreensib
 
 Dentro da criação dos arquivos VHDL que compunham o processador, não havia qualquer entrada de configuração inicial. Em outras palavras, era necessário que, caso houvesse a necessidade de modificar uma característica básica do processador, tal modificação precisasse ser feita diretamente em cada um dos vários arquivos.
 
-Aliado a isso, não existia qualquer reaproveitamento de arquivos. Ou seja, cada componente possuia, imprudentemente, um arquivo próprio que somente era utilizado por ele mesmo. Isso aumentava demasiadamente a complexidade de se modificar alguma característica e, até mesmo, entender o que já havia sido feito.
+Aliado a isso, não existia qualquer reaproveitamento de arquivos. Ou seja, cada componente possuía, imprudentemente, um arquivo próprio que somente era utilizado por ele mesmo. Isso aumentava demasiadamente a complexidade de se modificar alguma característica e, até mesmo, entender o que já havia sido feito.
 
 A combinação destes dois problemas e o objetivo principal evidente de modificar as memórias fez com que fosse necessária uma modificação drástica dentro dos arquivos que davam origem ao processador.
 
@@ -88,7 +88,7 @@ Então, evitando o incremento no número de componentes utilizados, a segunda opçã
 
 Ao realizar-se as modificações citadas na seção \ref{estMod}, viu-se necessário que houvesse adição de algumas funcionalidades na ULA. Assim sendo, foi adicionado um \bi{} no sinal seletor da ULA, totalizando 4 \bis{}.
 
-Basicamente, as funcionalidades básicas adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos muxes da ULA, o que deixava os muxes ocupados e impediam a adição de outras possíveis funcionalidades.
+Basicamente, as funcionalidades básicas adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos \textit{muxes} da ULA, o que deixava os \textit{muxes} ocupados e impediam a adição de outras possíveis funcionalidades.
 
 Quanto à adição de operações lógicas, foi realizada uma checagem na documentação da linguagem \py{} em busca de instruções que realizassem operações lógicas. Foram, então, encontradas as instruções BINARY\_AND, BINARY\_OR e BINARY\_XOR, que seguem o mesmo fluxo das operações BINARY\_ explicadas na subseção \ref{op-arit}. Com isso, elas puderam ser implementadas utilizando-se a mesma máquina de estados das outras instruções similares.
 
@@ -126,7 +126,7 @@ Já os \textit{warnings} são:
 \subsection{Método de Verificação de Erros}
 \label{errorModos}
 
-O grande objetivo, ao se reconhecer os erros durante uma execução é saber o que aconteceu para, então, ser possível identificar o que pode ser corrigido para evitar isso. Para tal finalidade, foi atribuido um código de erro, de 8 \bis{}, para cada um dos erros citados na subseção \ref{errorTipos}. Com isso, foi possível gerar a tabela abaixo:
+O grande objetivo, ao se reconhecer os erros durante uma execução é saber o que aconteceu para, então, ser possível identificar o que pode ser corrigido para evitar isso. Para tal finalidade, foi atribuído um código de erro, de 8 \bis{}, para cada um dos erros citados na subseção \ref{errorTipos}. Com isso, foi possível gerar a tabela abaixo:
 
 %tabela de erros e códigos
 

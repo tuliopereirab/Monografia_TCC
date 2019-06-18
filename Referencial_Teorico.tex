@@ -27,7 +27,7 @@ Por último, pode-se citar como uma aplicação para a linguagem \py{} a possibilid
 
 \subsection{Máquina Virtual da linguagem \py{} em \textit{Hardware}}
 \label{pvm_hardware}
-Ao testar os mesmos sistemas em \sw{} ou em \hw{}, é possível obter-se resultados bem variados, dependendo do sistema \cite{Adams2006}. Na maior parte dos casos, com algoritmos que exigem maior poder computacional e que precisam ser executados em um tempo pré-determinado, são utilizados sistemas em \hw{}. É sabido que um sistema físico, \hw{}, consegue executar mais rapidamente aplicações complexas \cite{Grevera2000}. Isso acontece porque, quando se executa um sistema em \sw{}, existem diferentes tratamentos de dados e envio das instruções para um processador físico executar, que passam pelo sistema operacional e outros tratamentos, dependendo da linguagem utilizada. Assim, ocorre um significativo aumento sobre tempo de executação, gerando um desempenho inferior. 
+Ao testar os mesmos sistemas em \sw{} ou em \hw{}, é possível obter-se resultados bem variados, dependendo do sistema \cite{Adams2006}. Na maior parte dos casos, com algoritmos que exigem maior poder computacional e que precisam ser executados em um tempo pré-determinado, são utilizados sistemas em \hw{}. É sabido que um sistema físico, \hw{}, consegue executar mais rapidamente aplicações complexas \cite{Grevera2000}. Isso acontece porque, quando se executa um sistema em \sw{}, existem diferentes tratamentos de dados e envio das instruções para um processador físico executar, que passam pelo sistema operacional e outros tratamentos, dependendo da linguagem utilizada. Assim, ocorre um significativo aumento sobre tempo de execução, gerando um desempenho inferior. 
 
 Desta forma, quando se adiciona ainda outra camada de \sw{}, como a linguagem \py{} possui, que é a \pvm{}, o desempenho diminui consideravelmente, fazendo com que sistemas de elevada complexidade que necessitam obrigatoriamente respeitar tempos pré-definidos, sofram falhas significativas. Contudo, ao analisar-se a reportagem apresentada na subseção inicial dessa seção, percebe-se que as linguagens de programação mais utilizadas hoje em dia são as interpretadas. Isso se deve ao fato de que elas possuem grande portabilidade, podendo ser executadas em inúmeros sistemas físicos, alguns completamente diferentes de outros, com o mesmo algoritmo compilado (mesmos \bc{}) \cite{Ngo1997}.
 
@@ -74,7 +74,7 @@ Para realizar os testes de suas arquitetura, foi definida uma frequência de 100 
 
 \subsection{JAIP-MP}
 \label{jaipmp}
-O segundo trabalho, proposto por \citeonline{Tsai2015a}, é um processador de quatro \textit{cores} feito para executar algoritmos escritos em \java{}. Foi atribuido à arquitetura o nome de JAIP-MP (\textit{Java Application IP - Multi-core Processor}).
+O segundo trabalho, proposto por \citeonline{Tsai2015a}, é um processador de quatro \textit{cores} feito para executar algoritmos escritos em \java{}. Foi atribuído à arquitetura o nome de JAIP-MP (\textit{Java Application IP - Multi-core Processor}).
 
 Nesse trabalho, a arquitetura implementada permite carregamentos dinâmicos de classe e execução dupla de \textit{bytecodes}, permitindo que duas instruções sejam executadas simultaneamente em cada núcleo do processador (\textit{core}). Além disso, foram implementados métodos de utilização da memória \textit{cache} para o funcionamento de objetos, tais como utilizados na linguagem \java{}. Ou seja, é possível alocar objetos diretamente na memória e manipulá-los. Com a possibilidade de execução simultânea de instruções, é possível perceber o uso de \textit{multithreading} por parte da arquitetura proposta. 
 
@@ -158,7 +158,7 @@ Após todos os carregamentos concluídos, são feitas as chamadas de funções aritmé
 \begin{figure}[htp]
 \centering
 \includegraphics[scale=0.6]{images/exemplo_prioridades.png}
-\caption{Exemplo de uma operação, através da pilha, de uma equação com três operândos e prioridades diferentes.}
+\caption{Exemplo de uma operação, através da pilha, de uma equação com três operandos e prioridades diferentes.}
 \label{img_exemplo_prioridades}
 \end{figure} 
 
@@ -274,7 +274,7 @@ Os endereços da linguagem \textit{Python} são criados e definidos pelo próprio c
 
 \subsection{\textit{OpArg Python}}
 
-A primeira parte de um endereço \textit{Python}, onde está contido o arqumento da instrução, contém 8 \textit{bits} e é utilizada para mostrar ao sistema um endereço de memória, valor ou tipo de operação, o qual será utilizado pela instrução a ser executada. Todas as instruções possuem um espaço reservado para o argumento, porém, em algumas delas, esse espaço é simplesmente preenchido com qualquer valor, pois será ignorado. A essas instruções, atribui-se a característica de ter um argumento sem importância ("\textit{don't care}").
+A primeira parte de um endereço \textit{Python}, onde está contido o argumento da instrução, contém 8 \textit{bits} e é utilizada para mostrar ao sistema um endereço de memória, valor ou tipo de operação, o qual será utilizado pela instrução a ser executada. Todas as instruções possuem um espaço reservado para o argumento, porém, em algumas delas, esse espaço é simplesmente preenchido com qualquer valor, pois será ignorado. A essas instruções, atribui-se a característica de ter um argumento sem importância ("\textit{don't care}").
 
 Quando o processador percebe que está executando uma instrução que necessita de um argumento, ele imediatamente o lê e passa para o componente responsável por manipulá-lo. Como o argumento pode ser uma constante, que será carregada diretamente para a pilha, um endereço de memória ou ainda uma definição de operação (utilizada pela instrução COMPARE\_OP), o decodificador deve ler o valor contido na primeira metade do endereço e conseguir passá-lo para o componente necessário, dependendo do \textit{OpCode} que foi lido. Por isso, todas as decisões sobre a utilização do argumento, assim como outras decisões dentro da execução, devem ser feitas dentro de um módulo de controle.
 

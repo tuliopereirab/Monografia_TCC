@@ -146,7 +146,7 @@ Após definição, foi feito outro levantamento de requisitos. Nesse caso, para ide
  
 Então, de posse da lista de componentes a serem utilizados na arquitetura, foram realizadas as criações de arquiteturas parciais, as quais foram desenvolvidas especificamente para cada uma das classes de instruções. Ao final deste fragmento de implementação, todas as arquiteturas foram integradas em apenas uma e foram inseridos multiplexadores para que fosse possível que o mesmo componente, presente no RTL de mais uma arquitetura parcial, pudesse ser compartilhado, a fim de atender a mais de uma classe de instruções.
 
-Além disso, foi realizada a implementação, em C, de um conversor do código \as{} composto de palavras para o código binário que é carregado para a memória de instruções. Este conversor, o qual recebeu o nome the \textit{pyConv}, contém métodos de verificação de erros com o objetivo de evitar que algoritmos com erros sejam carregados para arquitetura.
+Além disso, foi realizada a implementação, em C, de um conversor do código \as{} composto de palavras para o código binário que é carregado para a memória de instruções. Este conversor, o qual recebeu o nome de \textit{pyConv}, contém métodos de verificação de erros com o objetivo de evitar que algoritmos com erros sejam carregados para arquitetura.
 
 Portanto, ao final deste trabalho, foi possível obter uma arquitetura funcional, a qual consegue executar todas as instruções listadas e analisadas no decorrer do trabalho. Juntamente com ela, foi possível obter um conversor capaz de gerar arquivos para simulações. 
 
