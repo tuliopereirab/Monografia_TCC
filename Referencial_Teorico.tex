@@ -111,7 +111,7 @@ Através das análises feitas, é possível perceber uma grande semelhança entre o t
 \section{Funcionamento CPython}
 \label{cpython_func}
 
-A máquina virtual \textit{Python}, com a sua implementação original chamada de \textit{CPython} \cite{designCompiler}, baseia-se no uso de uma pilha para permitir a execução de diversas funcionalidades nos componentes do processador. Para executar qualquer instrução que necessite utilizar dados que virão da memória onde ficam armazenadas as variáveis, é preciso que essa pilha salve estes dados no seu topo para que, então, a próxima instrução possa ser chamada e possa utilizar os dados. Para falar sobre o topo da pilha, utilizar-se-á a sigla TOS (top of the stack), que também é utilizada em documentos que descrevem o funcionamento do interpretador \cite{pythonMachine}. 
+A máquina virtual \textit{Python}, com a sua implementação original chamada de \textit{CPython} \cite{designCompiler}, baseia-se no uso de uma pilha para permitir a execução de diversas funcionalidades nos componentes do processador. Para executar qualquer instrução que necessite utilizar dados que virão da memória onde ficam armazenadas as variáveis, é preciso que essa pilha salve estes dados no seu topo para que, então, a próxima instrução possa ser chamada e possa utilizar os dados. Para falar sobre o topo da pilha, utilizar-se-á a sigla TOS (\textit{Top Of Stack}), que também é utilizada em documentos que descrevem o funcionamento do interpretador \cite{pythonMachine}. 
 
 A pilha do \cpy{} é capaz de suportar qualquer tipo de dados que a linguagem \py{} permite. Tal pilha é a responsável por guardar todos os dados que forem carregados, vindos da memória ou de fonte externa (carregamento de constante), com o objetivo de serem executados em determinados componentes do processador, sendo valores constantes (que estejam entrando no sistema pela primeira vez) ou variáveis (que já foram carregados anteriormente como constantes e salvos na memória). Assim como uma pilha padrão, existe um ponteiro que sempre aponta para a primeira posição da pilha (a posição que se encontra no topo da pilha e que contém o último dado que foi inserido). 
 
@@ -235,13 +235,22 @@ Observe ainda que, conforme a Equação \ref{eq_tos} mostra, o \tos{} se posiciona
 
 As instruções \textit{Assembly} responsáveis por executar operações aritméticas na linguagem \textit{Python} são:
 
-\begin{enumerate}
+\begin{description}
 	\item[BINARY\_ADD]: executa uma operação de soma entre o TOS e a segunda posição da pilha.
 	\item[BINARY\_SUBTRACT]: executa uma operação de subtração entre o TOS e a segunda posição da pilha.
 	\item[BINARY\_MULTIPLY]: executa uma operação de multiplicação dentre o TOS e a segunda posição da pilha.
 	\item[BINARY\_DIVIDE]: executa uma operação de divisão entre o TOS e a segunda posição da pilha.
 	%\item[INPLACE\_ADD]: \textbf{FALTA EXPLICAÇÃO}
-\end{enumerate}
+\end{description}
+
+Além das operações aritméticas apresentadas acima, seguindo o mesmo funcionamento de instruções binárias, existem as que realizam operações lógicas. E, com funcionamento levemente diferente, existem operações unárias, com prefixo \textit{unary}, as quais são executadas apenas com um operando. Os exemplo de instruções \as{} para essas outras instruções são:
+
+\begin{description}
+	\item[BINARY\_AND]: executa uma operação de AND (e) entre os dois valores binários encontrados no \tos{}.
+	\item[BINARY\_OR]: executa uma operação de OR (ou) entre os dois valores binários encontrados no \tos{}.
+	\item[BINARY\_XOR]: executa uma operação de XOR entre os dois valores binários encontrados no \tos{}.
+	\item[UNARY\_NOT]: executa uma operação de NOT apenas no \tos{}.
+\end{description}
 
 \section{Formato das instruções da \pvm{}} % talvez trocar para "INSTRUÇÕES DA \pvm{}"
 \label{rf_modos_enderecamento}
