@@ -1,10 +1,10 @@
 A realização de testes, tanto de simulação utilizando o \textit{Modelsim}, quanto diretamente no FPGA com a ferramenta \textit{Quartus}, exige a criação de arquivos binários para inicializar a memória de instruções. Ou seja, um algoritmo \py{}, passado para código \as{}, precisa ainda ser convertido em código binário e escrito nos arquivos.
 
-Os arquivos em questão, os quais serão abordados especificamente na seção \ref{conv_arq}, são os \textit{.mem} e \textit{.mif}. Sendo utilizados, respectivamente, nas ferramentas \modelsim{} e \quartus{}. 
+Os arquivos em questão, os quais serão abordados especificamente na Seção \ref{conv_arq}, são os \textit{.mem} e \textit{.mif}. Sendo utilizados, respectivamente, nas ferramentas \modelsim{} e \quartus{}. 
 
 O principal objetivo da criação deste conversor, chamado de \textit{pyConv}, é agilizar a execução de algoritmos \py{} diretamente no processador. Simplificando, portanto, a execução dos testes e permitindo que algoritmos mais complexos sejam executados na arquitetura sem a necessidade de escrever código binário em cada uma das posições de memória.
 
-O \textit{pyConv} tem ainda como objetivo evitar ao máximo a inicialização da memória com algoritmos que contenham erros. A verificação desses erros, que será assunto da seção \ref{conv_erros}, permite a identificação de erros léxicos, sintáticos e até lógicos, os quais poderiam tornar algum sinal da arquitetura inválido (assunto da seção \ref{errorMod}).
+O \textit{pyConv} tem ainda como objetivo evitar ao máximo a inicialização da memória com algoritmos que contenham erros. A verificação desses erros, que será assunto da Seção \ref{conv_erros}, permite a identificação de erros léxicos, sintáticos e até lógicos, os quais poderiam tornar algum sinal da arquitetura inválido (assunto da Seção \ref{errorMod}).
 
 Além do que será apresentado sobre o \textit{pyConv} neste capítulo, sugere-se a verificação dos apêndices  \ref{diag_casos}, \ref{diag_seq} e \ref{diag_class} para análise dos diagramas de casos de uso, sequência e classes, respectivamente. Com eles é possível compreender, com maior facilidade, o funcionamento do conversor e como ele foi desenvolvido.
 
@@ -13,7 +13,7 @@ Além do que será apresentado sobre o \textit{pyConv} neste capítulo, sugere-se a
 
 O a ferramenta \textit{pyConv}, desenvolvida em C, recebe como entrada os códigos \as{} no mesmo formato gerado pelo compilador \py{}, utilizando a funcionalidade \textit{Disassembler}. 
 
-Tais formatos, que já foram vistos no capítulo \ref{ref-teorico}, definem uma instrução no formato "\textit{LOAD\_CONST [argumento]}", por exemplo. Essas instruções servem, então, de entrada para o conversor.
+Tais formatos, que já foram vistos no Capítulo \ref{ref-teorico}, definem uma instrução no formato "\textit{LOAD\_CONST [argumento]}", por exemplo. Essas instruções servem, então, de entrada para o conversor.
 
 Esta seção apresentará como são feitos: 
 \begin{itemize}
@@ -25,20 +25,20 @@ Esta seção apresentará como são feitos:
 \subsection{Recebimento de instruções}
 \label{conv_func_instr}
 
-Ao ser inicializado, o \textit{pyConv} gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
+Ao ser inicializado, o \textit{pyConv} gera uma matriz que simula uma memória de instruções e passa a aguardar a entrada de instruções. Ao receber uma, verifica alguns erros que podem estar ligados a essa instrução, os quais serão abordados na Seção \ref{conv_erros}, e, caso tudo esteja correto, adiciona a instrução diretamente na palavra de memória da matriz.
 
 A palavra de memória é a posição de memória que é apontada pelo ponteiro PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a Figura \ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/conversor/img_conv_line.jpg}
+\includegraphics[scale=0.6]{images/conversor/img_conv_line.jpg}
 \caption{Indicação numérica da palavra de memória que está sendo escrita.}
 \label{img_conv_line}
 \end{figure}
 
 Então, com a palavra (ou palavras, no caso de instruções que recebem endereços) salva na matriz, retorna-se para a função inicial que espera uma nova instrução. A posição de memória é, então, atualizada para a próxima, conforme o tipo de instrução inserido anteriormente. Caso seja uma instrução que recebe endereços e, então, necessita de duas palavras de memória para funcionar, a linha atual recebe um incremento de 2, caso contrário, apenas 1.
 
-Quando existe um desvio, é necessário que seja escrito na memória em uma posição fora de ordem. Para isso, dentro do \textit{pyConv}, existe o comando "\textit{line}", que permite que o conversor passe a escrever em uma linha diferente, indicada pelo usuário. Tal comando pode ser utilizado tanto para desvios quanto para corrigir erros de digitação cometidos anteriormente, reescrevendo uma posição. 
+Quando existe um desvio, é necessário que seja escrito na memória em uma posição fora de ordem. Para isso, dentro do \textit{pyConv}, existe o comando "\textit{line}", que permite que o conversor passe a escrever em uma linha diferente, indicada pelo usuário. Esse comando pode ser utilizado tanto para desvios quanto para corrigir erros de digitação cometidos anteriormente, reescrevendo uma posição. 
 
 Ao final da inserção das instruções, utiliza-se o comando "\textit{quit}", que dispara uma verificação geral e final do algoritmo, explicada na subseção \ref{conv_erros_sim}, e então libera-se a escrita nos arquivos a serem gerados.
 
@@ -58,9 +58,9 @@ Assim sendo, a manipulação de variáveis é facilitada em \hw{} por um sistema bas
 \label{conv_func_help}
 O \textit{pyConv}, por utilizar alguns atalhos para algumas instruções, tais como os códigos de operação de comparação (0 para \textit{igual}, 1 para \textit{menor que} e 2 para \textit{maior que}), possui um menu de ajuda para quem for utilizá-lo. 
 
-Tal menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra "\textit{help}" seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instruções possam possuir. 
+Esse menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra \textit{"help"} seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instruções possam possuir. 
 
-A figura %\ref{img_conv_help} apresenta um exemplo de informação apresentada pela função \textit{help} para a instrução COMPARE\_OP.
+A Figura \ref{img_conv_help} apresenta um exemplo de informação apresentada pela função \textit{help} para a instrução COMPARE\_OP.
 
 \begin{figure}[htp]
 \centering
@@ -69,7 +69,7 @@ A figura %\ref{img_conv_help} apresenta um exemplo de informação apresentada pel
 \label{img_conv_help}
 \end{figure}
 
-Além disso, o menu de ajuda é de extrema importância se for considerado o fato de que as instruções de entrada no \textit{pyConv} podem ser iguais ou diferentes às instruções de \as{} da linguagem \py{}. Ou seja, foram criados apelidos para as instruções \py{}, o que facilita a inserção de dados no conversor. Um exemplo disso é a instrução LOAD\_CONST, que recebe o apelido de \textit{lconst}. A tabela \ref{img_conv_help_instr} apresenta a tabela de instruções e apelidos. 
+Além disso, o menu de ajuda é de extrema importância se for considerado o fato de que as instruções de entrada no \textit{pyConv} podem ser iguais ou diferentes às instruções de \as{} da linguagem \py{}. Ou seja, foram criados apelidos para as instruções \py{}, o que facilita a inserção de dados no conversor. Um exemplo disso é a instrução LOAD\_CONST, que recebe o apelido de \textit{lconst}. A Tabela \ref{img_conv_help_instr} apresenta a tabela de instruções e apelidos. 
 
 \begin{table}[]
 \centering
@@ -109,9 +109,7 @@ Então, para facilitar a execução em abas as ferramentas, o conversor gera os doi
 
 \subsection{Arquivo \textit{.mem}}
 \label{conv_arq_mem}
-O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. 
-
-Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4}, considerando que a equação (\ref{eq_prof}) que descreve o valor \textit{profundidade de memória}, e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha.
+O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4}, considerando que a equação (\ref{eq_prof}) que descreve o valor \textit{profundidade de memória}, e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha.
 
 \begin{equation}
 \label{eq_prof}
@@ -137,16 +135,14 @@ A ferramenta \quartus{}, ao gerá-los, utiliza simplificações quando várias posiç
 \textit{[2..10]	:	0000000000000000;}
 \end{center}
 
-Isso significa que da posição 2 até a posição 10 todas as posições receberão o valor 0 em binário, contendo 16 \bis{} cada.
+Isso significa que da posição 2 até a posição 10 todas as posições receberão o valor 0 em binário, contendo 16 \bis{} cada. A Figura \ref{img_conv_mif} apresenta um exemplo de arquivo \mif{} criado pelo conversor.
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/conversor/img_conv_mif.jpg}
+\includegraphics[scale=0.5]{images/conversor/img_conv_mif.jpg}
 \caption{Exemplo de arquivo \textit{.mif}.}
 \label{img_conv_mif}
 \end{figure}
-
-A Figura \ref{img_conv_mif} apresenta um exemplo de arquivo \mif{} criado pelo conversor.
 
 \subsection{Arquivo texto}
 \label{conv_arq_texto}
@@ -157,7 +153,7 @@ Alguns complexos, outros nem tanto, é necessário que todos eles possam ser lidos
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/conversor/img_conv_arq_texto.jpg}
+\includegraphics[scale=0.5]{images/conversor/img_conv_arq_texto.jpg}
 \caption{Exemplo de arquivo texto.}
 \label{img_conv_arq_texto}
 \end{figure}
@@ -169,7 +165,7 @@ O arquivo texto, basicamente, recebe o número da linha, a instrução e o argument
 
 Após se implementar um algoritmo em alto nível, executa-se uma compilação. Tal ato permite que erros léxicos e sintáticos sejam identificados e, assim, evitados. Alguns erros lógicos previsíveis podem ser capturados pelo compilador e, então, podem evitar problemas futuros.
 
-Tendo em vista essa funcionalidade, foram adicionadas duas camadas de verificação de erros neste projeto. A segunda, abordada na seção \ref{errorMod} e implementada diretamente na unidade de controle física do processador, permite a identificação de erros que passaram pelo conversor e chegaram à arquitetura.
+Tendo em vista essa funcionalidade, foram adicionadas duas camadas de verificação de erros neste projeto. A segunda, abordada na Seção \ref{errorMod} e implementada diretamente na unidade de controle física do processador, permite a identificação de erros que passaram pelo conversor e chegaram à arquitetura.
 
 Como a ideia do projeto que é que os algoritmos executados na arquitetura sejam gerados pelo \textit{pyConv}, não é esperado que a camada de verificação de erros em \hw{} seja utilizada. Ela está presente apenas para a segurança do processador caso algum erro não seja encontrado pelo conversor ou algum usuário realize a criação dos arquivos de inicialização de memória manualmente.
 
@@ -178,9 +174,9 @@ Os erros verificados em \sw{} são, na sua maioria, os mesmos verificados em \hw{
 \subsection{Erros de digitação}
 \label{error_dig}
 
-Quando o conversor está sendo executado e recebe uma instrução, essa instrução deverá ser verificada e reconhecida. Então, primeiramente, ela passa pela verificação do seu "nome", o qual deve corresponder exatamente ao gerado pela função \textit{Disassembler} do compilador \py{} ou com o apelido dela apresentado pela tabela \ref{img_conv_help_instr}. Caso contrário, o conversor retorna um erro e ignora o que foi inserido.
+Quando o conversor está sendo executado e recebe uma instrução, essa instrução deverá ser verificada e reconhecida. Então, primeiramente, ela passa pela verificação do seu "nome", o qual deve corresponder exatamente ao gerado pela função \textit{Disassembler} do compilador \py{} ou com o apelido dela apresentado pela Tabela \ref{img_conv_help_instr}. Caso contrário, o conversor retorna um erro e ignora o que foi inserido.
 
-O segundo passo de verificação é referente ao argumento. Para instruções de entrada de dados, como LOAD\_CONST, espera-se que o argumento possa ser escrito em 8 \bis{} e, portanto, seja um valor decimal positivo entre 0 e 255. Já para endereços, espera-se que o valor possa ser escrito com o número de \bis{} de endereçamento, o qual, conforme seção \ref{estMod}, pode ser modificado facilmente e, portanto, deve ser modificado também no conversor (como também apresentado anteriormente, foi definido que os endereços para este documento sejam de 12 \bis{}, então os valores devem estar entre 0 e 4095).
+O segundo passo de verificação é referente ao argumento. Para instruções de entrada de dados, como LOAD\_CONST, espera-se que o argumento possa ser escrito em 8 \bis{} e, portanto, seja um valor decimal positivo entre 0 e 255. Já para endereços, espera-se que o valor possa ser escrito com o número de \bis{} de endereçamento, o qual, conforme Seção \ref{estMod}, pode ser modificado facilmente e, portanto, deve ser modificado também no conversor (como também apresentado anteriormente, foi definido que os endereços para este documento sejam de 12 \bis{}, então os valores devem estar entre 0 e 4095).
 
 Algumas instruções, contudo, não possuem argumento e, por isso, quando não há a entrada de argumento, a instrução inserida passa por uma verificação que indica se ela precisa ou não de argumento.
 
@@ -199,7 +195,7 @@ Seguindo a mesma teoria de prevenção de erro do ponteiro de \tos{}, ao ser inser
 
 Além desses erros, existe outro erro que pode estar ligado à instrução LOAD\_FAST. A verificação desse evita que um essa instrução seja executada com um endereço que não foi salvo anteriormente (com a instrução STORE\_FAST). Então, como tem-se uma matriz de variáveis, sempre que é inserida a instrução LOAD\_FAST, faz-se uma busca e, caso a variável inserida exista, a instrução é formalmente inserida no arquivo, caso contrário, sua inserção é negada.
 
-Outro erro lógico previsto está ligado às instruções de desvio condicional, as quais precisam de uma comparação prévia para que sejas executadas. Assim, sempre que for inserida a instrução COMPARE\_OP, uma variável de controle é ativada. Ela permite que haja a inserção de uma das instruções de desvio condicional (POP\_JUMP\_IF\_TRUE ou FALSE) quando digitada.
+Outro erro previsto está ligado às instruções de desvio condicional, as quais precisam de uma comparação prévia para que sejas executadas. Assim, sempre que for inserida a instrução COMPARE\_OP, uma variável de controle é ativada. Ela permite que haja a inserção de uma das instruções de desvio condicional (POP\_JUMP\_IF\_TRUE ou FALSE) quando digitada.
 
 Somente depois de todas essas verificações de erros que uma instrução pode, finalmente, ser inserida na matriz que irá para o arquivo de memória.  
 
@@ -211,13 +207,13 @@ Quando se estava projetando a análise de todos os erros possíveis, foi percebido
 
 Percebeu-se, então, que o único jeito de detectar erros complexos seria executando o algoritmo escrito, por completo. Porém, sabendo que o objetivo deste conversor é evitar que um algoritmo contendo erros seja carregado para a arquitetura, como verificar a existência de erros complexos sem transferir erros para o processador?
 
-A resposta para isso veio de trabalhos acadêmicos desenvolvidos pelo próprio autor deste documento, os quais tinham por objetivo implementar um simulador de algum processador em \sw{}. Foi percebido que não existe melhor maneira de verificar erros do que simulando a arquitetura em \sw{}, criando, assim, uma verificação final.
+A resposta para isso veio de trabalhos acadêmicos não publicados desenvolvidos pelo próprio autor deste documento durante aulas da graduação, os quais tinham por objetivo implementar um simulador de algum processador em \sw{}. Foi percebido que não existe melhor maneira de verificar erros do que simulando a arquitetura em \sw{}, criando, assim, uma verificação final.
 
 Essa verificação final é executada após o comando \textit{quit}, onde já é esperado que todo o algoritmo esteja completo. Então inicia-se o simulador da arquitetura e uma a uma as instruções são executadas na ordem em que aparecem na matriz de instruções. 
 
 O simulador, por sua vez, possui todos os sinais e componentes básicos e potencialmente problemáticos quando manipulados erroneamente. Tais componentes são os ponteiros PC, TOS e TOS\_função, dentre outros. 
 
-Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o seu \textit{status} atual, que deve ser sempre zero. Ao retornar um valor negativo, o conversor finaliza o teste e ignora a criação dos arquivos de memória. O próprio simulador é responsável por gerar mensagens de erros, indicando o código de erro e sua explicação, conforme tabela \ref{conv_erros_sim}.
+Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o seu \textit{status} atual, que deve ser sempre zero. Ao retornar um valor negativo, o conversor finaliza o teste e ignora a criação dos arquivos de memória. O próprio simulador é responsável por gerar mensagens de erros, indicando o código de erro e sua explicação, conforme Tabela \ref{conv_erros_sim}.
 
 \begin{table}[]
 \centering
@@ -229,7 +225,7 @@ Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o 
 -1              & Argumento contém letras e deveria conter apenas números.                                                                                                                 \\ \hline
 -2              & Largura de dado incorreta.                                                                                                                                               \\ \hline
 -3              & Largura de endereço incorreta.                                                                                                                                           \\ \hline
--4              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha ficará negativo. \\ Utilize adicione algo na pilha antes de remover.\end{tabular}                                   \\ \hline
+-4              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha ficará negativo. \\ Adicione algo na pilha antes de remover.\end{tabular}                                   \\ \hline
 -5              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha ultrapassará limite superior. \\ Retire algo da pilha antes de adicionar algo.\end{tabular}                         \\ \hline
 -6              & Endereço de memória está fora do intervalo esperado (0 a 4095).                                                                                                          \\ \hline
 -7              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha de funções ultrapassará limite superior.\\ Execute 'RETURN\_VALUE' antes de utilizar 'CALL\_FUNCTION'.\end{tabular} \\ \hline
@@ -237,7 +233,7 @@ Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o 
 -9              & \begin{tabular}[c]{@{}c@{}}Pilha não suporta as duas leituras exigidas. \\ Certifique-se que existam dois dados na pilha.\end{tabular}                                   \\ \hline
 -10             & \textit{warning: Resultando com Overflow.}                                                                                                                               \\ \hline
 -11             & \begin{tabular}[c]{@{}c@{}}Variável inexistente.\\ Utilize 'STORE\_FAST' para criá-la.\end{tabular}                                                                      \\ \hline
--12             & \textbf{SAÍDA: Algum erro foi encontrado no simulador. Instrução não executada.}                                                                                         \\ \hline
+-12             & \textbf{SAÍDA: Um ou mais erros foram encontrados no simulador. Instrução não executada.}                                                                                         \\ \hline
 -13             & \begin{tabular}[c]{@{}c@{}}Resultado da comparação inválido.\\ Execute uma comparação antes de um desvio condicional.\end{tabular}                                       \\ \hline
 -14             & Valor do endereço fora do intervalo esperado (0 a 4095).                                                                                                                 \\ \hline
 -15             & Soma entre PC atual e argumento da instrução ultrapassam valor máximo de 4095.                                                                                           \\ \hline

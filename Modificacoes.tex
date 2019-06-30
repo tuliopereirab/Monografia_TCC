@@ -52,7 +52,7 @@ A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações 
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/modificacoes/new_basics.png}
+\includegraphics[scale=0.7]{images/modificacoes/new_basics.png}
 \caption{Nova arquitetura parcial de operações básicas (a antiga é a Figura \ref{img_analisebasicos}).}
 \label{img_new_basics}
 \end{figure}
@@ -61,7 +61,7 @@ Contudo, devido a limitações do dispositivo utilizado para os testes, as largura
 
 \begin{figure}[htp]
 \centering
-\includegraphics[scale=0.8]{images/modificacoes/config_vhdl.jpg}
+\includegraphics[scale=0.6]{images/modificacoes/config_vhdl.png}
 \caption{Apresentação de como é feita a configuração da arquitetura.}
 \label{img_config_vhdl}
 \end{figure}
@@ -81,12 +81,12 @@ A Figura \ref{img_config_vhdl} apresenta as constantes em VHDL que recebem as ca
 
 Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de até 24 \bis{} ou menos. Sendo assim, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
 
-Então, evitando o incremento no número de componentes utilizados, a segunda opção foi adotada e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor (o endereço ADDR\_MAX\_WIDTH da figura % linha 44). Além disso, ainda houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima seção (\ref{addMod}). 
+Então, evitando o incremento no número de componentes utilizados, a segunda opção foi adotada e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor (o endereço ADDR\_MAX\_WIDTH da figura % linha 44). Além disso, ainda houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima Seção (\ref{addMod}). 
 
 \section{Adição de funcionalidades}
 \label{addMod}
 
-Ao realizar-se as modificações citadas na seção \ref{estMod}, viu-se necessário que houvesse adição de algumas funcionalidades na ULA. Assim sendo, foi adicionado um \bi{} no sinal seletor da ULA, totalizando 4 \bis{}.
+Ao realizar-se as modificações citadas na Seção \ref{estMod}, viu-se necessário que houvesse adição de algumas funcionalidades na ULA. Assim sendo, foi adicionado um \bi{} no sinal seletor da ULA, totalizando 4 \bis{}.
 
 Basicamente, as funcionalidades básicas adicionadas foram as de repassar uma entrada para a saída (que antes era uma soma de zero), soma de 1 em uma entrada sem depender da outra (que antes precisava que a outra entrada fosse 1) e adição de operações lógicas (NOT, AND OR, XOR). Não houve mudança expressiva, simplesmente uma simplificação de alguns fluxos desnecessários, como forçar a entrada de zero ou um vindos de um dos \textit{muxes} da ULA, o que deixava os \textit{muxes} ocupados e impediam a adição de outras possíveis funcionalidades.
 
@@ -94,21 +94,21 @@ Quanto à adição de operações lógicas, foi realizada uma checagem na documentação
 
 Já referente à operação lógica NOT, também suportada pela ULA, foi encontrada na documentação da linguagem \py{} a instrução UNARY\_NOT, a qual realiza a operação NOT no \tos{} e retorna seu resultado para a pilha.
 
-\section{Verificação e Controle de Erros}
+\section{Depuração e Controle de Erros}
 \label{errorMod}
 
-Para realizar as verificações de erros da arquitetura e identificar quando ocorreu algum erro que compromete o resultado de alguma execução, foram levantados algumas possibilidades de erros para serem corrigidas diretamente na arquitetura. Em sua maioria, são erros considerados \textit{warnings}, que alteram apenas o resultado do algoritmo mas não a execução.
+Para realizar as verificações de problemas da arquitetura e identificar quando ocorreu algum erro que compromete o resultado de alguma execução, foram levantados algumas possibilidades de problemas para serem corrigidos diretamente na arquitetura. Em sua maioria, são erros considerados alertas (\textit{warnings}), que alteram apenas o resultado do algoritmo mas não a execução.
 
-As subseções a seguir tratarão sobre: os tipos de erros verificados (\ref{errorTipos}) e método adotado para a verificação (\ref{errorModos}). É importante salientar que os erros verificados diretamente na arquitetura são os que tornam a arquitetura inválida. Outros erros lógicos mais complexos que podem ser considerados erros sem tornar a arquitetura inválida são verificados diretamente no conversor \textit{pyConv}, como será explicado na seção \ref{conv_erros}. 
+As subseções a seguir tratarão sobre: os tipos de erros verificados (\ref{errorTipos}) e método adotado para a verificação (\ref{errorModos}). É importante salientar que os problemas verificados diretamente na arquitetura são os que tornam a arquitetura inválida. Outros erros lógicos mais complexos que podem ser considerados erros sem tornar a arquitetura inválida são verificados diretamente no conversor \textit{pyConv}, como será explicado na Seção \ref{conv_erros}. 
 
-\subsection{Erros Verificados}
+\subsection{Problemas Identificados}
 \label{errorTipos}
 
-Os erros verificados na arquitetura giram em torno dos sinais de controle que podem se tornar inválidos e, por conseguinte, impedir a correta execução de algum algoritmo. Os erros podem ser divididos em erros críticos, que tornam a arquitetura inválida e, portanto, devem forçar a parada da execução, ou \textit{warnings}, onde sabe-se que ocorreu um erro mas é possível continuar a execução.
+Os erros verificados na arquitetura giram em torno dos sinais de controle que podem se tornar inválidos e, por conseguinte, impedir a correta execução de algum algoritmo. Os problemas podem ser divididos em erros críticos, que tornam a arquitetura inválida e, portanto, devem forçar a parada da execução, ou alertas, onde sabe-se que ocorreu um erro mas é possível continuar a execução.
 
-Os \textit{warnings} tem o poder de influenciar nos resultados, mas não na execução em geral. Eles podem, por exemplo, influenciar no resultado de uma longa sequência de somas sucessivas. 
+Os alertas têm o poder de influenciar nos resultados, mas não na execução em geral. Eles podem, por exemplo, influenciar no resultado de uma longa sequência de somas sucessivas. 
 
-Já os erros críticos impedem que a arquitetura execute e, quando detectados, levam o controle a um estado \textit{loop} infinito de erro.
+Já os erros críticos impedem que a arquitetura execute e, quando detectados, levam o controle a um estado específico, o qual permanecerá sendo executado até que a simulação seja finalizada.
 
 Os erros críticos são:
 \begin{enumerate}
@@ -126,14 +126,14 @@ Já os \textit{warnings} são:
 \subsection{Método de Verificação de Erros}
 \label{errorModos}
 
-O grande objetivo, ao se reconhecer os erros durante uma execução é saber o que aconteceu para, então, ser possível identificar o que pode ser corrigido para evitar isso. Para tal finalidade, foi atribuído um código de erro, de 8 \bis{}, para cada um dos erros citados na subseção \ref{errorTipos}. Com isso, foi possível gerar a tabela abaixo:
+O grande objetivo, ao se reconhecer os erros durante uma execução é saber o que aconteceu para, então, ser possível identificar o que pode ser corrigido para evitar isso. Para tal finalidade, foi atribuído um código de erro, de 8 \bis{}, para cada um dos problemas citados na subseção \ref{errorTipos}. Com isso, foi possível gerar a Tabela \ref{mod_error_table}.
 
-%tabela de erros e códigos
+\input{tables/table_errorCodeHW}
 
-Já com os códigos de erros, era necessário então salvar o código de erro quando um erro específico ocorrer. Para isso, foi adicionado um novo registrador, chamado \textit{regError}, responsável por salvar e manter os códigos de erro sempre que ocorrerem. 
+Já com os códigos de erros, era necessário então salvá-los para alertar o usuário quando um problema específico ocorrer. Para isso, foi adicionado um novo registrador, chamado \textit{regError}, responsável por salvar e manter os códigos de erro sempre que ocorrerem. 
 
-O principal objetivo do \textit{regError} é permitir, através de uma análise temporal da execução de determinado algoritmo, identificar qual instrução estava sendo executada quando o registrador foi escrito com o código de erro. E, com tabela de erros acima, é possível identificar o tipo de erro que ocorreu. 
+O principal objetivo do \textit{regError} é permitir, através de uma análise temporal da execução de determinado algoritmo, identificar qual instrução estava sendo executada quando o registrador foi escrito com o código de erro. E, com Tabela \ref{mod_error_table}, é possível identificar o tipo de erro que ocorreu. 
 
 Portanto, sempre que foi executado um algoritmo no processador, é de extrema importância que o \textit{regError} seja verificado. Caso seu valor não seja zero, existe uma grande chance do resultado estar inválido ou nem existir (no caso quando um erro crítico ocorre no início da execução). 
 
-A prevenção de erros na arquitetura é considera a última camada de proteção do processador, visto que não é esperado que ela seja utilizada, já que é recomendável que os arquivos de inicialização das memórias sejam criados diretamente pelo conversor \textit{pyConv}, o qual já verifica a existência de erros.
+A prevenção de erros na arquitetura é considera a última camada de proteção do processador, visto que não é esperado que ela seja utilizada, já que é recomendável que os arquivos de inicialização das memórias sejam criados diretamente pelo conversor \textit{pyConv}, o qual já verifica sua existência de erros.

@@ -1,4 +1,4 @@
-Ao final deste trabalho, é possível perceber que os objetivos no início estabelecidos foram satisfeitos. Logo, é possível afirmar que existe uma arquitetura, criada em VHDL, capaz de executar algoritmos escritos em \py{}. Essa arquitetura recebe como entrada o código \as{} da linguagem \py{} no formato binário.
+Ao final deste trabalho, é possível perceber que os objetivos no início estabelecidos foram alcançados. Logo, é possível afirmar que existe uma arquitetura, criada em VHDL, capaz de executar algoritmos escritos em \py{}. Essa arquitetura recebe como entrada o código \as{} da linguagem \py{} no formato binário.
 
 Tal código binário é gerado através de um conversor, chamado de \textit{pyConv}, capaz de receber o código \as{} de alto nível, ou seja, com palavras e convertê-lo para código binário. O código \as{}, por sua vez, é idêntico ao gerado pela ferramenta \textit{Disassembler} do próprio compilador \py{}.
 
@@ -8,4 +8,4 @@ Portanto, este trabalho pode ser considerado o trabalho inicial que poderá, um d
 
 Além disso, para trabalhos futuros, tem-se em vista a implementação de outros módulos para este processador e, ainda, tem-se a ideia de integrar o processador e o \textit{pyConv} em um \textit{chip} (gerando um \textit{system-on-chip} (SoC)). Tal implementação permitiria fazer o processador funcionar ao lado de outro processador de propósito geral, contido no FPGA alvo da prototipação, sendo de responsabilidade deste segundo enviar as instruções para o Processador Python.
 
-Em longo prazo, quando este projeto estiver abrangendo praticamente todas as instruções da PVM, é possível que este processador possa servir de alternativa para a \pvm{} executar seus algoritmos. Podendo ela, através do \textit{pyConv} ou ferramenta similar, enviar instruções diretamente para o \hw{} e receber respostas. 
+Em longo prazo, quando este projeto estiver abrangendo praticamente todas as instruções da PVM, é possível que este processador possa servir, no longo prazo e após implementar-se suporte a todas as instruções \py{}, de alternativa para a \pvm{} executar seus algoritmos. Podendo ela, através do \textit{pyConv} ou ferramenta similar, enviar instruções diretamente para o \hw{} e receber respostas. 
