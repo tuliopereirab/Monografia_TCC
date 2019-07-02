@@ -1,8 +1,8 @@
 Neste capítulo serão apresentados os resultados das pesquisas e implementações concebidas durante o período de realização deste trabalho. Como já dito no decorrer do texto, foram implementados um processador \py{}, em \hw{}, capaz de executar algoritmos escritos em \py{}, e um conversor, capaz de dar origem aos arquivos utilizados para inicialização das memórias.
 
-Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (seção \ref{result_carac_gerais} e os resultados das simulações realizadas (seção \ref{result_testes}).
+Assim, aqui, poderão ser encontradas informações básicas que descrevem o desempenho de uma arquitetura física, tais como suas características gerais (Seção \ref{result_carac_gerais} e os resultados das simulações realizadas (Seção \ref{result_testes}).
 
-%Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na seção \ref{result_algo_final}, para ser executado na arquitetura. 
+%Além disso, foi escolhido um algoritmo levemente mais complexo, o qual será abordado na Seção \ref{result_algo_final}, para ser executado na arquitetura. 
 
 O principal objetivo desse trabalho, como também já foi dito anteriormente, é abrir portas para o desenvolvimento da máquina virtual \py{} completamente em \hw{}. Portanto, esperava-se que fosse possível realizar a implementação básica que servisse de ponto de partida e, assim sendo, pode-se considerar que o objetivo foi atingido. 
 
@@ -11,13 +11,13 @@ Com essa arquitetura, trabalhos futuros poderão se preocupar simplesmente em adi
 \section{Características Gerais}
 \label{result_carac_gerais}
 
-Para iniciar a análise dos resultados deste projeto, precisa-se introduzir as ferramentas utilizadas para a realização dos testes. Dados como frequência de operação e energia dissipada dependem diretamente do dispositivo utilizado como alvo de prototipação.
+Para iniciar a análise dos resultados deste projeto, precisa-se introduzir as ferramentas utilizadas para a realização dos testes. Dados como frequência de operação e potência dissipada dependem diretamente do dispositivo utilizado como alvo de prototipação.
 
 Dito isto, apresenta-se como ferramenta principal do desenvolvimento deste projeto a ferramenta, desenvolvida pela empresa \textit{Altera}, chamada \textit{Quartus II}. A mesma empresa desenvolvedora do \sw{} também desenvolve sistemas FPGA e, como dispositivo alvo da prototipação, então, utilizou-se o FPGA \textit{Cyclone III} número EP3C25F324C6. A justificativa para o uso deste dispositivo específico é o fato da Universidade Federal do Pampa possuir diversos deles e deixá-los disponíveis para a utilização dos alunos.
 
 Todo o projeto do \hw{} foi desenvolvido utilizando-se a linguagem de descrição de \hw{} chamada VHDL, que possibilitou a criação de cada componente individualmente e, posteriormente, a integração dos mesmos. Contudo, antes de iniciar-se o desenvolvimento com a linguagem, foi utilizada a ferramenta \textit{Logisim} para montar o \textit{register-transfer level}, comumente conhecido como RTL, o qual permitiu melhor visibilidade sobre os objetivos da arquitetura e, posteriormente, da implementação. 
 
-Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de energia (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os ciclos de \clock{} necessários para sua execução. 
+Com essas definições, pode-se iniciar a análise dos resultados. Primeiramente, com análise da frequência máxima de operação encontrada (subseção \ref{result_freq}), após área ocupada (subseção \ref{result_carac_area}) e análises de potência (subseção \ref{result_energia}). Além disso, esta seção ainda apresenta a análise das instruções implementadas, na subseção \ref{result_analise_instrucoes}, mostrando principalmente os ciclos de \clock{} necessários para sua execução. 
 
 \subsection{Frequência Máxima de Operação}
 \label{result_freq}
@@ -38,9 +38,9 @@ Nos trabalhos correlatos analisados na Seção \ref{trab_correlatos}, foi possível
 A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada pela ferramenta \textit{Quartus} no decorrer da compilação. Nela pode ser observada a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk}, referente à entrada de \clock{} do sistema.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/freq.jpg}
 \caption{Frequência máxima de operação gerada pela ferramenta \textit{Quartus}.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/freq.jpg}}
+\fonte{Autor (2019)}
 \label{img_freq}
 \end{figure}
 
@@ -52,9 +52,9 @@ A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada
 Ainda analisando dados obtidos através da ferramenta \textit{Quartus}, pode-se analisar, na Figura \ref{img_area}, as informações referentes à área ocupada em um FPGA. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/area.jpg}
 \caption{Área ocupada em um FPGA gerada pela ferramenta \textit{Quartus}.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/area.jpg}}
+\fonte{Autor (2019)}
 \label{img_area}
 \end{figure}
 
@@ -72,34 +72,34 @@ Na imagem, é possível perceber que como foi feita a utilização de cada component
 
 Os valores acima apresentados como sendo a área ocupada do processador são válidos apenas se o número de \bis{} dos endereços das memórias for igual a 12. Qualquer outro valor gera alterações significativas nos valores acima, principalmente no número de registradores e de \bis{} de memória.
 
-\subsection{Análises de Energia}
+\subsection{Análises de Potência}
 \label{result_energia}
 
-Nos dias atuais, existe uma grande atenção voltada para o consumo energético de todos os sistemas que necessitam de energia. Então, para todos os projetos a serem desenvolvidos futuramente, é esperado que um dos objetivos principais seja obter grande poder computacional utilizando-se menor energia.
+Nos dias atuais, existe uma grande atenção voltada para o consumo energético de todos os sistemas que necessitam de energia. Então, para todos os projetos a serem desenvolvidos futuramente, é esperado que um dos objetivos principais seja obter grande poder computacional dissipando-se menos potência.
 
-Isso se deve, principalmente, ao fato de que a maioria dos dispositivos estão sendo criados para funcionarem com baterias e, portanto, poderem ser levados para qualquer lugar. Assim, realizou-se uma análise de energia dissipada do processador desenvolvido neste trabalho.
+Isso se deve, principalmente, ao fato de que a maioria dos dispositivos estão sendo criados para funcionarem com baterias e, portanto, poderem ser levados para qualquer lugar. Assim, realizou-se uma análise de potência dissipada do processador desenvolvido neste trabalho.
 
-A Figura \ref{img_result_energia} apresenta os dados retornados pela ferramenta \textit{Quartus II}. Dentro dela, existe a ferramenta chamada \textit{PowerPlay Power Analyzer}, a qual realiza, juntamente com o auxílio da ferramenta \textit{Modelsim}, levantamento de dados sobre a energia dissipada durante as simulações.
+A Figura \ref{img_result_energia} apresenta os dados retornados pela ferramenta \textit{Quartus II}. Dentro dela, existe a ferramenta chamada \textit{PowerPlay Power Analyzer}, a qual realiza, juntamente com o auxílio da ferramenta \textit{Modelsim}, levantamento de dados sobre a potência dissipada durante as simulações.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.9]{images/resultados/energia.jpg}
-\caption{Análises de energia gerada pela ferramenta \textit{Quartus}.}
+\caption{Análise de potência gerada pela ferramenta \textit{Quartus}.}
+\centerline{\includegraphics[scale=0.9]{images/resultados/energia.jpg}}
+\fonte{Autor (2019)}
 \label{img_result_energia}
 \end{figure}
 
 Para a realização deste teste, configurou-se o \textit{Quartus} de forma que ele gerasse um arquivo no formato \textit{.vcd}, o qual é utilizado pelo \textit{Modelsim} para analisar dados energéticos durante simulações. 
 
-Conforme mostra a Figura \ref{img_result_energia}, a energia térmica total dissipada foi de 132,56 miliwatts (mW). Esse valor é a soma das energias dinâmica (30,07 mW), estática (81,20 mW) e dos pinos de entrada (21,28 mW). A diferença entre os dois é, basicamente, que a energia dinâmica indica a dissipação quando os transistores estão em funcionamento (estado \textit{"on"}), enquanto a estática indica que eles estão desligados (estado \textit{"off"}).
+Conforme mostra a Figura \ref{img_result_energia}, a potência térmica total dissipada foi de 132,56 miliwatts (mW). Esse valor é a soma das potências dinâmica (30,07 mW), estática (81,20 mW) e dos pinos de entrada (21,28 mW). A diferença entre os dois é, basicamente, que a potência dinâmica indica a dissipação quando os transistores estão em funcionamento (estado \textit{"on"}), enquanto a estática indica que eles estão desligados (estado \textit{"off"}).
 
 Para estes testes, a ferramenta considerou como temperatura ambiente 26,6 ºC e 1,20 V de tensão interna à arquitetura, enquanto a tensão nos pinos de entrada e saída foi considerada 2,5 V. A temperatura é definida como 26,6 ºC para que sejam feitas análises do sistema em temperaturas consideradas médias, não sendo calor extremo nem frio extremo. Temperaturas próximas a essa podem ser encontradas tanto em cidades consideradas quentes quanto frias, o que permite que o teste seja válido para o maior número de lugares possível.
 
-Além disso, a ferramenta ainda indica a memória de instruções (\textit{memInstr}) como o componente que mais dissipa energia (6,34 mW) seguida pela pilha (4,03 mW). A unidade de controle é responsável por dissipar 1,90 mW, sendo classificada na quarta posição. A Figura \ref{img_energia_ranking} apresenta os quinze componentes que mais consomem energia. 
+Além disso, a ferramenta ainda indica a memória de instruções (\textit{memInstr}) como o componente que mais dissipa potência (6,34 mW) seguida pela pilha (4,03 mW). A unidade de controle é responsável por dissipar 1,90 mW, sendo classificada na quarta posição. A Figura \ref{img_energia_ranking} apresenta os quinze componentes que mais consomem energia. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/energia_ranking.jpg}
-\caption{\textit{Ranking} dos componentes que mais consomem energia.}
+\caption{\textit{Ranking} dos componentes conforme suas potências.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/energia_ranking.jpg}}
+\fonte{Autor (2019)}
 \label{img_energia_ranking}
 \end{figure}
 
@@ -111,9 +111,9 @@ Como foi explicado nos capítulos anteriores, para que cada instrução fosse execu
 Assim sendo, criou-se o gráfico apresentado na Figura \ref{graf_ciclos_instr}, o qual apresenta o número de ciclos de \clock{} necessários para a execução de cada uma das instruções. Em alguns casos, principalmente com as instruções BINARY\_, não foi necessário apresentar todas as instruções individualmente, visto que todas elas seguem o mesmo fluxo de execução.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/ciclos_instrucao.png}
 \caption{Gráfico de barras com os ciclos de \clock{} necessários para a execução de cada instrução.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/ciclos_instrucao.png}}
+\fonte{Autor (2019)}
 \label{graf_ciclos_instr}
 \end{figure}
 
@@ -148,18 +148,18 @@ Feita essa apresentação de informações básicas, as subseções seguintes apresenta
 A primeira simulação realizada foi responsável por executar um algoritmo de teste para todas as operações binárias e unárias do processador. O código \as{} deste algoritmo pode ser visto na Figura \ref{img_ass1}. A única operação que não aparece no algoritmo e, portanto, sendo considerada a exceção, é a de divisão (instrução BINARY\_DIVIDE). Embora ela esteja funcional, sua utilização gera impacto de grandes proporções na frequência, conforme dito na subseção \ref{result_freq}, causando significativo impacto no tempo de execução.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste1.jpg}
 \caption{Código \textit{Assembly} do teste 1.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste1.jpg}}
+\fonte{Autor (2019)}
 \label{img_ass1}
 \end{figure}
 
 Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o objetivo de verificar as classes de instruções implementadas e fazer uma estimativa de tempo teórico de execução. Como pode ser visto na Figura \ref{img_graf1}, a classe de instruções que mais aparece neste algoritmo é a escrita e leitura na memória, caracterizando 78,1\%. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste1.png}
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 1.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste1.png}}
+\fonte{Autor (2019)}
 \label{img_graf1}
 \end{figure}
 
@@ -170,9 +170,9 @@ Para fazer a verificação de que o algoritmo funcionou corretamente, analisou-se 
 Já as outras posições, na ordem em que aparecem, receberam as operações: soma, subtração, multiplicação, divisão, AND, OR, XOR, NOT do operando 1 e NOT do operando 2. Pode-se observar que os valores binários apresentados correspondem aos resultados esperados para cada uma das operações.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste1.jpg}
 \caption{Resultado da simulação do teste 1.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste1.jpg}}
+\fonte{Autor (2019)}
 \label{img_final1}
 \end{figure}
 
@@ -182,18 +182,18 @@ Já as outras posições, na ordem em que aparecem, receberam as operações: soma, s
 O teste número 2 consiste na execução de um \textit{loop}, o qual vai de zero a 10. A cada ciclo de repetição, como mostra a Figura \ref{img_ass2} entre as linhas 3 e 15, são executadas instruções de carregamento de dados da memória, comparação e operação aritmética de soma. Nessa Figura, é possível perceber o código \as{} gerado pelo \textit{pyConv} no mesmo formato já apresentado na subseção \ref{result_arith}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste2.jpg}
 \caption{Código \textit{Assembly} do teste 2.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste2.jpg}}
+\fonte{Autor (2019)}
 \label{img_ass2}
 \end{figure}
 
 O código \as{} é, então, carregado para a memória de instruções e aparece no formato apresentado na Figura \ref{img_bin2}. Para todos os testes existe esse processo, contudo tal imagem só será mostrada aqui para evitar repetições desnecessárias.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/memInstr_teste2.jpg}
 \caption{Código binário do teste 2 carregado para a memória de instruções.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memInstr_teste2.jpg}}
+\fonte{Autor (2019)}
 \label{img_bin2}
 \end{figure}
 
@@ -202,9 +202,9 @@ A Figura \ref{img_graf2} apresenta o gráfico mostrando a proporção das classes d
 O fato de instruções relacionadas a desvios aparecerem em segunda posição nas que mais aparecem não incrementa praticamente nada no tempo de execução, visto que essas instruções são as mais rápidas de serem executadas.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste2.png}
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 2.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste2.png}}
+\fonte{Autor (2019)}
 \label{img_graf2}
 \end{figure}
 
@@ -213,9 +213,9 @@ Com a análise das instruções utilizadas para a realização desta simulação, foi p
 A Figura \ref{img_final2} apresenta a memória externa com os resultados da execução. É possível perceber o valor 10, em binário, salvo na posição 0, a qual foi destinada para ser o contador do \textit{loop}. O valor 255 aparece na posição 1, o qual é executado após a finalização do \textit{loop}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste2.jpg}
 \caption{Resultado da simulação do teste 2.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste2.jpg}}
+\fonte{Autor (2019)}
 \label{img_final2}
 \end{figure}
 
@@ -227,27 +227,27 @@ O teste 3 consiste na implementação de uma operação aritmética com o resultado r
 É então que o valor retornado é multiplicado pelo valor carregado previamente e, o resultado, salvo na memória externa. A Figura \ref{img_ass3} apresenta o código \as{} deste algoritmo.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste3.jpg}
 \caption{Código \textit{Assembly} do teste 3.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste3.jpg}}
+\fonte{Autor (2019)}
 \label{img_ass3}
 \end{figure}
 
 Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na Figura \ref{img_graf3}, que mostra a proporção das classes de instruções utilizadas. O tempo teórico calculado para essa execução foi de 782 ns. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste3.png}
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 3.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste3.png}}
+\fonte{Autor (2019)}
 \label{img_graf3}
 \end{figure}
 
 Após a execução, observou-se que o tempo de execução foi maior que o teórico, sendo este 894 ns. A Figura \ref{img_final3} apresenta o valor final, 30, salvo na posição zero da memória externa. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste3.jpg}
 \caption{Resultado da simulação do teste 3.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste3.jpg}}
+\fonte{Autor (2019)}
 \label{img_final3}
 \end{figure}
 
@@ -257,18 +257,18 @@ Após a execução, observou-se que o tempo de execução foi maior que o teórico, se
 Para a última simulação, a de número 4, foi criado um algoritmo com o objetivo único de executar a maior variedade de instruções possível. Assim, como pode ser visto na Figura \ref{img_ass4}, o algoritmo executa diversos desvios, operações aritméticas e até uma comparação. Ele pode ser considerado como um agrupamento dos três testes feitos anteriormente.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste4.jpg}
 \caption{Código \textit{Assembly} do teste 4.}
+\centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste4.jpg}}
+\fonte{Autor (2019)}
 \label{img_ass4}
 \end{figure}
 
 Seu gráfico de proporção entre as classes de instruções executadas é apresentado na Figura \ref{img_graf4}. Nele, percebe-se que a maior parte das instruções são de acesso à memória. Os devios, que aparecem em segundo, não geram tanto incremento no tempo de execução quanto as operações aritméticas, em terceiro.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste4.png}
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 4.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste4.png}}
+\fonte{Autor (2019)}
 \label{img_graf4}
 \end{figure}
 
@@ -279,9 +279,9 @@ Nas posições 2 e 3, respectivamente, aparecem o resultado da soma da posição 0 c
 O tempo teórico calculado para a execução deste algoritmo foi de 2.548 ns, enquanto o tempo observado na prática foi de 2.874 ns.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste4.jpg}
 \caption{Resultado da simulação do teste 4.}
+\centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste4.jpg}}
+\fonte{Autor (2019)}
 \label{img_final4}
 \end{figure}
 

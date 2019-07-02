@@ -31,9 +31,9 @@ Tendo as entradas dos registradores de argumento e instrução, falta ainda conect
 A Figura \ref{img_pArq_basicos}, como dito anteriormente, apresenta as ligações mencionadas acima. Na esquerda, é possível encontrar o registrador PC (\textit{regPc}), ligado à entrada da memória de instruções (\textit{memInstr}). Já à direita, encontram-se os dois registradores, argumento (\textit{regArg}) e instrução (\textit{regArg}), ligados às duas saídas da memória de instruções.  
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/projeto_basicos.png}
 \caption{Arquitetura parcial responsável pela funcionalidade básica.}
+\centerline{\includegraphics[scale=0.8]{images/projeto_basicos.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_basicos}
 \end{figure}
 
@@ -57,9 +57,9 @@ O próximo trio de componentes (memória externa, registrador de memória externa e
 A Figura \ref{img_pArq_dados} apresenta todas as conexões citadas acima. Nela, pode-se observar os seis componentes conectados entre si. Porém, como já foi dito, é possível observar somente uma entrada de controle (\textit{ctrl}) nos registradores de memória externa e pilha, porém divide-se essa entrada em duas. O motivo de estar aparecendo somente um pino foi para evitar que a imagem ficasse sobrecarregada de informações.  
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/projeto_dados.png}
 \caption{Arquitetura parcial responsável pela execução de instruções de gerenciamento de dados.}
+\centerline{\includegraphics[scale=0.8]{images/projeto_dados.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_dados}
 \end{figure}
 
@@ -88,9 +88,9 @@ Por último, tem-se a saída de resultado normal, utilizada para todas as operaçõe
 A Figura \ref{img_pArq_arith} apresenta um esboço da arquitetura parcial responsável pela execução das instruções aritméticas e comparação. Nela, podem ser vistos os cinco componentes conectados entre si e pinos de entrada e saída deles que são conectados a componentes externos a essa arquitetura. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/projeto_aritmeticas.png}
 \caption{Arquitetura parcial responsável pela execução de instruções de operações aritméticas e comparação.}
+\centerline{\includegraphics[scale=0.8]{images/projeto_aritmeticas.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_arith}
 \end{figure}
 
@@ -102,9 +102,9 @@ A próxima arquitetura parcial, responsável pela realização de pulos (ou desvios)
 Então, como pode ser visto na Figura \ref{img_pArq_pulos}, a arquitetura que realiza pulos contém três componentes principais (sem contar o multiplexador). Ela consegue atender às quatro instruções de desvios apresentadas neste trabalho, POP\_JUMP\_IF\_FALSE, POP\_JUMP\_IF\_TRUE, JUMP\_ABSOLUTE e JUMP\_FORWARD. Nas duas primeiras, existe uma comparação que acontece antes de ser iniciado um pulo, porém ela não é apresentada aqui pois é uma operação que depende da arquitetura parcial apresentada em \ref{pArq_arith} e do controle, que será apresentado na Seção \ref{projeto_control}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/projeto_pulos.png}
 \caption{Arquitetura parcial responsável pela execução de pulos.}
+\centerline{\includegraphics[scale=0.8]{images/projeto_pulos.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_pulos}
 \end{figure}
 
@@ -124,9 +124,9 @@ Por fim, tem-se a arquitetura parcial responsável pela chamada e retorno de funç
 Então, como mostra a Figura \ref{img_pArq_funcoes}, pode-se observar que as duas pilhas citadas acima, pilha de função (chamada "pilhaFuncao" e responsável por guardar o valor de PC+1) e pilha de TOS (chamada "pilhaTosRetorno" e responsável por guardar o \tos{} principal antes da chamada da função) tem suas saídas conectadas ao registrador PC e ao registrador TOS, respectivamente. Assim, quando a instrução RETURN\_VALUE for chamada, os valores presentes nos topos dessas pilhas serão alocados nos registradores a qual estão conectadas.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/projeto_funcoes.png}
 \caption{Arquitetura parcial responsável pela chamada e retorno de funções.}
+\centerline{\includegraphics[scale=0.8]{images/projeto_funcoes.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_funcoes}
 \end{figure}
 
@@ -149,9 +149,9 @@ n\_bits = \log_{2}{(n\_entradas)}
 A Figura \ref{img_muxes} apresenta o formato de um componente multiplexador, que já pôde ser visto na Figura \ref{img_pArq_pulos}, porém foi apresentado em detalhes. O componente posicionado à esquerda, (a), é um \mux{} que possui duas entrada e, portanto, apenas um \bi{} em seu seletor. Já o componente à direita, (b), é um \mux{} que possui 4 entradas e, portanto, um seletor de dois \bis{}. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/muxes.png}
 \caption{Exemplos de multiplexadores.}
+\centerline{\includegraphics[scale=0.8]{images/muxes.png}}
+\fonte{Autor (2019)}
 \label{img_muxes}
 \end{figure}
 
@@ -161,9 +161,9 @@ Utilizando esse componente, portanto, é possível utilizar melhor componentes que
 À entrada do \textit{regPilha}, foi necessário adicionar um multiplexador com dois \bis{} de sinal de controle, permitindo, portanto, quatro entradas. A Figura \ref{img_pArq_muxPilha} apresenta como é a entrada do registrador de pilha e quais os componentes que se conectam ao seu \textit{mux}. As entradas em que cada componente se conecta é a que eles realmente estão conectados na implementação final e são as que o controle irá enviar sinal para que saiam no pino à esquerda, que será apresentado na Seção \ref{projeto_control}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/muxPilha.png}
 \caption{Apresentação do multiplexador posicionado na entrada do registrador de pilha.}
+\centerline{\includegraphics[scale=0.8]{images/muxPilha.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_muxPilha}
 \end{figure}
 
@@ -176,9 +176,9 @@ A tabela \ref{table_muxPilha} apresenta, baseada na Figura \ref{img_pArq_muxPilh
 Passando, então, para a próxima análise de adição de multiplexadores, tem-se a adição de três multiplexadores às entradas do mesmo componente, a unidade lógica aritmética. O primeiro multiplexador, apresentado também na Figura \ref{img_pArq_pulos}, não estava completo nessa Figura, pois somente era necessário, naquele momento, entender como funcionava a arquitetura parcial responsável pela execução de pulos, que necessitava de um \mux{} de duas entradas apenas. Agora, na Figura \ref{img_pArq_muxesUla}, o mesmo multiplexador aparece maior e completo, recebendo todos os componentes necessários para seu funcionamento. A ele, dar-se-á o nome de \textit{muxOp2}. Falar-se-á dele na sequência, após os dois primeiros registradores, para que a ordem seja seguida.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/muxesUla.png}
 \caption{Apresentação dos dois multiplexadores que compõem as duas entradas da ULA.}
+\centerline{\includegraphics[scale=0.8]{images/muxesUla.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_muxesUla}
 \end{figure}
 
@@ -198,9 +198,9 @@ Além dos multiplexadores já adicionados, foram adicionados mais dois \textit{mux
 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/muxPc.png}
 \caption{Apresentação do multiplexador responsável pela entrada do registrador PC.}
+\centerline{\includegraphics[scale=0.7]{images/muxPc.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_muxPc}
 \end{figure}
 
@@ -211,9 +211,9 @@ A tabela \ref{table_muxPc} apresenta as conexões de entrada no multiplexador res
 O segundo \mux{}, o qual pode ser observado na Figura \ref{img_pArq_muxTos}, tem sua saída conectada ao registrador \textit{regTos}. Ele também possui um sinal de controle endereçado com 1 \bi{}. Suas entradas são, respectivamente, a saída da ULA e a saída da pilha de retorno de topo em suas entradas "0" e "1". 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.7]{images/muxTos.png}
 \caption{Apresentação do multiplexador responsável pela entrada do registrador TOS.}
+\centerline{\includegraphics[scale=0.7]{images/muxTos.png}}
+\fonte{Autor (2019)}
 \label{img_pArq_muxTos}
 \end{figure}
 
@@ -275,9 +275,9 @@ Uma melhor visualização do sistema como um todo e da máquina de estados geral po
 Uma imagem do componente controle, com seus pinos de entrada (à esquerda) e de saída (à direita) pode ser vista na Figura \ref{img_control}. Os nomes de cada pino de saída e entrada são os exatos nomes dos componentes que deverão estar conectados a eles, com exceção dos registradores com dois sinais de controle (memória externa e pilha). 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/control.png}
 \caption{Representação do componente Unidade de Controle.}
+\centerline{\includegraphics[scale=0.8]{images/control.png}}
+\fonte{Autor (2019)}
 \label{img_control}
 \end{figure}
 
@@ -301,9 +301,9 @@ Existe ainda uma funcionalidade que é básica e feita no primeiro estado de cada 
 A Figura \ref{estado_inicial} apresenta, como exemplo de um estado, o estado inicial, que é o mesmo para todas as instruções. É possível perceber que, dentro de seu círculo, só aparecem os sinais que se tornaram ativos no momento da inicialização do estado. Quanto aos sinais que controle que são considerados seletores, eles são definidos como um valor padrão, atribuindo-se zero para cada um deles, já que eles são considerados \textit{don't care} no momento.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=1]{images/estado_inicial.png}
 \caption{Representação do estado inicial de todas as instruções.}
+\centerline{\includegraphics[scale=1]{images/estado_inicial.png}}
+\fonte{Autor (2019)}
 \label{estado_inicial}
 \end{figure}
 
@@ -318,9 +318,9 @@ A outra exceção à essa definição são as instruções POP\_JUMP\_IF\_FALSE e POP\_J
 Como pode ser visto na Figura \ref{me_loadConst}, que representa a instrução LOAD\_CONST, os nomes dos estados são "lc1", "lc2", etc. Esse mesmo padrão pode ser observado em todos os diagramas de máquinas de estados criados. Ainda é possível perceber que no canto superior esquerdo da Figura, existe um estado que não tem nome. Esse estado é o estado inicial, comum a todas as instruções e, por isso, não recebe nome em nenhuma máquina de estados.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{images/LOAD_CONST.jpg}
 \caption{Representação da máquina de estados da instrução LOAD\_CONST.}
+\centerline{\includegraphics[scale=0.6]{images/LOAD_CONST.jpg}}
+\fonte{Autor (2019)}
 \label{me_loadConst}
 \end{figure}
 

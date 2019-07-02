@@ -25,9 +25,9 @@ Então, os componentes básicos para que a arquitetura consiga executar códigos sã
 A Figura \ref{img_analisebasicos} apresenta os componentes citados nessa subseção e que são utilizados o recebimento e leitura de instruções no processador. Nela, é possível perceber a memória de instruções (\textit{memInstr}) que possui uma entrada, que é o valor de PC, e duas saídas, que são o valor de \textit{OpCode} e \textit{OpArg}. Além da memória, existem três registradores, considerados simples, já que possuem uma entrada de dados, uma saída de dados e uma entrada de controle, chamada de "\textit{ctrl}" (que define o momento em que um registrador deverá armazenar o que está entrando através do pino de entrada). Contudo, ainda existe uma outra entrada em cada um deles, a qual não foi inserida na Figura, que recebe o valor referente ao \textit{clock} do processador. Os três registradores são, então, os registradores o de contador de programa (\textit{regPc}), o de argumento (\textit{regArg}) e o de instruções (\textit{regInstr}). 
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/analise_basicos.png}
 \caption{Componentes utilizados o funcionamento básico do processador.}
+\centerline{\includegraphics[scale=0.8]{images/analise_basicos.png}}
+\fonte{Autor (2019)}
 \label{img_analisebasicos}
 \end{figure}
 
@@ -60,9 +60,9 @@ Além do \textit{regEnd}, dever-se-á existir um registrador semelhante ao \textit
 A Figura \ref{img_analisedados} apresenta todos os componentes utilizados para acesso de dados dentro do processador. Nela, aparecem os componentes pilha, memória externa (\textit{memExt}), registrador de pilha (\textit{regPilha}), registrador de endereço (\textit{regEnd}), registrador de \tos (\textit{regTos}) e o registrador de memória externa (\textit{regMemExt}). É possível ver, na imagem, todas as entradas e saídas previstas para esses componentes. É necessário destacar que aparecem os mesmos pinos de controle nos registradores \textit{regPilha} e \textit{regMemExt}, mas na realidade ambos os registradores possuem duas entradas de controle, uma para cada par. Logo, entenda-se "\textit{ctrl}" como sendo o necessário para controlar cada registrador, podendo ser mais de um pino ou um pino com largura maior.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/analise_dados.png}
 \caption{Componentes utilizados para instruções de gerenciamento de dados.}
+\centerline{\includegraphics[scale=0.8]{images/analise_dados.png}}
+\fonte{Autor (2019)}
 \label{img_analisedados}
 \end{figure}
 
@@ -89,9 +89,9 @@ O último componente desta classe de instruções é o registrador responsável por s
 A Figura \ref{img_analisearith} apresenta todos os componentes utilizados para a realização de operações aritméticas no processador. Os componentes nela presentes são a unidade lógica arimética (ULA), dois registradores de operandos (\textit{regOp1} e \textit{regOp2}), o registrador de comparação (\textit{regComp}) e o registrador de \textit{overflow} (\textit{regOverflow}).
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/analise_aritmeticas.png}
 \caption{Componentes utilizados para instruções que realizam operações aritméticas e comparações.}
+\centerline{\includegraphics[scale=0.8]{images/analise_aritmeticas.png}}
+\fonte{Autor (2019)}
 \label{img_analisearith}
 \end{figure}
 
@@ -118,9 +118,9 @@ Para melhor entendimento, pode-se utilizar um exemplo simples. A Figura \ref{img
 Vale lembrar que os valores não são fisicamente excluídos da pilha, somente são ignorados, pois para a arquitetura, os únicos valores que importam são os que estão abaixo do ponteiro que aponta para o \tos{}. Na Figura \ref{img_analise_exemplo_funcoes} os espaços aparecem em branco para melhor entendimento, mas na realidade o valores estão fisicamente lá, e só serão substituídos quando forem feitas novas escritas em suas posições.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/analise_exemplo_funcoes.png}
 \caption{Exemplo de comportamento de uma pilha ao ser manipulada por funções.}
+\centerline{\includegraphics[scale=0.8]{images/analise_exemplo_funcoes.png}}
+\fonte{Autor (2019)}
 \label{img_analise_exemplo_funcoes}
 \end{figure}
 
@@ -135,8 +135,8 @@ Para atualizar o indicador de \tos{} principal, que gerencia a pilha principal, 
 Como dito, a Figura \ref{img_analise_funcoes} apresenta todos os componentes necessários para o correto funcionamento das instruções CALL\_FUNCTION e RETURN\_VALUE. Nela, são apresentados os pinos de entradas e saídas de cada componente, assim como seus nomes abaixo.  
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/analise_funcoes.png}
 \caption{Componentes utilizados para instruções que permite chamada e retorno de funções.}
+\centerline{\includegraphics[scale=0.8]{images/analise_funcoes.png}}
+\fonte{Autor (2019)}
 \label{img_analise_funcoes}
 \end{figure}

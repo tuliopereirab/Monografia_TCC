@@ -47,18 +47,18 @@ A definição dos argumentos de cada instrução cabe ao compilador, então ele dever
 Por último, após a execução de todo o código, é feita uma chamada da instrução RETURN\_VALUE, que finaliza a execução dessa função. Como o algoritmo só tinha essa função, finalizar a execução dela significa finalizar a execução do algoritmo por completo.
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/1_simple.png}
 \caption{Código \textit{Assembly} de uma criação de variável.}
+\centerline{\includegraphics{images/1_simple.png}}
+\fonte{Autor (2019)}
 \label{img_1_simple}
 \end{figure}
 
 A análise da Figura \ref{img_2_if} nos permite entender como é feita uma comparação em código \textit{Assembly} da linguagem \py{}. O algoritmo apresentado nela implementa uma chamada \textit{if} sozinha, sem acompanhamento de \textit{elif} ou \textit{else}. Isso significa que o trecho de código contido no corpo do \textit{if} somente irá impactar na execução do sistema se a comparação for verdadeira, não tendo, portanto, nenhuma execução caso a primeira afirmação seja falsa. Em outras palavras, caso a afirmação retorne como sendo falsa, a chamada \textit{if} será completamente ignorada, diferente do que acontece nas Figuras \ref{img_2_if_else} e \ref{img_2_if_elif_else}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/2_if.png}
 \caption{Código \textit{Assembly} de uma comparação \textit{if} simples.}
+\centerline{\includegraphics{images/2_if.png}}
+\fonte{Autor (2019)}
 \label{img_2_if}
 \end{figure}
 
@@ -75,9 +75,9 @@ Finalizando a análise do código \textit{Assembly} da Figura \ref{img_2_if}, pode
 A Figura \ref{img_2_if_else} apresenta um código quase igual ao apresentado na Figura \ref{img_2_if}. Contudo, ele acrescenta um trecho de código que deverá ser executado caso a afirmação feita no \textit{if} seja falsa. Então, não se pode dizer que a estrutura \textit{if} será completamente ignorada nesse caso. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/2_if_else.png}
 \caption{Código \textit{Assembly} de uma comparação \textit{if} contendo \textit{else}.}
+\centerline{\includegraphics{images/2_if_else.png}}
+\fonte{Autor (2019)}
 \label{img_2_if_else}
 \end{figure}
 
@@ -90,9 +90,9 @@ Nesse algoritmo, fica claro o motivo de se utilizar um desvio incondicional rela
 Na Figura \ref{img_2_if_elif_else}, segue-se a mesma lógica vista nas Figuras \ref{img_2_if} e \ref{img_2_if_else}, porém com a adição de uma nova comparação após a primeira. Como neste algoritmo implementa-se uma estrutura \textit{if} que contém duas comparações e uma saída padrão, que será executada caso as duas sejam falsas, é possível perceber isso também no código \textit{Assembly}. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/2_if_elif_else.png}
 \caption{Código \textit{Assembly} de uma comparação \textit{if}, contendo \textit{elif} e \textit{else}.}
+\centerline{\includegraphics{images/2_if_elif_else.png}}
+\fonte{Autor (2019)}
 \label{img_2_if_elif_else}
 \end{figure}
 
@@ -103,9 +103,9 @@ Com a inserção de uma nova comparação, agora também pode ser visto mais de um pu
 A Figura \ref{img_3_while} é a primeira que apresenta a implementação de uma estrutura de repetição em \textit{Assembly}. Através de sua análise, pode-se perceber a inserção de algumas novas instruções. Porém, mantém-se a sequência de chamada de instruções para executar operações mais simples, tais como comparações, onde as constantes a serem comparadas são carregadas para a pilha antes de executar a instrução COMPARE\_OP. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/3_while.png}
 \caption{Código \textit{Assembly} de uma estrtutura de repetição \textit{while}.}
+\centerline{\includegraphics{images/3_while.png}}
+\fonte{Autor (2019)}
 \label{img_3_while}
 \end{figure}
 
@@ -124,9 +124,9 @@ Para reiniciar a estrutura de repetição, é feito um JUMP\_ABSOLUTE, onde o valor
 A Figura \ref{img_4_for} apresenta a segunda estrutura de repetição implementada, a qual é chamada de \textit{for}. Tal instrução apresenta algumas instruções novas, porém, sua execução é bem similar à vista na Figura \ref{img_3_while}. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/4_for.png}
 \caption{Código \textit{Assembly} de uma estrutura de repetição \textit{for}.}
+\centerline{\includegraphics{images/4_for.png}}
+\fonte{Autor (2019)}
 \label{img_4_for}
 \end{figure}
 
@@ -139,18 +139,18 @@ Para finalizar a execução do \textit{loop}, é executado o trecho de código inter
 A próxima imagem, Figura \ref{img_5_add}, apresenta a primeira operação aritmética realizada. Através dela, é possível perceber como é feita a conversão de um código alto nível, escrito em \textit{Python}, feita pelo compilador, que realiza uma atribuição de variáveis com soma. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/5_add.png}
 \caption{Código \textit{Assembly} de uma operação aritmética de soma com duas constantes.}
+\centerline{\includegraphics{images/5_add.png}}
+\fonte{Autor (2019)}
 \label{img_5_add}
 \end{figure}
 
 Pode-se perceber, porém, que na Figura, só existe uma instrução de carregamento para a pilha, diferentemente das outras operações aritméticas. Tal instrução, LOAD\_CONST, pega o valor 15, e o carrega para a pilha. No entanto, ao escrever o código em alto nível, foi definido que o valor a ser salvo na pilha seria \(10 + 5\). Logo, pode-se concluir que o compilador, visando simplificar a operação e retirar linha de códigos de baixo nível, realizou a soma antes de definir qual seria o argumento da instrução LOAD\_CONST, definindo, então, como sendo o resultado da soma. 
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/5_add_var_int.png}
 \caption{Código \textit{Assembly} de uma operação de soma com uma variável e uma constante.}
+\centerline{\includegraphics{images/5_add_var_int.png}}
+\fonte{Autor (2019)}
 \label{img_5_add_var_int}
 \end{figure}
 
@@ -173,34 +173,34 @@ Então, ao serem carregados os dois operandos, executa-se a operação definida pel
 Todas as operações aritméticas acontecem da mesma forma, onde a primeira variável a ser carregada (TOS) se torna o segundo operando da equação e, a segunda (TOS1), o primeiro operando. O resultado é salvo no lugar onde estava TOS1.
 
 \begin{figure}[htp]
-\centering
-\includegraphics{images/5_add_var_var.png}
 \caption{Código \textit{Assembly} de uma operação aritmética de soma com duas variáveis.}
+\centerline{\includegraphics{images/5_add_var_var.png}}
+\fonte{Autor (2019)}
 \label{img_5_add_var_var}
 \end{figure}
 
 A Figura \ref{img_5_add_var_var} realiza a mesma operação aritmética mostrada na Figura \ref{img_5_add_var_int}, com a diferença apenas nas origens dos operandos. Ao invés de ser executada a soma entre uma variável e uma constante, é executada a soma entre duas variáveis. Então, para isso, é preciso que as duas variáveis tenham sido salvas na memória e, então, carregadas novamente para a pilha. Para tal procedimento, é necessário o uso das instruções STORE\_FAST e LOAD\_FAST uma vez a mais do que o que foi visto anteriormente, na Figura \ref{img_5_add_var_int}.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/5_sub.png}
 \caption{Código \textit{Assembly} de uma operação aritmética de subtração.}
+\centerline{\includegraphics[scale=0.8]{images/5_sub.png}}
+\fonte{Autor (2019)}
 \label{img_5_sub}
 \end{figure}
 
 Já as Figura \ref{img_5_sub}, \ref{img_5_multi} e \ref{img_5_div} seguem a mesma lógica empregada na Figura \ref{img_5_add_var_var}, com a diferença de que realizam operações aritméticas diferentes, sendo elas subtração, multiplicação e divisão, respectivamente. Perceba que as instruções aritméticas de cada uma delas estão destacadas nas figuras.
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/5_multi.png}
 \caption{Código \textit{Assembly} de uma operação aritmética de divisão.}
+\centerline{\includegraphics[scale=0.8]{images/5_multi.png}}
+\fonte{Autor (2019)}
 \label{img_5_multi}
 \end{figure}
 
 \begin{figure}[htp]
-\centering
-\includegraphics[scale=0.8]{images/5_div.png}
 \caption{Código \textit{Assembly} de uma operação aritmética de divisão.}
+\centerline{\includegraphics[scale=0.8]{images/5_div.png}}
+\fonte{Autor (2019)}
 \label{img_5_div}
 \end{figure}
 
