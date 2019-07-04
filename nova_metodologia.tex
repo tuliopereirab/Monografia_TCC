@@ -7,7 +7,7 @@ Como este projeto foi dividido em duas grandes fases, houveram algumas modificaç
 \section{Levantamento de Informações}
 \label{newMeto_levantamento}
 
-Primeiramente, antes que fosse tomada qualquer ação dentro do projeto, foi preciso que houvesse um amplo levantamento de informações sobre o assunto. Dentre essas informações, foi necessário, primeiramente, entender como a linguagem \py{} é executada, em detalhes.
+Primeiramente, antes que fosse tomada qualquer ação dentro do projeto, foi preciso que houvesse um amplo levantamento de informações sobre o assunto. Dentre essas informações, foi necessário, primeiramente, entender em detalhes como a linguagem \py{} é executada.
 
 Sabendo, então, que ela é executada utilizando uma máquina virtual chamada \textit{Python Virtual Machine} (PVM), foi possível definir os objetivos deste trabalho: tornar possível executar algoritmos escritos em \py{} em uma arquitetura projetada em \hw{}.
 
@@ -18,7 +18,7 @@ De posse das informações básicas sobre as instruções, foi possível analisar quai
 \section{Análises e Planejamentos}
 \label{newMeto_analises}
 
-Com várias informações básicas já obtidas, possuía-se conhecimento sobre o funcionamento básico da máquina virtual e podia-se iniciar a implementação. Contudo, o que implementar exatamente? Esta fase, chamada fase de projeto, é responsável por responder a essa pergunta.
+Com várias informações básicas já obtidas, possuía-se conhecimento sobre o funcionamento básico da máquina virtual e podia-se iniciar a implementação. Contudo, o que implementar exatamente? Esta fase, chamada fase de análise, é responsável por responder a essa pergunta.
 
 \subsection{Análise das Instruções}
 
@@ -47,7 +47,7 @@ Então, as instruções, separadas nas classes que foram apresentadas na subseção a
 
 Todas as análises explicações sobre as decisões tomadas nesta fase de projeto podem ser encontradas como leitura adicional contida no Apêndice \ref{analise_componentes}.
 
-Nesta fase, em resumo, foram definidos os componentes que estariam presentes em cada uma das arquiteturas parciais, as quais seram apresentadas no capítulo \ref{desenvolvimento}. Com esses componentes, foi possível identificar quais deles poderiam ser reutilizados e, portanto, reduzir a área ocupada pela arquitetura final.
+Nesta fase, em resumo, foram definidos os componentes que estariam presentes em cada uma das arquiteturas parciais, as quais serão apresentadas no capítulo \ref{desenvolvimento}. Com esses componentes, foi possível identificar quais deles poderiam ser reutilizados e, portanto, reduzir a área ocupada pela arquitetura final.
 
 Os componentes necessários para a criação de cada uma das arquiteturas parciais são:
 
@@ -67,7 +67,7 @@ Nesta fase de projeto, foram definidas as arquiteturas parciais e, juntamente co
 \subsection{Fase de desenvolvimento}
 \label{newMeto_desenvolvimento}
 
-Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem e, por conseguinte, a plataforma que seriam utilizadas para implementação, compilação e testes. Assim, foi definido que todo o projeto do \hw{} seria implementado em VHDL, utilizando a ferramenta \textit{Quartus}. Já o conversor, chamado de \textit{pyConv} e apresentado no capítulo \ref{conversor}, seria implementado C.
+Para realizar o desenvolvimento, primeiramente, definiu-se a linguagem e, por conseguinte, a plataforma que seriam utilizadas para implementação, compilação e testes. Assim, foi definido que todo o projeto do \hw{} seria implementado em VHDL, utilizando a ferramenta \textit{Quartus}. Já o conversor, chamado de \textit{pyConv} e apresentado no capítulo \ref{conversor}, seria implementado em C.
 
 A fase de desenvolvimento fala apenas sobre a criação do \hw{}, visto que o \textit{pyConv} foi uma implementado para ser uma ferramenta extra, utilizado, principalmente, para gerar arquivos de testes. A criação do conversor, juntamente com seus métodos para evitar erros, são explicados no capítulo \ref{conversor}.
 
@@ -87,14 +87,14 @@ Com a divisão deste projeto em duas grandes partes (a primeira de levantamento d
 
 Contudo, parte deste documento, responsável por explicar o desenvolvimento em detalhes, já estava concluída e, assim, decidiu-se incluir um capítulo a parte explicando as modificações e as motivações que levaram a elas. As informações completas e detalhadas de todas as modificações podem ser encontradas no capítulo \ref{modificacoes}.
 
-Basicamente, todas as modificações tiveram como objetivo refinar a arquitetura para que fosse possível suportar futuras funcionalidades, as quais poderão ser acopladas como componentes externos à arquitetura. No resultado deste projeto, é esperado que a ampliação da arquitetura aqui descrita possa ser ainda mais ampliada com trabalhos futuros sem modificar nada, além da unidade de controle. 
+Basicamente, todas as modificações tiveram como objetivo refinar a arquitetura para que fosse possível suportar futuras funcionalidades, as quais poderão ser acopladas como componentes externos à arquitetura. No resultado deste projeto, é esperado que a ampliação da arquitetura aqui descrita possa ser ampliada com trabalhos futuros sem modificar nada, além da unidade de controle (\textit{plug and play}). 
 
 \section{Levantamento de Resultados}
 \label{newMeto_resultados}
 
 Para o levantamento dos resultados, foram analisados, principalmente, dados gerados pelas ferramentas utilizadas. Tanto o \textit{Quartus} quanto o \textit{Modelsim} geram dados que permitem que uma análise sólida do funcionamento da arquitetura seja feita.
 
-O \textit{Quartus} gera dados relacionados à arquitetura em si, permitindo que seja possível verificar dados como área ocupada em um \textit{chip} (quantidade de componentes utilizados) e características básicas, como frequência de operação e energia dissipada. Ainda com essa ferramenta é possível realizar simulações, contudo essa não é uma boa funcionalidade para ser utilizada durante a fase de testes, tendo em vista a falta de dados apresentados nas simulações em comparação com o \textit{Modelsim}.
+O \textit{Quartus} gera dados relacionados à arquitetura em si, permitindo que seja possível verificar dados como área ocupada em um \textit{chip} (quantidade de componentes utilizados) e características básicas, como frequência de operação e potência dissipada. Ainda com essa ferramenta é possível realizar simulações, contudo essa não é uma boa funcionalidade para ser utilizada durante a fase de testes, tendo em vista a falta de dados apresentados nas simulações em comparação com o \textit{Modelsim}.
 
 As simulações do \textit{Quartus} apenas apresentam dados dos pinos de entrada e saída da arquitetura, não sendo possível analisar sinais internos dela. Sendo assim, para este quesito, a ferramenta \textit{Modelsim} se sobressai.
 

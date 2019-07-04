@@ -1,8 +1,8 @@
-Todo o trabalho que visa a implementação de alguma funcionalidade ou que tem um objetivo específico a ser atendido pode sofrer com modificações de projeto caso necessário. Assim, durante a implementação do projeto, é possível que seja percebido que, para atingir os objetivos, alguns pontos pré-definidos durante a fase de projeto precisam ser modificados. 
+Todo o trabalho que visa a implementação de alguma funcionalidade ou que tem um objetivo específico a ser atendido pode sofrer modificações de projeto caso necessário. Assim, durante a implementação do projeto, é possível que seja percebido que, para atingir os objetivos, alguns pontos pré-definidos durante a fase de projeto precisam ser modificados. 
 
-Esta seção trata de todas as modificações e aprimoramentos feitas com o objetivo de melhorar o projeto como um todo e expandir o leque de opções a ser comportado pelo sistema final. Tais modificações incluem: modificações de algoritmos (\ref{algoMod}), modificações estruturais (\ref{estMod}), adição de funcionalidades (\ref{addMod}) e, por último, adição de verificação e controle de erros (\ref{errorMod}).
+Esta seção trata de todas as modificações e aprimoramentos feitos com o objetivo de melhorar o projeto como um todo e expandir o leque de opções a ser comportado pelo sistema final. Tais modificações incluem: modificações de algoritmos (\ref{algoMod}), modificações estruturais (\ref{estMod}), adição de funcionalidades (\ref{addMod}) e, por último, adição de verificação e controle de erros (\ref{errorMod}).
 
-\section{Modificações de Algoritmos}
+\section{Modificações na Implementação VHDL}
 \label{algoMod}
 
 Quando se inicia um projeto, começa-se pensando no método mais eficiente de implementação conhecido. Seguindo essa ideia, este trabalho foi implementado visando atingir todos os objetivos pré-definidos da melhor forma possível e, inicialmente, pensando-se, erroneamente, pouco em modificações futuras e organização.
@@ -79,9 +79,9 @@ A Figura \ref{img_config_vhdl} apresenta as constantes em VHDL que recebem as ca
 \end{itemize} 
 \subsection{Manter cálculos na ULA}
 
-Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de até 24 \bis{} ou menos. Sendo assim, duas soluções foram pensadas: criar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
+Ao realizar as modificações, viu-se que seria impossível manter uma ULA de 8 \bis{} e endereços de 24 \bis{} ou menos. Sendo assim, duas soluções foram pensadas: adicionar nova ULA e outros componentes ao redor dela ou aumentar a largura das entradas e saídas da ULA para todos os dados.
 
-Então, evitando o incremento no número de componentes utilizados, a segunda opção foi adotada e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura menor que esse valor (o endereço ADDR\_MAX\_WIDTH da figura % linha 44). Além disso, ainda houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima Seção (\ref{addMod}). 
+Então, evitando o incremento no número de componentes utilizados, a segunda opção foi adotada e implementada. Assim, todas as entradas da ULA agora recebem 24 \bis{} mesmo que o endereço das memórias tenha largura inferior que esse valor (o endereço ADDR\_MAX\_WIDTH da Figura \ref{img_addr_16_24} já apresentada). Além disso, ainda houve a adição de mais um \bi{} no sinal seletor da ULA, o qual será explicado na próxima Seção (\ref{addMod}). 
 
 \section{Adição de funcionalidades}
 \label{addMod}
