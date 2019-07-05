@@ -6,7 +6,7 @@ O principal objetivo da criação deste conversor, chamado de \textit{pyConv}, é a
 
 O \textit{pyConv} tem ainda como objetivo evitar ao máximo a inicialização da memória com algoritmos que contenham erros. A verificação desses erros, que será assunto da Seção \ref{conv_erros}, permite a identificação de erros léxicos, sintáticos e até lógicos, os quais poderiam tornar algum sinal da arquitetura inválido (assunto da Seção \ref{errorMod}).
 
-Além do que será apresentado sobre o \textit{pyConv} neste capítulo, sugere-se a verificação dos apêndices  \ref{diag_casos}, \ref{diag_seq} e \ref{diag_class} para análise dos diagramas de casos de uso, sequência e classes, respectivamente. Com eles é possível compreender, com maior facilidade, o funcionamento do conversor e como ele foi desenvolvido.
+Além do que será apresentado sobre o \textit{pyConv} neste capítulo, sugere-se a verificação dos Apêndices \ref{diag_casos} e \ref{diag_class} para análise dos diagramas de casos de uso e estados, respectivamente. Com eles é possível compreender, com maior facilidade, o funcionamento do conversor e como ele foi desenvolvido.
 
 \section{Funcionalidades}
 \label{conv_func}
@@ -58,7 +58,7 @@ Assim sendo, a manipulação de variáveis é facilitada em \hw{} por um sistema bas
 \label{conv_func_help}
 O \textit{pyConv}, por utilizar alguns atalhos para algumas instruções, tais como os códigos de operação de comparação (0 para \textit{igual}, 1 para \textit{menor que} e 2 para \textit{maior que}), possui um menu de ajuda para quem for utilizá-lo. 
 
-Esse menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra \textit{"help"} seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instruções possam possuir. 
+Esse menu é acessado diretamente pela entrada de instruções, sendo necessário que a palavra \textit{"help"} seja digitada. Então, o sistema pedirá a instrução que se está buscando ajuda e mostrará as informações dela, tais como formato, descrição e informações adicionais que algumas instruções podem possuir. 
 
 A Figura \ref{img_conv_help} apresenta um exemplo de informação apresentada pela função \textit{help} para a instrução COMPARE\_OP.
 
@@ -109,7 +109,8 @@ Então, para facilitar a execução em abas as ferramentas, o conversor gera os doi
 
 \subsection{Arquivo \textit{.mem}}
 \label{conv_arq_mem}
-O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4}, considerando que a equação (\ref{eq_prof}) que descreve o valor \textit{profundidade de memória}, e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha.
+
+O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pelo \modelsim{} ao realizar-se uma simulação. Ele possui o formato de uma matriz \textit{[profundidade da memória] x 4}, considerando que a equação (\ref{eq_prof}) que descreve o valor \textit{profundidade de memória}, e recebe algumas informações de cabeçalho. Seus indices são expressos em hexadecimal e mostram a posição de memória da primeira palavra de cada linha. A Figura \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo \textit{pyConv}.
 
 \begin{equation}
 \label{eq_prof}
@@ -122,8 +123,6 @@ profundidade\_memoria = \frac{2^{ADDR\_WIDTH}}{4}
 \fonte{Autor (2019)}
 \label{img_conv_mem}
 \end{figure}
-
-A Figura \ref{img_conv_mem} mostra um exemplo de arquivo \mem{} criado pelo \textit{pyConv}.
 
 \subsection{Arquivo \textit{.mif}}
 \label{conv_arq_mif}
@@ -189,13 +188,13 @@ A verificação de erros lógicos é feita com o objetivo de evitar que nenhum compo
 
 Então, o \textit{pyConv} possui uma variável de controle do topo da pilha, o qual é incrementado sempre que recebe uma instrução válida que adiciona algo à pilha e decrementado quando uma instrução retira algo da pilha. Com essa variável, é possível verificar, sempre que uma instrução de leitura da pilha for inserida, se ela pode ou não ser executada.
 
-Um exemplo simples é qualquer uma das instruções BINARY\_, que necessitam de duas posições da pilha para serem lidas. Então, caso não haja, a instrução não será adicionada ao arquivo. Caso haja, será decrescido apenas 1 da variável da de controle, pois essa instrução retorna um resultado a ser no \tos{}. 
+Um exemplo simples é qualquer uma das instruções BINARY\_, que necessitam de duas posições da pilha para serem lidas. Então, caso não haja, a instrução não será adicionada ao arquivo. Caso haja, será decrescido apenas o valor 1 da variável de controle, pois essa instrução retorna um resultado a ser salvo no \tos{}. 
 
 Seguindo a mesma teoria de prevenção de erro do ponteiro de \tos{}, ao ser inserida a função CALL\_FUNCTION, o topo da pilha de funções é incrementado e, com a instrução RETURN\_VALUE, decrementado. Assim, não é possível inserir a instrução RETURN\_VALUE sem antes inserir CALL\_FUNCTION. A correção desse erro é idêntica à utilizada no erro anterior, porém com outra variável.
 
-Além desses erros, existe outro erro que pode estar ligado à instrução LOAD\_FAST. A verificação desse evita que um essa instrução seja executada com um endereço que não foi salvo anteriormente (com a instrução STORE\_FAST). Então, como tem-se uma matriz de variáveis, sempre que é inserida a instrução LOAD\_FAST, faz-se uma busca e, caso a variável inserida exista, a instrução é formalmente inserida no arquivo, caso contrário, sua inserção é negada.
+Além desses erros, existe outro erro que pode estar ligado à instrução LOAD\_FAST. A verificação desse evita que essa instrução seja executada com um endereço que não foi salvo anteriormente (com a instrução STORE\_FAST). Então, como tem-se uma matriz de variáveis, sempre que é inserida a instrução LOAD\_FAST, faz-se uma busca e, caso a variável inserida exista, a instrução é formalmente inserida no arquivo, caso contrário, sua inserção é negada.
 
-Outro erro previsto está ligado às instruções de desvio condicional, as quais precisam de uma comparação prévia para que sejas executadas. Assim, sempre que for inserida a instrução COMPARE\_OP, uma variável de controle é ativada. Ela permite que haja a inserção de uma das instruções de desvio condicional (POP\_JUMP\_IF\_TRUE ou FALSE) quando digitada.
+Outro erro previsto está ligado às instruções de desvio condicional, as quais precisam de uma comparação prévia para que sejam executadas. Assim, sempre que for inserida a instrução COMPARE\_OP, uma variável de controle é ativada. Ela permite que haja a inserção de uma das instruções de desvio condicional (POP\_JUMP\_IF\_TRUE ou FALSE) quando digitada.
 
 Somente depois de todas essas verificações de erros que uma instrução pode, finalmente, ser inserida na matriz que irá para o arquivo de memória.  
 
@@ -203,20 +202,18 @@ Somente depois de todas essas verificações de erros que uma instrução pode, fina
 \subsection{Verificação Final de Erros}
 \label{conv_erros_sim}
 
-Quando se estava projetando a análise de todos os erros possíveis, foi percebido que alguns erros, por serem de elevada complexidade, não eram previsíveis e nem detectáveis durante as inserções de instruções. No entanto, era de grande importância que eles fosse detectados e não fossem passados para a arquitetura.
+Quando se estava projetando a análise de todos os erros possíveis, foi percebido que alguns erros, por serem de elevada complexidade, não eram previsíveis e nem detectáveis durante as inserções de instruções. No entanto, era de grande importância que eles fossem detectados e não fossem passados para a arquitetura.
 
 Percebeu-se, então, que o único jeito de detectar erros complexos seria executando o algoritmo escrito, por completo. Porém, sabendo que o objetivo deste conversor é evitar que um algoritmo contendo erros seja carregado para a arquitetura, como verificar a existência de erros complexos sem transferir erros para o processador?
 
 A resposta para isso veio de trabalhos acadêmicos não publicados desenvolvidos pelo próprio autor deste documento durante aulas da graduação, os quais tinham por objetivo implementar um simulador de algum processador em \sw{}. Foi percebido que não existe melhor maneira de verificar erros do que simulando a arquitetura em \sw{}, criando, assim, uma verificação final.
 
-Essa verificação final é executada após o comando \textit{quit}, onde já é esperado que todo o algoritmo esteja completo. Então inicia-se o simulador da arquitetura e uma a uma as instruções são executadas na ordem em que aparecem na matriz de instruções. 
-
-O simulador, por sua vez, possui todos os sinais e componentes básicos e potencialmente problemáticos quando manipulados erroneamente. Tais componentes são os ponteiros PC, TOS e TOS\_função, dentre outros. 
+Essa verificação final é executada após o comando \textit{quit}, onde já é esperado que todo o algoritmo esteja completo. Então inicia-se o simulador da arquitetura e uma a uma as instruções são executadas na ordem em que aparecem na matriz de instruções. O simulador, por sua vez, possui todos os sinais e componentes básicos e potencialmente problemáticos quando manipulados erroneamente. Tais componentes são os ponteiros PC, TOS e TOS\_função, dentre outros. 
 
 Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o seu \textit{status} atual, que deve ser sempre zero. Ao retornar um valor negativo, o conversor finaliza o teste e ignora a criação dos arquivos de memória. O próprio simulador é responsável por gerar mensagens de erros, indicando o código de erro e sua explicação, conforme Tabela \ref{conv_erros_sim}.
 
 \begin{table}[]
-\caption{Lista de erros retornados pelo simulador.}
+\caption{Lista de erros e mensagens retornados pelo simulador.}
 \label{conv_erros_sim}
 \centerline{\begin{tabular}{|c|c|}
 \hline
