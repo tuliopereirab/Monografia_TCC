@@ -37,7 +37,7 @@ Para resolver tal problema, primeiramente, foi pensado que podia-se expandir a l
 Então, para solucionar o problema, pensou-se em utilizar uma segunda palavra, aliada à palavra que carrega o código da instrução com 8 \bis{}, para carregar o endereço. E, para melhor aproveitamento futuro, caso seja encontrada a necessidade de expandir ainda mais a memória, existe a possibilidade de utilizar os 8 \bis{} remanescentes da primeira palavra concatenados com a segunda palavra inteira, totalizando 24 \bis{} de endereçamento de memória. 
 %imagem explicando a utilização dos endereços (16 pra 24 bits e como poderia ser feito)
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Funcionamento básico do \textit{regJump}.}
 \centerline{\includegraphics[scale=0.8]{images/modificacoes/addr_16_24.png}}
 \fonte{Autor (2019)}
@@ -50,7 +50,7 @@ Para isso, foi criado e adicionado à arquitetura um registrador responsável pela
 
 A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações básicas do processador, responsável por ler instrução, argumento e dar início a execução. Com o \textit{regJump} se conectando à saída do \textit{regArg}, que também possui saída para outros componentes, é possível gerar endereços de até 24 \bis{}. Porém, como foi dito anteriormente, os endereços definidos para os testes deste trabalho serão apenas 12 \bis{}, o que fará o \textit{regJump} retornar apenas os 12 \bis{} menos significativos lidos da sua conexão direta com a memória de instruções.  
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Nova arquitetura parcial de operações básicas (a antiga é a Figura \ref{img_analisebasicos}).}
 \centerline{\includegraphics[scale=0.7]{images/modificacoes/new_basics.png}}
 \fonte{Autor (2019)}
@@ -59,7 +59,7 @@ A Figura \ref{img_new_basics} apresenta a nova arquitetura parcial de operações 
 
 Contudo, devido a limitações do dispositivo utilizado para os testes, as larguras dos endereços de memória foram fixadas em 12 \bis{} para todas as memórias e pilhas (com exceção das responsáveis por chamada e retorno de funções), totalizando 4096 palavras em cada memória, onde antes existiam apenas 256. Além disso, agora também é possível a expansão ou retração das memórias apenas modificando um valor decimal dentro do código VHDL.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Apresentação de como é feita a configuração da arquitetura.}
 \centerline{\includegraphics[scale=0.6]{images/modificacoes/config_vhdl.png}}
 \fonte{Autor (2019)}

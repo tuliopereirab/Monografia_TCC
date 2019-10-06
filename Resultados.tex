@@ -37,7 +37,7 @@ Nos trabalhos correlatos analisados na Seção \ref{trab_correlatos}, foi possível
 
 A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada pela ferramenta \textit{Quartus} no decorrer da compilação. Nela pode ser observada a frequência máxima sugerida pela ferramenta para que seja aplicada ao pino de entrada \textit{clk}, referente à entrada de \clock{} do sistema.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Frequência máxima de operação gerada pela ferramenta \textit{Quartus}.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/freq.jpg}}
 \fonte{Autor (2019)}
@@ -51,7 +51,7 @@ A Figura \ref{img_freq} apresenta o resultado da análise de frequência realizada
 
 Ainda analisando dados obtidos através da ferramenta \textit{Quartus}, pode-se analisar, na Figura \ref{img_area}, as informações referentes à área ocupada no FPGA \textit{Cyclone III} apresentado. 
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Área ocupada em um FPGA gerada pela ferramenta \textit{Quartus}.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/area.jpg}}
 \fonte{Autor (2019)}
@@ -81,7 +81,7 @@ Isso se deve, principalmente, ao fato de que a maioria dos dispositivos estão se
 
 A Figura \ref{img_result_energia} apresenta os dados retornados pela ferramenta \textit{Quartus II}. Dentro dela, existe a ferramenta chamada \textit{PowerPlay Power Analyzer}, a qual realiza, juntamente com o auxílio da ferramenta \textit{Modelsim}, levantamento de dados sobre a potência dissipada durante as simulações.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Análise de potência gerada pela ferramenta \textit{Quartus}.}
 \centerline{\includegraphics[scale=0.9]{images/resultados/energia.jpg}}
 \fonte{Autor (2019)}
@@ -96,7 +96,7 @@ Para estes testes, a ferramenta considerou como temperatura ambiente 26,6 ºC e 1
 
 Além disso, a ferramenta ainda indica a memória de instruções (\textit{memInstr}) como o componente que mais dissipa potência (6,34 mW) seguida pela pilha (4,03 mW). A unidade de controle é responsável por dissipar 1,90 mW, sendo classificada na quarta posição. A Figura \ref{img_energia_ranking} apresenta os quinze componentes que mais consomem energia. 
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{\textit{Ranking} dos componentes conforme suas potências.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/energia_ranking.jpg}}
 \fonte{Autor (2019)}
@@ -110,7 +110,7 @@ Como foi explicado nos capítulos anteriores, para que cada instrução fosse execu
 
 Assim sendo, criou-se o gráfico apresentado na Figura \ref{graf_ciclos_instr}, o qual apresenta o número de ciclos de \clock{} necessários para a execução de cada uma das instruções. Em alguns casos, principalmente com as instruções BINARY\_, não foi necessário apresentar todas as instruções individualmente, visto que todas elas seguem o mesmo fluxo de execução.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Gráfico de barras com os ciclos de \clock{} necessários para a execução de cada instrução.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/ciclos_instrucao.png}}
 \fonte{Autor (2019)}
@@ -147,7 +147,7 @@ Feita essa apresentação de informações básicas, as subseções seguintes apresenta
 
 A primeira simulação realizada foi responsável por executar um algoritmo de teste para todas as operações binárias e unárias do processador. O código \as{} deste algoritmo pode ser visto na Figura \ref{img_ass1}. A única operação que não aparece no algoritmo e, portanto, sendo considerada a exceção, é a de divisão (instrução BINARY\_DIVIDE). Embora ela esteja funcional, sua utilização gera impacto de grandes proporções na frequência, conforme dito na subseção \ref{result_freq}, causando significativo impacto no tempo de execução.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Código \textit{Assembly} do teste 1.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste1.jpg}}
 \fonte{Autor (2019)}
@@ -156,7 +156,7 @@ A primeira simulação realizada foi responsável por executar um algoritmo de test
 
 Antes de realizar a simulação, fez-se uma análise no algoritmo criado com o objetivo de verificar as classes de instruções implementadas e fazer uma estimativa de tempo teórico de execução. Como pode ser visto na Figura \ref{img_graf1}, a classe de instruções que mais aparece neste algoritmo é a escrita e leitura na memória, caracterizando 78,1\%. 
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 1.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste1.png}}
 \fonte{Autor (2019)}
@@ -169,7 +169,7 @@ Para fazer a verificação de que o algoritmo funcionou corretamente, analisou-se 
 
 Já as outras posições, na ordem em que aparecem, receberam as operações: soma, subtração, multiplicação, AND, OR, XOR, NOT do operando 1 e NOT do operando 2. Pode-se observar que os valores binários apresentados correspondem aos resultados esperados para cada uma das operações.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Resultado da simulação do teste 1.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste1.jpg}}
 \fonte{Autor (2019)}
@@ -181,7 +181,7 @@ Já as outras posições, na ordem em que aparecem, receberam as operações: soma, s
 
 O teste número 2 consiste na execução de um \textit{loop}, o qual vai de zero a 10. A cada ciclo de repetição, como mostra a Figura \ref{img_ass2} entre as linhas 3 e 15, são executadas instruções de carregamento de dados da memória, comparação e operação aritmética de soma. Nessa Figura, é possível perceber o código \as{} gerado pelo \textit{pyConv} no mesmo formato já apresentado na subseção \ref{result_arith}.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Código \textit{Assembly} do teste 2.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste2.jpg}}
 \fonte{Autor (2019)}
@@ -190,7 +190,7 @@ O teste número 2 consiste na execução de um \textit{loop}, o qual vai de zero a 
 
 O código \as{} é, então, carregado para a memória de instruções e aparece no formato apresentado na Figura \ref{img_bin2}. Para todos os testes existe esse processo, contudo tal imagem só será mostrada aqui para evitar repetições desnecessárias.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Código binário do teste 2 carregado para a memória de instruções.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memInstr_teste2.jpg}}
 \fonte{Autor (2019)}
@@ -201,7 +201,7 @@ A Figura \ref{img_graf2} apresenta o gráfico mostrando a proporção das classes d
 
 O fato de instruções relacionadas a desvios aparecerem em segunda posição nas que mais aparecem não incrementa praticamente nada no tempo de execução, visto que essas instruções são as mais rápidas de serem executadas.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 2.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste2.png}}
 \fonte{Autor (2019)}
@@ -212,7 +212,7 @@ Com a análise das instruções utilizadas para a realização desta simulação, foi p
 
 A Figura \ref{img_final2} apresenta a memória externa com os resultados da execução. É possível perceber o valor 10, em binário, salvo na posição 0, a qual foi destinada para ser o contador do \textit{loop}. O valor 255 aparece na posição 1, o qual é executado após a finalização do \textit{loop}.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Resultado da simulação do teste 2.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste2.jpg}}
 \fonte{Autor (2019)}
@@ -226,7 +226,7 @@ O teste 3 consiste na implementação de uma operação aritmética com o resultado r
 
 É então que o valor retornado é multiplicado pelo valor carregado previamente e, o resultado, salvo na memória externa. A Figura \ref{img_ass3} apresenta o código \as{} deste algoritmo.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Código \textit{Assembly} do teste 3.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste3.jpg}}
 \fonte{Autor (2019)}
@@ -235,7 +235,7 @@ O teste 3 consiste na implementação de uma operação aritmética com o resultado r
 
 Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na Figura \ref{img_graf3}, que mostra a proporção das classes de instruções utilizadas. O tempo teórico calculado para essa execução foi de 782 ns. 
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 3.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste3.png}}
 \fonte{Autor (2019)}
@@ -244,7 +244,7 @@ Analisando o algoritmo apresentado, foi possível gerar o gráfico apresentado na 
 
 Após a execução, observou-se que o tempo de execução foi maior que o teórico, sendo este 894 ns. A Figura \ref{img_final3} apresenta o valor final, 30, salvo na posição zero da memória externa. 
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \caption{Resultado da simulação do teste 3.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste3.jpg}}
 \fonte{Autor (2019)}
@@ -256,7 +256,7 @@ Após a execução, observou-se que o tempo de execução foi maior que o teórico, se
 
 Para a última simulação, a de número 4, foi criado um algoritmo com o objetivo único de executar a maior variedade de instruções possível. Assim, como pode ser visto na Figura \ref{img_ass4}, o algoritmo executa diversos desvios, operações aritméticas e até uma comparação. Ele pode ser considerado como um agrupamento dos três testes feitos anteriormente.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Código \textit{Assembly} do teste 4.}
 \centerline{\includegraphics[scale=0.7]{images/resultados/Simulacoes/assembly_teste4.jpg}}
 \fonte{Autor (2019)}
@@ -265,7 +265,7 @@ Para a última simulação, a de número 4, foi criado um algoritmo com o objetivo ú
 
 Seu gráfico de proporção entre as classes de instruções executadas é apresentado na Figura \ref{img_graf4}. Nele, percebe-se que a maior parte das instruções são de acesso à memória. Os devios, que aparecem em segundo, não geram tanto incremento no tempo de execução quanto as operações aritméticas, em terceiro.
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \caption{Gráfico com a proporção das classes de instruções utilizadas para o teste 4.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/pizza_teste4.png}}
 \fonte{Autor (2019)}
@@ -278,7 +278,7 @@ Nas posições 2 e 3, respectivamente, aparecem o resultado da soma da posição 0 c
 
 O tempo teórico calculado para a execução deste algoritmo foi de 2.548 ns, enquanto o tempo observado na prática foi de 2.874 ns.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Resultado da simulação do teste 4.}
 \centerline{\includegraphics[scale=0.6]{images/resultados/Simulacoes/memExt_final_teste4.jpg}}
 \fonte{Autor (2019)}

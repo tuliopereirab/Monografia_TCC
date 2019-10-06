@@ -29,7 +29,7 @@ Ao ser inicializado, o \textit{pyConv} gera uma matriz que simula uma memória de
 
 A palavra de memória é a posição de memória que é apontada pelo ponteiro PC na arquitetura, então é de extrema importância que uma instrução seja digitada na posição correta. Então, para gerenciar isso, o próprio conversor já espera uma instrução indicando a posição de memória referente à memória física, conforme mostra a Figura \ref{img_conv_line}. Nela, é possível identificar que foi inserido uma instrução na posição zero e aguarda-se o próximo na posição um.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Indicação numérica da palavra de memória que está sendo escrita.}
 \centerline{\includegraphics[scale=0.6]{images/conversor/img_conv_line.jpg}}
 \fonte{Autor (2019)}
@@ -62,7 +62,7 @@ Esse menu é acessado diretamente pela entrada de instruções, sendo necessário qu
 
 A Figura \ref{img_conv_help} apresenta um exemplo de informação apresentada pela função \textit{help} para a instrução COMPARE\_OP.
 
-\begin{figure}[htp]
+\begin{figure}[h]
 \caption{Apresentação das informações para a instrução COMPARE\_OP.}
 \centerline{\includegraphics[scale=0.5]{images/conversor/img_conv_help.jpg}}
 \fonte{Autor (2019)}
@@ -117,7 +117,7 @@ O primeiro deles, \mem{}, é importado diretamente para a memória reconhecida pel
 profundidade\_memoria = \frac{2^{ADDR\_WIDTH}}{4}
 \end{equation}
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Exemplo de arquivo \textit{.mem}.}
 \centerline{\includegraphics[scale=0.5]{images/conversor/img_conv_mem.jpg}}
 \fonte{Autor (2019)}
@@ -136,7 +136,7 @@ A ferramenta \quartus{}, ao gerá-los, utiliza simplificações quando várias posiç
 
 Isso significa que da posição 2 até a posição 10 todas as posições receberão o valor 0 em binário, contendo 16 \bis{} cada. A Figura \ref{img_conv_mif} apresenta um exemplo de arquivo \mif{} criado pelo conversor.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Exemplo de arquivo \textit{.mif}.}
 \centerline{\includegraphics[scale=0.5]{images/conversor/img_conv_mif.jpg}}
 \fonte{Autor (2019)}
@@ -150,11 +150,12 @@ O último arquivo, gerado apenas para suprir uma eventual necessidade de análise 
 
 Alguns complexos, outros nem tanto, é necessário que todos eles possam ser lidos para que seja possível comparar o que foi executado e o que era esperado. Antes de existir um arquivo texto, era necessário ler a memória (em código binário) e decodificar cada uma das posições manualmente, algo que levava certo tempo.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Exemplo de arquivo texto.}
 \centerline{\includegraphics[scale=0.5]{images/conversor/img_conv_arq_texto.jpg}}
 \fonte{Autor (2019)}
 \label{img_conv_arq_texto}
+\setlength{\textfloatsep}{5pt}
 \end{figure}
 
 O arquivo texto, basicamente, recebe o número da linha, a instrução e o argumento, quando este último existe. A Figura \ref{img_conv_arq_texto} apresenta um exemplo de um arquivo texto.
@@ -198,7 +199,6 @@ Outro erro previsto está ligado às instruções de desvio condicional, as quais pr
 
 Somente depois de todas essas verificações de erros que uma instrução pode, finalmente, ser inserida na matriz que irá para o arquivo de memória.  
 
-
 \subsection{Verificação Final de Erros}
 \label{conv_erros_sim}
 
@@ -210,10 +210,10 @@ A resposta para isso veio de trabalhos acadêmicos não publicados desenvolvidos p
 
 Essa verificação final é executada após o comando \textit{quit}, onde já é esperado que todo o algoritmo esteja completo. Então inicia-se o simulador da arquitetura e uma a uma as instruções são executadas na ordem em que aparecem na matriz de instruções. O simulador, por sua vez, possui todos os sinais e componentes básicos e potencialmente problemáticos quando manipulados erroneamente. Tais componentes são os ponteiros PC, TOS e TOS\_função, dentre outros. 
 
-Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o seu \textit{status} atual, que deve ser sempre zero. Ao retornar um valor negativo, o conversor finaliza o teste e ignora a criação dos arquivos de memória. O próprio simulador é responsável por gerar mensagens de erros, indicando o código de erro e sua explicação, conforme Tabela \ref{conv_erros_sim}.
+Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o seu \textit{status} atual, que deve ser sempre zero. Ao retornar um valor negativo, o conversor finaliza o teste e ignora a criação dos arquivos de memória. O próprio simulador é responsável por gerar mensagens de erros, indicando o código de erro e sua explicação, conforme Tabelas \ref{conv_erros_sim} e \ref{conv_erros_sim_2}.
 
 \begin{table}[]
-\caption{Lista de erros e mensagens retornados pelo simulador.}
+\caption{Lista de erros e mensagens retornados pelo simulador (1).}
 \label{conv_erros_sim}
 \centerline{\begin{tabular}{|c|c|}
 \hline
@@ -226,13 +226,25 @@ Ao ser iniciado, o simulador executa uma instrução e retorna para o conversor o 
 -6              & Endereço de memória está fora do intervalo esperado (0 a 4095).                                                                                                          \\ \hline
 -7              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha de funções ultrapassará limite superior.\\ Execute 'RETURN\_VALUE' antes de utilizar 'CALL\_FUNCTION'.\end{tabular} \\ \hline
 -8              & \begin{tabular}[c]{@{}c@{}}Ponteiro do topo da pilha de funções ficará negativo.\\ Utilize 'CALL\_FUNCTION' antes de 'RETURN\_VALUE'.\end{tabular}                       \\ \hline
--9              & \begin{tabular}[c]{@{}c@{}}Pilha não suporta as duas leituras exigidas. \\ Certifique-se que existam dois dados na pilha.\end{tabular}                                   \\ \hline
+-9              & \begin{tabular}[c]{@{}c@{}}Pilha não suporta as duas leituras exigidas. \\ Certifique-se que existam dois dados na pilha.
+\end{tabular}                         \\ \hline
+\end{tabular}}
+\fonte{Autor (2019)}
+\end{table}
+
+
+\begin{table}[h]
+\caption{Lista de erros e mensagens retornados pelo simulador (2).}
+\label{conv_erros_sim_2}
+\centerline{\begin{tabular}{|c|c|}
+\hline
+\textbf{CÓDIGO} & \textbf{DESCRIÇÃO}                                                                                                                                                       \\ \hline
 -10             & \textit{warning: Resultando com Overflow.}                                                                                                                               \\ \hline
 -11             & \begin{tabular}[c]{@{}c@{}}Variável inexistente.\\ Utilize 'STORE\_FAST' para criá-la.\end{tabular}                                                                      \\ \hline
 -12             & \begin{tabular}[c]{@{}c@{}}\textbf{SAÍDA: Um ou mais erros foram encontrados no simulador.} \\ \textbf{Instrução não executada.}\end{tabular}                                                                                         \\ \hline
 -13             & \begin{tabular}[c]{@{}c@{}}Resultado da comparação inválido.\\ Execute uma comparação antes de um desvio condicional.\end{tabular}                                       \\ \hline
 -14             & Valor do endereço fora do intervalo esperado (0 a 4095).                                                                                                                 \\ \hline
--15             & Soma entre PC atual e argumento da instrução ultrapassam valor máximo de 4095.                                                                                           \\ \hline
+-15             & \begin{tabular}[c]{@{}c@{}}Soma entre PC atual e argumento da instrução \\ ultrapassam valor máximo de 4095.                                                                                \end{tabular}    \\ \hline
 -16             & Valor de PC ficará acima do máximo suportado.                                                                                                                            \\ \hline
 -17             & Instrução inválida.                                                                                                                                                      \\ \hline
 -18             & \begin{tabular}[c]{@{}c@{}}Opção da instrução 'COMPARE\_OP' inválida.\\ Utilize: 0-\textgreater igual, 1-\textgreater menor que, 2-\textgreater maior que.\end{tabular}  \\ \hline

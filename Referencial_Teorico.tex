@@ -148,7 +148,7 @@ A utilização das instruções de carga e armazenamento de dados geralmente ocorre 
 
 Quando o código assembly não é desenvolvido diretamente pelo programador, a escolha das instruções e a ordem de presença delas no código é feita pelo compilador na hora em que ele lê determinado comando em alto nível e decide quebrá-lo em várias instruções. Então, para exemplificar, um compilador lerá, no caso do \py{}, uma linha de código de alto nível de atribuição de valor a uma variável a partir de uma soma entre duas outras variáveis e a dividirá em dois carregamentos de variáveis, uma soma e um salvamento na memória. No caso da linguagem \py{}, como o compilador foi feito especialmente para trabalhar com uma pilha, ele já tem definido a ordem certa de carregar cada operando da operação, visando que os resultados a cada operação fiquem estrategicamente posicionados na pilha para servirem, quando necessário, para outras operações. Logo, a correta ordem de carregamentos das variáveis é crucial para que o resultado saia como era esperado. A Figura \ref{img_exemplo_pilha} mostra uma instrução (a), o carregamento das variáveis na pilha (b), a obtenção do resultado retornado na pilha (c) e, posteriormente, o salvamento do resultado na memória (d). Em equações mais complexas, onde existem, por exemplo, parênteses que tornam operações internas mais importantes que outras, é necessário que o compilador consiga percebê-los e que monte o código \as{} de forma que as operações internas sejam atendidas corretamente, gerando um resultado prático como foi esperado. 
 
-\begin{figure}[!htp]
+\begin{figure}[]
 \caption{Exemplo de carregamento de dados de uma equação para a pilha.}
 \centerline{\includegraphics[scale=0.6]{images/exemplo_pilha.png}}
 \fonte{Autor (2019)}
@@ -159,7 +159,7 @@ Portanto, sempre que o compilador necessita traduzir uma operação aritmética, el
 
 Após todos os carregamentos concluídos, são feitas as chamadas de funções aritméticas, por exemplo, na ordem idêntica à de prioridade. Tal fato ocorre porque, como as primeira e segunda posições da pilha contêm os dois operandos da operação de maior prioridade, como dito anteriormente, sua operação deverá ser executada antes de qualquer outra. Então, a terceira e a quarta posições possuem elementos cuja operação tem precedência igual ou inferior à operação a ser executada sobre os elementos da primeira e segunda posição (respectivamente, o topo e o pré topo). Seguindo a ordem de prioridade até que todas as instruções tenham sido executadas. A Figura \ref{img_exemplo_prioridades} apresenta a execução de uma equação que possui uma multiplicação e uma soma. Em (a), é apresentada a equação; em (b), aparecem todos os três valores carregados para a pilha; em (c), a pilha aparece com dois valores, pois já foi executada a operação de multiplicação (que possui prioridade superior à soma) e; em (d) pode-se observar que só existe o valor final da equação, após a realização da soma entre o resultado da multiplicação e o terceiro valor.
 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Exemplo de uma operação, através da pilha, de uma equação com três operandos e prioridades diferentes.}
 \centerline{\includegraphics[scale=0.6]{images/exemplo_prioridades.png}}
 \fonte{Autor (2019)}
@@ -267,7 +267,7 @@ Já os 8 \textit{bits} menos significativos, ou seja, mais à direita, são respons
 É importante lembrar que, para algumas instruções, o primeiro \textit{byte} não é utilizado. Isso acontece porque algumas instruções não necessitam utilizar um argumento, pois executam uma funcionalidade específica e independente de qualquer entrada externa. Um exemplo de instrução que não necessita de argumento em sua chamada é a \textit{BINARY\_ADD}, que executa uma soma entre o \tos{} e a segunda posição. Assim, ao ser identificado o \textit{opcode} que chama tal instrução, ignora-se o segundo \textit{byte} do endereço e segue-se para a execução. 
 
 A Figura \ref{img_endCode} apresenta o formato de uma instrução \textit{Python}, contendo o \textit{oparg} primeiro, até o \textit{bit} número 7, e o \textit{opcode} a partir do \textit{bit} número 8 até o final do argumento. 
-\begin{figure}[htp]
+\begin{figure}[]
 \caption{Formato de um endereço binário de 2 \textit{bytes}.}
 \centerline{\includegraphics{images/bytecodeFormat.png}}
 \fonte{\citeonline{insidePVM}}

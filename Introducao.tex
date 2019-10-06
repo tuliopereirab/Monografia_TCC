@@ -8,7 +8,7 @@ A grande vantagem de se utilizar linguagens interpretadas, assim como a linguage
 
 A linguagem \textit{Python} possui um compilador \cite{designCompiler} que gera, como resultado, um arquivo contendo os \textit{bytecodes} de determinada implementação feita através da linguagem. Após tal arquivo ser obtido, pode-se iniciar a execução dos \textit{bytecodes} através do interpretador. A Figura \ref{INTRO_diagCompilacao} demonstra um fluxo básico de compilação, onde tem-se como entrada um código qualquer escrito em \textit{Python}, passando por um compilador que gerará, como resultado, um arquivo contendo os \textit{bytecodes} que serão lidos pelo interpretador posteriormente. Podemos perceber que, de posse do compilador citado anteriormente, é, de certa forma, simples obter o arquivo contendo os \textit{bytecodes}. 
 
-\begin{figure}[!htb]
+\begin{figure}[]
 	\caption{Fluxo básico de compilação.}
 	\centerline{\includegraphics[scale=1]{images/INTRO_Compilacao.png}}
 	\fonte{Autor (2019)}
@@ -25,7 +25,7 @@ A arquitetura desenvolvida neste trabalho tem como principal objetivo servir com
 
 Espera-se, ao final desse trabalho, que seja obtida uma descrição de uma arquitetura física funcional e que ela possa ser prototipada, utilizando-se \textit{FPGA} (\textit{Field Programmable Gate Array}). A Figura \ref{INTRO_diagFPGA} demonstra o fluxo que se pretende implementar para execução de um programa \textit{Python} em um FPGA. Quando uma arquitetura funcional for obtida, pretende-se criar um \textit{software} de apoio que será responsável por gerar arquivos de inicialização de memória com os \bc{} da aplicação, os quais serão transferidos para a memória interna do FPGA. Desse modo, a arquitetura pode, subsequentemente, iniciar a execução desta aplicação. Com as instruções encontradas no arquivo já presentes na memória do FPGA, esse executará cada uma delas, na ordem em que aparecem, sendo capaz de executar desvios (\textit{jumps}) entre elas.
 
-\begin{figure}[!htb]
+\begin{figure}[]
 	\caption{Fluxo básico que se planeja implementar para execução de um arquivo com \textit{bytecodes Python} em um FPGA.}
 	\centerline{\includegraphics[scale=0.6]{images/INTRO_fluxo_entrada_FPGA.png}}
 	\fonte{Autor (2019)}
